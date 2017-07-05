@@ -10,11 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.forum.dao.Art_typesDAO;
+import com.forum.dao.ArticlesDAO;
 import com.forum.domain.Art_types;
 import com.forum.domain.Articles;
 import com.forum.domain.User;
-import com.forum.model.Art_typesDAO;
-import com.forum.model.ArticlesDAO;
+import com.forum.service.ArticlesSevice;
 
 /**
  * Servlet implementation class ArticlesMakerCtrl
@@ -32,12 +33,12 @@ public class ArticlesMakerCtrl extends HttpServlet {
 			req.getRequestDispatcher("/WEB-INF/forum/ArticlesMaker.jsp").forward(req, res);
 		}else if(action.equals("create")&&forum_no!=null){
 			Articles articles=new Articles();
-			articles.setArt_name((String) req.getParameter("art_name"));
-			articles.setArt_type((String) req.getParameter("art_type_name"));
-			articles.setArt_ctx((String) req.getParameter("art_ctx"));
-			articles.setForum_no(forum_no);
-			articles.setMem_no(((User)req.getSession().getAttribute("user")).getMem_no());
-			boolean createResult = new ArticlesDAO().executeInsert(articles);
+			String art_name = req.getParameter("art_name");
+			String art_type_name = req.getParameter("art_type_name");
+			String art_ctx = req.getParameter("art_ctx");
+			String mem_no = ((User)req.getSession().getAttribute("user")).getMem_no();
+			ArticlesSevice articlesSevice = new ArticlesSevice();
+			boolean createResult = articlesSevice.addArticles(mem_no, forum_no, art_type_name, art_name, art_ctx);
 			if(createResult){
 				String URL = this.getServletContext().getContextPath()+"/forum/ForumShowCtrl?forum_no="+forum_no;
 				res.sendRedirect(URL);				

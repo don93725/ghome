@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.forum.dao.Article_commentsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.domain.User;
-import com.forum.model.Article_commentsDAO;
+import com.forum.service.Article_commentsSevice;
+import com.forum.util.DAOInterface;
 import com.forum.util.TransData;
 
 
@@ -26,24 +28,16 @@ public class ArtCmtMakerCtrl extends HttpServlet {
 		HttpSession session = req.getSession();
 		String art_no = req.getParameter("art_no");
 		User user = ((User)session.getAttribute("user"));
-		
+		//part 要在補
 		Part part = null;
 		String art_cmt_ctx = req.getParameter("art_cmt_ctx");
 		if(user==null){
 			String URL = this.getServletContext().getContextPath()+"/forum/LoginCtrl";
 			res.sendRedirect(URL);
 		}else if(art_no!=null&&art_cmt_ctx!=null){
-			String mem_no = user.getMem_no();
-			Article_comments article_comments = new Article_comments();
-			article_comments.setArt_no(art_no);
-			article_comments.setMem_no(mem_no);
-			if(part!=null){				
-				article_comments.setArt_cmt_img(TransData.transBlob(part));
-			}else{
-				article_comments.setArt_cmt_img(null);		
-			}
-			article_comments.setArt_cmt_ctx(art_cmt_ctx);
-			boolean result = new Article_commentsDAO().executeInsert(article_comments);
+			String mem_no = user.getMem_no();				
+			Article_commentsSevice article_commentsSevice = new Article_commentsSevice();
+			boolean result = article_commentsSevice.addArticle_comments(art_no, mem_no, part, art_cmt_ctx);
 			if(result){
 				String forum_no=req.getParameter("forum_no");
 				String URL=getServletContext().getContextPath()+"/forum/ArticleShowCtrl?forum_no="+forum_no	+"&art_no="+art_no;

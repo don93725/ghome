@@ -1,4 +1,4 @@
-package com.forum.model;
+package com.forum.dao;
 
 import java.sql.Blob;
 import java.util.ArrayList;

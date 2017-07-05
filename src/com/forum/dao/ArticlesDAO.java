@@ -1,4 +1,4 @@
-package com.forum.model;
+package com.forum.dao;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.forum.dao.Article_commentsDAO;
+import com.forum.dao.ArticlesDAO;
+import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Articles;
-import com.forum.model.Article_commentsDAO;
-import com.forum.model.ArticlesDAO;
-import com.forum.model.ForumsDAO;
 import com.forum.util.DAOInterface;
 
 /**

@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.forum.dao.ArticlesDAO;
+import com.forum.dao.ForumsDAO;
 import com.forum.domain.Articles;
 import com.forum.domain.Forum;
-import com.forum.model.ArticlesDAO;
-import com.forum.model.ForumsDAO;
 
 /**
  * Servlet implementation class ForumShowCtrl
