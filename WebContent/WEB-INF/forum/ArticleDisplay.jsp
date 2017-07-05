@@ -11,7 +11,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-><a href="${pageContext.request.contextPath}/forum/ForumCL">討論大廳</a>><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }">${forum_name }</a>
+><a href="${pageContext.request.contextPath}/forum/ForumCrtl">討論大廳</a>><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }">${forum_name }</a>
 <%if(thisPage==1){ %>
 <div>
 <table border='1'>

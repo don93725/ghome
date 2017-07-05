@@ -5,7 +5,7 @@ import com.forum.domain.Articles;
 import com.forum.domain.User;
 
 public class ArticlesSevice {
-	public boolean addArticles(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx) {
+	public boolean add(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx) {
 		Articles articles=new Articles();
 		articles.setMem_no(mem_no);
 		articles.setForum_no(forum_no);

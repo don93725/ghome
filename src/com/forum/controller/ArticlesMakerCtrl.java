@@ -38,7 +38,7 @@ public class ArticlesMakerCtrl extends HttpServlet {
 			String art_ctx = req.getParameter("art_ctx");
 			String mem_no = ((User)req.getSession().getAttribute("user")).getMem_no();
 			ArticlesSevice articlesSevice = new ArticlesSevice();
-			boolean createResult = articlesSevice.addArticles(mem_no, forum_no, art_type_name, art_name, art_ctx);
+			boolean createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
 			if(createResult){
 				String URL = this.getServletContext().getContextPath()+"/forum/ForumShowCtrl?forum_no="+forum_no;
 				res.sendRedirect(URL);				

@@ -37,7 +37,7 @@ public class ArtCmtMakerCtrl extends HttpServlet {
 		}else if(art_no!=null&&art_cmt_ctx!=null){
 			String mem_no = user.getMem_no();				
 			Article_commentsSevice article_commentsSevice = new Article_commentsSevice();
-			boolean result = article_commentsSevice.addArticle_comments(art_no, mem_no, part, art_cmt_ctx);
+			boolean result = article_commentsSevice.add(art_no, mem_no, part, art_cmt_ctx);
 			if(result){
 				String forum_no=req.getParameter("forum_no");
 				String URL=getServletContext().getContextPath()+"/forum/ArticleShowCtrl?forum_no="+forum_no	+"&art_no="+art_no;
