@@ -1,5 +1,7 @@
 package com.forum.service;
 
+import java.util.List;
+
 import com.forum.dao.ArticlesDAO;
 import com.forum.domain.Articles;
 import com.forum.domain.User;
@@ -14,6 +16,12 @@ public class ArticlesSevice {
 		articles.setArt_ctx(art_ctx);
 		boolean result = new ArticlesDAO().executeInsert(articles);
 		return result;
-
+	}
+	public List<Articles> getPageData(int thisPage,int pageSize,String forum_no) {
+		String where = "forum_no="+forum_no;
+		String order = "art_add_date desc";
+		
+		List<Articles> articles=new ArticlesDAO().pageAndRank(thisPage, pageSize, order, where);
+		return articles;
 	}
 }

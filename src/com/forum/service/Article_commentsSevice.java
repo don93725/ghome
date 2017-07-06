@@ -1,6 +1,7 @@
 package com.forum.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.Part;
 
@@ -28,6 +29,12 @@ public class Article_commentsSevice {
 		boolean result = new Article_commentsDAO().executeInsert(article_comments);
 		return result;
 		
+	}
+	public List<Article_comments> getPageData(int thisPage,int pageSize,String art_no){
+		String order = "art_cmt_time";
+		String where = "art_no="+art_no;
+		List<Article_comments> article_comments = new Article_commentsDAO().pageAndRank(thisPage, pageSize, order,where);
+		return article_comments;
 	}
 	
 }

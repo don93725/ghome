@@ -14,6 +14,7 @@ import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Articles;
+import com.forum.service.Article_commentsSevice;
 import com.forum.util.DAOInterface;
 
 /**
@@ -32,15 +33,12 @@ public class ArticleShowCtrl extends HttpServlet {
 			}
 			int pageSize = 5;
 			int allPageCount = new Article_commentsDAO().countBySQL("select count(*) from article_comments where art_no="+art_no);
-			
 			if(allPageCount!=0){
 				allPageCount = allPageCount/pageSize +1;				
 			}else{
 				allPageCount=1;
 			}
-			String order = "art_cmt_time";
-			String where = "art_no="+art_no;
-			List<Article_comments> article_comments = new Article_commentsDAO().pageAndRank(Integer.parseInt(thisPage), pageSize, order,where);
+			List<Article_comments> article_comments = new Article_commentsSevice().getPageData(Integer.parseInt(thisPage), pageSize, art_no);
 			String forum_name= new ForumsDAO().getForumName(forum_no);
 			String queryStr = "ArticleShowCtrl?forum_no="+forum_no+"&art_no="+art_no;
 			req.setAttribute("thisPage", thisPage);

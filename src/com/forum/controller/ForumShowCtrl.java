@@ -15,6 +15,7 @@ import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Articles;
 import com.forum.domain.Forum;
+import com.forum.service.ArticlesSevice;
 
 /**
  * Servlet implementation class ForumShowCtrl
@@ -35,14 +36,11 @@ public class ForumShowCtrl extends HttpServlet {
 			int pageSize = 8;
 			int allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"'");
 			allPageCount = (allPageCount-1)/pageSize+1;
-			String queryStr ="ForumShowCtrl?forum_no="+forum_no;
 			req.setAttribute("allPageCount", allPageCount);
+			String queryStr ="ForumShowCtrl?forum_no="+forum_no;
+			req.setAttribute("queryStr", queryStr);				
 			req.setAttribute("thisPage", thisPage);			
-			req.setAttribute("queryStr", queryStr);			
-			String where = "forum_no="+forum_no;
-			String order = "art_add_date desc";
-			
-			List<Articles> articles=articlesDAO.pageAndRank(Integer.parseInt(thisPage), pageSize, order, where);
+			List<Articles> articles=new ArticlesSevice().getPageData(Integer.parseInt(thisPage), pageSize, forum_no);
 			req.setAttribute("articles", articles);
 			req.getRequestDispatcher("/WEB-INF/forum/Forum.jsp").forward(req, res);
 		}else{
