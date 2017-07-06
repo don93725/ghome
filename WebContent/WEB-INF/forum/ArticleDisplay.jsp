@@ -24,12 +24,14 @@
 </tr>
 <tr><td width='600' height='100' valign="top" colspan='3'>${articles.art_ctx}</td></tr>
 <tr><td width='600' height='20' align="left">
-	<c:if test="${articles.mem_no}==${user.mem_no}">
-	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=update&forum_no=${param.forum_no }&art_no=${articles.art_no}">修改</a>&nbsp
-	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}">刪除</a>&nbsp
+	<c:if test="${(articles.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
+	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goUpdatePage&forum_no=${param.forum_no }&art_no=${articles.art_no}">修改</a>&nbsp
+	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}" onclick="return confirm('確定要刪除文章?')">刪除</a>&nbsp
 	</c:if>
-	<c:if test="${articles.mem_no}!=${user.mem_no}">
-	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=report&forum_no=${param.forum_no }&art_no=${articles.art_no}">檢舉</a></c:if></td></tr>
+	<c:if test="${articles.mem_no!=user.mem_no}">
+	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=report&forum_no=${param.forum_no }&art_no=${articles.art_no}">檢舉</a></c:if>
+	</td></tr>
+
 	
 </table>
 </div>
@@ -44,6 +46,11 @@
 	
 </tr>
 <tr><td width='600' height='100' valign="top"><%=comments.getArt_cmt_ctx() %></td></tr>
+<tr><td width='600' height='20' align="left">
+	<c:if test="${(articles.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
+	<a href="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}&art_cmt_no=<%=comments.getArt_cmt_no()%>">刪除</a>
+	</c:if>
+	</td></tr>
 </table>
 </div>
 <%} %>
@@ -54,9 +61,12 @@
 <form action="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?forum_no=${param.forum_no}&art_no=${articles.art_no}" method="post">
 <tr>
 	<td rowspan='2' width='100' align="center"">留言</td>
-	<td width='600' height='100' align="center"><textarea style="width:592px;height:120px" name='art_cmt_ctx'></textarea></td>	
+	<td width='600' height='100' align="center"><textarea style="width:592px;height:120px" name='art_cmt_ctx'></textarea>
+	<input type='hidden' name="action" value='create'>
+	</td>	
 </tr>
 <tr><td  align="center" ><input type='submit' value='送出'><input type='submit' value='重填'></td></tr>
+
 </form>
 </table>
 </div>

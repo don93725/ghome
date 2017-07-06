@@ -14,7 +14,7 @@
 <body>
 ><a href="${pageContext.request.contextPath}/forum/ForumCtrl">討論大廳</a><br>
 <%if(session.getAttribute("user")!=null){ %>
-<a href='${pageContext.request.contextPath}/forum/ArticlesMakerCtrl?action=new&forum_no=${param.forum_no }'>新增文章</a>
+<a href='${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goCreatePage&forum_no=${param.forum_no }'>新增文章</a>
 <%} %>
 <table border=1>
 <tr><th>文章類型</th><th>文章標題</th><th>發文者</th><th>發文時間</th><th>瀏覽次數</th></tr>

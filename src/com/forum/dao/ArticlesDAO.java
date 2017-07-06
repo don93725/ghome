@@ -75,10 +75,8 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 	// 建置修改
 
 	public boolean updateByVO(Articles articles) {
-		String SQL = "update articles set mem_no=?,forum_no=?,art_type=?,art_add_date=?,art_upd_date=?,art_name=?,art_ctx=?,art_view=? where art_no=?";
-		Object[] param = { articles.getArt_no(), articles.getMem_no(), articles.getForum_no(), articles.getArt_type(),
-				articles.getArt_add_date(), articles.getArt_upd_date(), articles.getArt_name(), articles.getArt_ctx(),
-				articles.getArt_view() };
+		String SQL = "update articles set art_type=?,art_upd_date=sysdate,art_name=?,art_ctx=? where art_no=?";
+		Object[] param = { articles.getArt_type(), articles.getArt_name(), articles.getArt_ctx(), articles.getArt_no() };
 		boolean updateResult = new SQLHelper().executeUpdate(SQL, param);
 		return updateResult;
 	}

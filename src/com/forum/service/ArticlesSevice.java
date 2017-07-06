@@ -17,6 +17,15 @@ public class ArticlesSevice {
 		boolean result = new ArticlesDAO().executeInsert(articles);
 		return result;
 	}
+	public boolean update(String art_type_name, String art_name, String art_ctx,String art_no) {
+		Articles articles=new Articles();
+		articles.setArt_type(art_type_name);
+		articles.setArt_name(art_name);
+		articles.setArt_ctx(art_ctx);
+		articles.setArt_no(art_no);
+		boolean result = new ArticlesDAO().updateByVO(articles);
+		return result;
+	}
 	public boolean update(){
 		Articles articles = new  Articles();
 		boolean result = new ArticlesDAO().updateByVO(articles);
@@ -28,4 +37,5 @@ public class ArticlesSevice {
 		List<Articles> articles=new ArticlesDAO().pageAndRank(thisPage, pageSize, order, where);
 		return articles;
 	}
+	
 }

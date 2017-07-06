@@ -27,16 +27,20 @@ public class ArticlesActionCtrl extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
 		String forum_no = req.getParameter("forum_no");
-		if (action.equals("new") && forum_no != null) {
+		if ((action.equals("goCreatePage") || action.equals("goUpdatePage")) && forum_no != null) {
 			List<Art_types> art_types = new Art_typesDAO()
 					.getVOBySQL("select * from art_types where forum_no=" + forum_no, null);
 			req.setAttribute("art_types", art_types);
+			if (action.equals("goUpdatePage")) {
+				String art_no = req.getParameter("art_no");
+				Articles articles = (Articles) new ArticlesDAO().getVOByPK(art_no);
+				req.setAttribute("articles", articles);
+			}
 			req.getRequestDispatcher("/WEB-INF/forum/ArticlesMaker.jsp").forward(req, res);
-			
+
 		} else if (forum_no != null) {
-			switch (action) {
-			case "create":
-				Articles articles = new Articles();
+
+			if (action.equals("create")) {
 				String art_name = req.getParameter("art_name");
 				String art_type_name = req.getParameter("art_type_name");
 				String art_ctx = req.getParameter("art_ctx");
@@ -51,17 +55,37 @@ public class ArticlesActionCtrl extends HttpServlet {
 					req.setAttribute("msg", "失敗");
 					req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
 				}
-			case "update":
-				System.out.println("update?");
-				break;
-			case "delete":
-				System.out.println("delete?");
-				break;
-			case "report":
+			} else if (action.equals("update")) {
+				String art_name = req.getParameter("art_name");
+				String art_type_name = req.getParameter("art_type_name");
+				String art_ctx = req.getParameter("art_ctx");
+				String art_no = req.getParameter("art_no");
+				ArticlesSevice articlesSevice = new ArticlesSevice();
+				
+				boolean createResult = articlesSevice.update(art_type_name, art_name, art_ctx,art_no);
+				if (createResult) {
+					String URL = this.getServletContext().getContextPath() + "/forum/ArticleShowCtrl?forum_no="
+							+ forum_no+"&art_no="+art_no;
+					res.sendRedirect(URL);
+				} else {
+					req.setAttribute("msg", "失敗");
+					req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+				}
+			} else if (action.equals("delete")) {
+				String art_no = req.getParameter("art_no");
+				boolean result = new ArticlesDAO().executeDelete(art_no);
+				if (result) {
+					String URL = this.getServletContext().getContextPath() + "/forum/ForumShowCtrl?forum_no="
+							+ forum_no;
+					res.sendRedirect(URL);
+				} else {
+					req.setAttribute("msg", "fail to delete article");
+					req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+				}
+			} else if (action.equals("report")) {
 				System.out.println("report?");
-				break;
-			default:
-				System.out.println("what r u doing?");
+			} else {
+
 			}
 
 		} else {
