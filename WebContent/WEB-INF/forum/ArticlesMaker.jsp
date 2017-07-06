@@ -10,7 +10,7 @@
 <% List<Art_types> list =(ArrayList<Art_types>)request.getAttribute("art_types"); 
 	%>
 <table>
-<form action="${pageContext.request.contextPath}/forum/ArticlesMakerCtrl" method='post'>
+<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post'>
 <tr>
 	<td>標題</td>
 	<td>

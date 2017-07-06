@@ -6,7 +6,6 @@ public class BasicDAO {
 	
 	public int countBySQL(String SQL) {
 		List list = (List) new SQLHelper().executeQuery(SQL, null);
-		System.out.println(list.size());
 		Object[] obj =null;
 		if(list.size()!=0){
 			obj = (Object[]) list.get(0);

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.forum.domain.Art_types;
+import com.forum.inteface.DAOInterface;
 import com.forum.util.BasicDAO;
-import com.forum.util.DAOInterface;
 import com.forum.util.SQLHelper;
 
 public class Art_typesDAO extends BasicDAO implements DAOInterface<Art_types>{

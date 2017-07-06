@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.forum.domain.Articles;
+import com.forum.inteface.DAOInterface;
 import com.forum.util.BasicDAO;
-import com.forum.util.DAOInterface;
 import com.forum.util.SQLHelper;
 
 public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {

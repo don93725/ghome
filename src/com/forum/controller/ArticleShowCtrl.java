@@ -14,8 +14,8 @@ import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Articles;
+import com.forum.inteface.DAOInterface;
 import com.forum.service.Article_commentsSevice;
-import com.forum.util.DAOInterface;
 
 /**
  * Servlet implementation class ArticleShowCtrl
@@ -33,6 +33,7 @@ public class ArticleShowCtrl extends HttpServlet {
 			}
 			int pageSize = 5;
 			int allPageCount = new Article_commentsDAO().countBySQL("select count(*) from article_comments where art_no="+art_no);
+			
 			if(allPageCount!=0){
 				allPageCount = allPageCount/pageSize +1;				
 			}else{

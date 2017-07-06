@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.forum.domain.Art_types;
 import com.forum.domain.Article_comments;
+import com.forum.inteface.DAOInterface;
 import com.forum.util.BasicDAO;
-import com.forum.util.DAOInterface;
 import com.forum.util.SQLHelper;
 
 public class Article_commentsDAO extends BasicDAO implements DAOInterface<Article_comments>{

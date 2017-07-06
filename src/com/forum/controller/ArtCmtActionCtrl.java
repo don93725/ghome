@@ -14,14 +14,14 @@ import javax.servlet.http.Part;
 import com.forum.dao.Article_commentsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.domain.User;
+import com.forum.inteface.DAOInterface;
 import com.forum.service.Article_commentsSevice;
-import com.forum.util.DAOInterface;
 import com.forum.util.TransData;
 
 
 
-@WebServlet("/forum/ArtCmtMakerCtrl")
-public class ArtCmtMakerCtrl extends HttpServlet {
+@WebServlet("/forum/ArtCmtActionCtrl")
+public class ArtCmtActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		
