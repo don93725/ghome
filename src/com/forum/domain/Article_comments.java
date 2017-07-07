@@ -7,6 +7,7 @@ public class Article_comments {
 	String art_cmt_no,art_no,mem_no,art_cmt_ctx;
 	Blob art_cmt_img;
 	Date art_cmt_time;
+	
 	public String getArt_cmt_no() {
 		return art_cmt_no;
 	}

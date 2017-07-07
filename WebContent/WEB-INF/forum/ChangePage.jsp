@@ -4,6 +4,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=BIG5">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
@@ -13,16 +18,24 @@
   <div style="width: 465px ; height: 50px" align="right">
 	<table>
 	<tr><td colspan='5' style='text-align: center'>
+	
+	<ul class="pagination">  
 	<%if(thisPage>1){ %>
-	<a href='${pageContext.request.contextPath}/forum/${queryStr}&thisPage=${thisPage-1}'>上一頁</a>
-	<%} %>
-	<% for(int i = thisPage-3; i<thisPage+3;i++){
-		if(i>0&&i<allPageCount+1){%>	
-	<a href='${pageContext.request.contextPath}/forum/${queryStr}&thisPage=<%=i%>'> <%=i %> </a>
+	<li><a href="${pageContext.request.contextPath}/forum/${queryStr}&thisPage=${thisPage-1}">&laquo;</a></li>
+	
+	
+	<%}for(int i = thisPage-3; i<thisPage+3;i++){
+		if(i>0&&i<allPageCount+1){
+			if(i==thisPage){ %>
+	   		<li class="active"><a href="${pageContext.request.contextPath}/forum/${queryStr}&thisPage=<%=i%>"><%=i %></a></li>
+	   <%}else{ %>
+			<li><a href="${pageContext.request.contextPath}/forum/${queryStr}&thisPage=<%=i%>"><%=i %></a></li>	   
+	   <%}%>
 	<%}} %>
 	<%if(thisPage<allPageCount){ %>
-	<a href='${pageContext.request.contextPath}/forum/${queryStr}&thisPage=${thisPage+1}'>下一頁</a>
-	<%} %>	
+	<li><a href="${pageContext.request.contextPath}/forum/${queryStr}&thisPage=${thisPage+1}">&raquo;</a></li>
+	<%}%>
+		</ul>
 	</td>
 	</tr>
 	<tr><td colspan='5' style='text-align: center'>

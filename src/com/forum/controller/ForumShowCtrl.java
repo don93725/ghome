@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Articles;
-import com.forum.domain.Forum;
 import com.forum.service.ArticlesSevice;
+import com.forum.service.ForumsSevice;
 
 /**
  * Servlet implementation class ForumShowCtrl
@@ -39,7 +39,8 @@ public class ForumShowCtrl extends HttpServlet {
 			req.setAttribute("allPageCount", allPageCount);
 			String queryStr ="ForumShowCtrl?forum_no="+forum_no;
 			req.setAttribute("queryStr", queryStr);				
-			req.setAttribute("thisPage", thisPage);			
+			req.setAttribute("thisPage", thisPage);		
+			new ForumsSevice().increaseViews(forum_no);
 			List<Articles> articles=new ArticlesSevice().getPageData(Integer.parseInt(thisPage), pageSize, forum_no);
 			req.setAttribute("articles", articles);
 			req.getRequestDispatcher("/WEB-INF/forum/Forum.jsp").forward(req, res);

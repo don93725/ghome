@@ -44,8 +44,11 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 	articles.setArt_ctx((String)obj[7]);
 	}
 	if(obj[8]!=null){
-	articles.setArt_view(Integer.parseInt(obj[8].toString()));
+	articles.setArt_views(Integer.parseInt(obj[8].toString()));
 	}
+	if(obj[9]!=null){
+		articles.setArt_mviews(Integer.parseInt(obj[9].toString()));
+		}
 	tempList.add(articles);
 	}
 	return tempList;
@@ -83,7 +86,7 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 	// 建置新增
 
 	public boolean executeInsert(Articles articles) {
-		String SQL = "insert into articles values(articles_seq.nextval,?,?,?,SYSDATE,null,?,?,0)";
+		String SQL = "insert into articles values(articles_pk_seq.nextval,?,?,?,SYSDATE,null,?,?,default,default)";
 		Object[] param = { articles.getMem_no(), articles.getForum_no(), articles.getArt_type(), articles.getArt_name(), articles.getArt_ctx()};
 		boolean insertResult = new SQLHelper().executeUpdate(SQL, param);
 		return insertResult;
@@ -96,34 +99,60 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 		boolean deleteResult = new SQLHelper().executeUpdate(SQL, param);
 		return deleteResult;
 	}
-	// 建置分頁(彈性排序可設條件)
+	//建置分頁(彈性排序可設條件)
 
-	public List<Articles> pageAndRank(int page, int pageSize, String order, String where) {
-		int firstPage = (page - 1) * pageSize + 1;
-		int lastPage = page * pageSize;
-		String SQL="select art_no,mem_no,forum_no,art_type,art_add_date,art_upd_date,art_name,art_ctx,art_view from"+
-				   "(select art_no,mem_no,forum_no,art_type,art_add_date,art_upd_date,art_name,art_ctx,art_view, rownum rn from "+
-				   "(select * from articles";
-		if(where!=null){
-			SQL =  SQL + " where "+where;
-		}
-		SQL = SQL+" order by "+ order + ")) where rn between "+firstPage+" and "+lastPage;
-		
-		List<Articles> list = getVOBySQL(SQL, null);
-		return list;
+	public List<Articles> pageAndRank(int page,int pageSize,String order,String where){
+	int firstPage=(page-1)*pageSize+1;
+	int lastPage = page*pageSize;
+	String SQL="select art_no,mem_no,forum_no,art_type,art_add_date,art_upd_date,art_name,art_ctx,art_views,art_mviews from (select art_no,mem_no,forum_no,art_type,art_add_date,art_upd_date,art_name,art_ctx,art_views,art_mviews, rownum rn from (select * from articles";
+	if(where!=null){
+	SQL = SQL +" where " + where;
 	}
-	// 分頁無條件
-	public List<Articles> pageAndRank(int page, int pageSize, String order) {
+	SQL = SQL+ " order by "+order+")) where rn between "+firstPage+" and "+lastPage;
+	List<Articles> list=getVOBySQL(SQL,null);
+	return list;
+	}
+	//建置分頁(彈性排序不設條件)
+
+	public List<Articles> pageAndRank(int page,int pageSize,String order){
+	List<Articles> list=pageAndRank(page,pageSize,order);
+	return list;
+	}
+	//建置分頁(PK排序)
+
+	public List<Articles> pageAndRankByPk(int page,int pageSize){
+	List<Articles> list=pageAndRank(page,pageSize,"art_no");
+	return list;
+	}
+	//建置取得欄位資料
+
+	public Object[] getCol(String col, Object[] param){
+	String SQL = "select "+col+" from articles where art_no=?";
+	List<Object[]> list = new SQLHelper().executeQuery(SQL, param);
+	Object[] colData= list.get(0);
+	return colData;
+	}
+	//Service層實作
+
+//	public class ArticlesServiece implements ServiceIntface<Articles>{
+//	//封裝新增物件
+//
+//	public boolean add(String art_no, String mem_no, String forum_no, String art_type, Date art_add_date, Date art_upd_date, String art_name, String art_ctx, Integer art_views, Integer art_mviews){
+//	Articles articles = new Articles();
+//	articles.setArt_no(art_no);
+//	articles.setMem_no(mem_no);
+//	articles.setForum_no(forum_no);
+//	articles.setArt_type(art_type);
+//	articles.setArt_add_date(art_add_date);
+//	articles.setArt_upd_date(art_upd_date);
+//	articles.setArt_name(art_name);
+//	articles.setArt_ctx(art_ctx);
+//	articles.setArt_views(art_views);
+//	articles.setArt_mviews(art_mviews);
+//	DAOInterface dao = new ArticlesDAO();
+//	boolean result = dao.executeInsert(articles);
+//	return result;
+//	}
 	
-		List<Articles> list =pageAndRank(page,pageSize,order,null);		
-		
-		return list;
-	}
-	// 建置分頁(PK排序)
-
-	public List<Articles> pageAndRankByPk(int page, int pageSize) {
-		List<Articles> list = pageAndRank(page, pageSize,"art_no");
-		return list;
-	}
 
 }

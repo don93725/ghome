@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.forum.dao.Art_typesDAO;
 import com.forum.dao.ArticlesDAO;
@@ -27,7 +28,12 @@ public class ArticlesActionCtrl extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
 		String forum_no = req.getParameter("forum_no");
-		if ((action.equals("goCreatePage") || action.equals("goUpdatePage")) && forum_no != null) {
+		HttpSession session = req.getSession();
+		User user = ((User) session.getAttribute("user"));
+		if (user == null) {
+			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
+			res.sendRedirect(URL);
+		} else if ((action.equals("goCreatePage") || action.equals("goUpdatePage")) && forum_no != null) {
 			List<Art_types> art_types = new Art_typesDAO()
 					.getVOBySQL("select * from art_types where forum_no=" + forum_no, null);
 			req.setAttribute("art_types", art_types);
@@ -44,7 +50,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 				String art_name = req.getParameter("art_name");
 				String art_type_name = req.getParameter("art_type_name");
 				String art_ctx = req.getParameter("art_ctx");
-				String mem_no = ((User) req.getSession().getAttribute("user")).getMem_no();
+				String mem_no = user.getMem_no();
 				ArticlesSevice articlesSevice = new ArticlesSevice();
 				boolean createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
 				if (createResult) {
@@ -61,11 +67,11 @@ public class ArticlesActionCtrl extends HttpServlet {
 				String art_ctx = req.getParameter("art_ctx");
 				String art_no = req.getParameter("art_no");
 				ArticlesSevice articlesSevice = new ArticlesSevice();
-				
-				boolean createResult = articlesSevice.update(art_type_name, art_name, art_ctx,art_no);
+
+				boolean createResult = articlesSevice.update(art_type_name, art_name, art_ctx, art_no);
 				if (createResult) {
 					String URL = this.getServletContext().getContextPath() + "/forum/ArticleShowCtrl?forum_no="
-							+ forum_no+"&art_no="+art_no;
+							+ forum_no + "&art_no=" + art_no;
 					res.sendRedirect(URL);
 				} else {
 					req.setAttribute("msg", "失敗");

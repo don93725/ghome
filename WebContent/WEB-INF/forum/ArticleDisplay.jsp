@@ -4,6 +4,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta content="Expires" content="-1">
+<meta content="Catch-Control" content="no-cache">
+<meta content="Pragma" content="no-cache">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%Articles articles=(Articles)request.getAttribute("articles");
 	List<Article_comments> article_comments = (List<Article_comments>)request.getAttribute("article_comments");
@@ -48,7 +51,7 @@
 <tr><td width='600' height='100' valign="top"><%=comments.getArt_cmt_ctx() %></td></tr>
 <tr><td width='600' height='20' align="left">
 	<c:if test="${(articles.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
-	<a href="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}&art_cmt_no=<%=comments.getArt_cmt_no()%>">刪除</a>
+	<a href="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}&art_cmt_no=<%=comments.getArt_cmt_no()%>" onclick="return confirm('確定要刪除留言?')">刪除</a>
 	</c:if>
 	</td></tr>
 </table>

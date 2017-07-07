@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.forum.dao.ForumsDAO;
-import com.forum.domain.Forum;
+import com.forum.domain.Forums;
 
 
 @WebServlet("/forum/ForumCtrl")
@@ -19,7 +19,7 @@ public class ForumCtrl extends HttpServlet {
 	@Override
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		List<Forum> list =new ForumsDAO().getAllForum();
+		List<Forums> list =new ForumsDAO().getAll();
 		req.setAttribute("forums", list);
 		req.getRequestDispatcher("/WEB-INF/forum/ForumMain.jsp").forward(req, res);
 		

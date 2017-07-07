@@ -3,6 +3,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta content="Expires" content="-1">
+<meta content="Catch-Control" content="no-cache">
+<meta content="Pragma" content="no-cache">
 <meta http-equiv="Content-Type" content="text/html; charset=BIG5">
 <title>Insert title here</title>
 </head>
@@ -10,7 +13,7 @@
 	int allPageCount=Integer.parseInt(request.getAttribute("allPageCount").toString());
 	int thisPage = Integer.parseInt(request.getAttribute("thisPage").toString());
 	String forum_no = request.getParameter("forum_no").toString();
-	SimpleDateFormat sdf= new SimpleDateFormat("yyyy MMM d HH:mm   ",Locale.US);%>
+	SimpleDateFormat sdf= new SimpleDateFormat("yyyy MMM d HH:mm",Locale.US);%>
 <body>
 ><a href="${pageContext.request.contextPath}/forum/ForumCtrl">討論大廳</a><br>
 <%if(session.getAttribute("user")!=null){ %>
@@ -26,7 +29,7 @@
 		<td><a href="${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=${param.forum_no }&art_no=<%=art.getArt_no()%>"><%=art.getArt_name() %></a></td>
 		<td><%= art.getMem_no()%></td>
 		<td><%=sdf.format(art.getArt_add_date())%></td>
-		<td><%= art.getArt_view()%></td>
+		<td align="right"><%= art.getArt_views()%></td>
 	</tr>
 	<%} %>
 	</table>

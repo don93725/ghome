@@ -3,14 +3,22 @@ package com.forum.domain;
 import java.util.Date;
 
 public class Articles {	
-	Integer art_view;
+	Integer art_views,art_mviews;
+	
 	String art_no,mem_no,forum_no,art_type,art_name,art_ctx;
 	Date art_add_date,art_upd_date;
-	public Integer getArt_view() {
-		return art_view;
+	
+	public Integer getArt_views() {
+		return art_views;
 	}
-	public void setArt_view(Integer art_view) {
-		this.art_view = art_view;
+	public void setArt_views(Integer art_views) {
+		this.art_views = art_views;
+	}
+	public Integer getArt_mviews() {
+		return art_mviews;
+	}
+	public void setArt_mviews(Integer art_mviews) {
+		this.art_mviews = art_mviews;
 	}
 	public String getArt_no() {
 		return art_no;

@@ -3,6 +3,7 @@ package com.forum.service;
 import java.util.List;
 
 import com.forum.dao.ArticlesDAO;
+import com.forum.dao.ForumsDAO;
 import com.forum.domain.Articles;
 import com.forum.domain.User;
 
@@ -37,5 +38,18 @@ public class ArticlesSevice {
 		List<Articles> articles=new ArticlesDAO().pageAndRank(thisPage, pageSize, order, where);
 		return articles;
 	}
+	 public boolean increaseViews(String art_no){
+		 ArticlesDAO articlesDAO = new ArticlesDAO();
+		 String col="art_views,art_mviews";
+		 Object[] param = {art_no};
+		 Object[] viewVal = articlesDAO.getCol(col, param);		 
+		 for(int i = 0 ; i<viewVal.length ; i++){
+			 viewVal[i] = Integer.parseInt(viewVal[i].toString())+1;			 
+		 }		 
+		 String SQL = "update articles set art_views=?,art_mviews=? where art_no="+art_no;
+		 
+		 boolean result = articlesDAO.executeUpdate(SQL, viewVal);
+		 return result;
+	 }
 	
 }
