@@ -1,19 +1,19 @@
 package com.forum.domain;
 
-public class Forum {
+public class Forums {
+	Integer forum_views,forum_mviews;
 	String forum_no,mem_no,forum_name,forum_desc,forum_note,forum_stat;
-	int forum_views;
-	
-	public Forum(String forum_no, String mem_no, String forum_name, String forum_desc, String forum_note,
-			String forum_stat, int forum_views) {
-		super();
-		this.forum_no = forum_no;
-		this.mem_no = mem_no;
-		this.forum_name = forum_name;
-		this.forum_desc = forum_desc;
-		this.forum_note = forum_note;
-		this.forum_stat = forum_stat;
+	public Integer getForum_views() {
+		return forum_views;
+	}
+	public void setForum_views(Integer forum_views) {
 		this.forum_views = forum_views;
+	}
+	public Integer getForum_mviews() {
+		return forum_mviews;
+	}
+	public void setForum_mviews(Integer forum_mviews) {
+		this.forum_mviews = forum_mviews;
 	}
 	public String getForum_no() {
 		return forum_no;
@@ -51,13 +51,5 @@ public class Forum {
 	public void setForum_stat(String forum_stat) {
 		this.forum_stat = forum_stat;
 	}
-	public int getForum_views() {
-		return forum_views;
-	}
-	public void setForum_views(int forum_views) {
-		this.forum_views = forum_views;
-	}
 	
-	
-
 }
