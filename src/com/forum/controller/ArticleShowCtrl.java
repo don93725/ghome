@@ -8,9 +8,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.forum.dao.Art_typesDAO;
 import com.forum.dao.Article_commentsDAO;
 import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
+import com.forum.domain.Art_types;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Articles;
 import com.forum.inteface.DAOInterface;
@@ -42,7 +45,7 @@ public class ArticleShowCtrl extends HttpServlet {
 			}
 			List<Article_comments> article_comments = new Article_commentsSevice().getPageData(Integer.parseInt(thisPage), pageSize, art_no);
 			Object[] param = {forum_no};
-			String forum_name= (String)new ForumsDAO().getCol("forum_name",param )[0];
+			String forum_name= (String)new ForumsDAO().getCol("forum_name",param )[0];			
 			String queryStr = "ArticleShowCtrl?forum_no="+forum_no+"&art_no="+art_no;
 			req.setAttribute("thisPage", thisPage);
 			req.setAttribute("forum_name", forum_name);

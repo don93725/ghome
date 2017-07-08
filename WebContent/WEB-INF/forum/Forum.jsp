@@ -1,5 +1,8 @@
 <%@ page language="java" import="java.util.*,com.forum.domain.*,java.text.SimpleDateFormat" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -19,6 +22,16 @@
 <%if(session.getAttribute("user")!=null){ %>
 <a href='${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goCreatePage&forum_no=${param.forum_no }'>新增文章</a>
 <%} %>
+<div>
+<table border='1'>
+<tr>
+<c:forEach begin="0" end="${fn:length(art_types)}" varStatus="loop">
+<td><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }&art_type_no=${art_types[loop.count].art_type_no}"><c:out value="${art_types[loop.count].art_type_name }"/></a></td>
+</c:forEach>
+</tr>>
+</table>
+</div>
+<div>
 <table border=1>
 <tr><th>文章類型</th><th>文章標題</th><th>發文者</th><th>發文時間</th><th>瀏覽次數</th></tr>
 <%for(int i = 0 ;i<list.size();i++){

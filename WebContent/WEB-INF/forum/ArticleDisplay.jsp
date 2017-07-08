@@ -16,11 +16,9 @@
 </head>
 <body>
 ><a href="${pageContext.request.contextPath}/forum/ForumCtrl">討論大廳</a>><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }">${forum_name }</a>
-<%if(thisPage==1){ %>
-<div>
+<c:if test="${thisPage==1}">
 <table border='1'>
-<tr>
-	
+<tr>	
 	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br>
 	<a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${articles.mem_no}'>名稱</a><br>身份</td>
 	<td colspan='2'>${articles.art_name}</td>
@@ -33,12 +31,10 @@
 	</c:if>
 	<c:if test="${articles.mem_no!=user.mem_no}">
 	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=report&forum_no=${param.forum_no }&art_no=${articles.art_no}">檢舉</a></c:if>
-	</td></tr>
-
-	
+	</td></tr>	
 </table>
 </div>
-<%} %>
+</c:if>
 <%for(int i = 0 ; i < article_comments.size() ; i++){
 	Article_comments comments=article_comments.get(i);%>
 <div>

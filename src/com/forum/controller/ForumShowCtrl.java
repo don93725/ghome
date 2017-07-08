@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.forum.dao.Art_typesDAO;
 import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
+import com.forum.domain.Art_types;
 import com.forum.domain.Articles;
 import com.forum.service.ArticlesSevice;
 import com.forum.service.ForumsSevice;
@@ -34,6 +36,15 @@ public class ForumShowCtrl extends HttpServlet {
 				thisPage="1";
 			}
 			int pageSize = 8;
+			String art_type_no = req.getParameter("art_type_no");
+			if(art_type_no==null) {
+				int allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"' and art_type_no='"+art_type_no+"'");
+			}else {
+				int allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"'");
+			}
+			List<Art_types> art_types = new Art_typesDAO()
+					.getVOBySQL("select * from art_types where forum_no=" + forum_no, null);
+			req.setAttribute("art_types", art_types);
 			int allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"'");
 			allPageCount = (allPageCount-1)/pageSize+1;
 			req.setAttribute("allPageCount", allPageCount);
