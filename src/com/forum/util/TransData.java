@@ -15,18 +15,12 @@ import javax.sql.rowset.serial.SerialException;
 
 
 public class TransData {
-	public static Blob transBlob(Part part) throws IOException{
+	public static byte[] transBlob(Part part) throws IOException{
 		Blob blob=null;
 		InputStream in = part.getInputStream();
 		byte[] b = new byte[in.available()];
-		try {
-			blob =new SerialBlob(b);
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-		return blob;
+		
+		return b;
 	}
 	public static Clob transClob(String s) throws SerialException, SQLException{
 		Clob clob=new SerialClob(s.toCharArray());

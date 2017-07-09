@@ -57,14 +57,13 @@
 <%if(session.getAttribute("user")!=null){ %>
 <div>
 <table border='1'>
-<form action="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?forum_no=${param.forum_no}&art_no=${articles.art_no}" method="post">
+<form action="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?forum_no=${param.forum_no}&art_no=${articles.art_no}&action=create" method="post" enctype='multipart/form-data'>
 <tr>
 	<td rowspan='2' width='100' align="center"">留言</td>
 	<td width='600' height='100' align="center"><textarea style="width:592px;height:120px" name='art_cmt_ctx'></textarea>
-	<input type='hidden' name="action" value='create'>
 	</td>	
 </tr>
-<tr><td  align="center" ><input type='submit' value='送出'><input type='submit' value='重填'></td></tr>
+<tr><td  align="center" ><input type='file' name='pic'><input type='submit' value='送出'><input type='submit' value='重填'></td></tr>
 
 </form>
 </table>

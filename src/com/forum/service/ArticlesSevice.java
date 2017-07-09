@@ -27,11 +27,7 @@ public class ArticlesSevice {
 		boolean result = new ArticlesDAO().updateByVO(articles);
 		return result;
 	}
-	public boolean update(){
-		Articles articles = new  Articles();
-		boolean result = new ArticlesDAO().updateByVO(articles);
-		return result;
-	}
+	
 	public List<Articles> getPageData(int thisPage,int pageSize,String forum_no) {
 		String where = "forum_no="+forum_no;
 		String order = "art_add_date desc";		

@@ -1,6 +1,7 @@
 <%@ page language="java" import='com.forum.domain.*,java.util.*' contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
-   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -11,8 +12,6 @@
 <title>增加文章</title>
 </head>
 <body>
-<% List<Art_types> list =(ArrayList<Art_types>)request.getAttribute("art_types"); 
-	%>
 <c:if test="${param.action=='goCreatePage'}">
 <table>
 <form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post'>
@@ -20,9 +19,9 @@
 	<td>標題</td>
 	<td>
 		<select name='art_type_name'>
-		<%for(int i=0;i<list.size();i++){ %>
-		<option value='[<%=list.get(i).getArt_type_name() %>]'><%=list.get(i).getArt_type_name() %></option>
-		<%} %>
+		<c:forEach begin="0" end="${fn:length(art_types)-1 }" varStatus="loop2">
+		<option value='[${art_types[loop2.count-1].art_type_name}]'>${art_types[loop2.count-1].art_type_name}</option>		
+		</c:forEach>		
 		</select></td>
 	<td><input type='text' name='art_name'  ><input type='hidden' name='forum_no' value='${param.forum_no }'><input type='hidden' name='action' value='create'></td>
 </tr>
@@ -38,13 +37,10 @@
 	<td>標題</td>
 	<td>
 		<select name='art_type_name'>
-		<%for(int i=0;i<list.size();i++){ %>
-		<% if(("["+list.get(i).getArt_type_name()+"]").equals(((Articles)request.getAttribute("articles")).getArt_type())){ %>
-		<option value='[<%=list.get(i).getArt_type_name() %>]'" <%="selected" %>><%=list.get(i).getArt_type_name() %></option>
-
-		<%}else{%>
-				<option value='[<%=list.get(i).getArt_type_name() %>]'"><%=list.get(i).getArt_type_name() %></option>
-		<%}} %>
+		<c:forEach begin="0" end="${fn:length(art_types)-1}" varStatus="loop">
+		<c:set var="type" value="[${art_types[loop.count-1].art_type_name}]"/>
+		<option value='<c:out value='${type }'/>' <c:if test='${type==articles.art_type}'>selected </c:if>><c:out value='${art_types[loop.count-1].art_type_name }'/></option>
+		</c:forEach>		
 		</select></td>
 	<td><input type='text' name='art_name' value='${articles.art_name }' ><input type='hidden' name='forum_no' value='${param.forum_no }'><input type='hidden' name='art_no' value='${param.art_no }'><input type='hidden' name='action' value='update'></td>
 </tr>
@@ -53,5 +49,6 @@
 </form>
 </table>
 </c:if>
+<a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }'>返回板塊區</a>
 </body>
 </html>

@@ -26,9 +26,9 @@
 <table border='1'>
 <tr>
 <c:forEach begin="0" end="${fn:length(art_types)}" varStatus="loop">
-<td><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }&art_type_no=${art_types[loop.count].art_type_no}"><c:out value="${art_types[loop.count].art_type_name }"/></a></td>
+<td><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }&art_type_no=${art_types[loop.count-1].art_type_no}"><c:out value="${art_types[loop.count-1].art_type_name }"/></a></td>
 </c:forEach>
-</tr>>
+</tr>
 </table>
 </div>
 <div>

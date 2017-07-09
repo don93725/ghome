@@ -101,6 +101,14 @@ public class Art_typesDAO extends BasicDAO implements DAOInterface<Art_types>{
 	List<Art_types> list=pageAndRank(page,pageSize,"art_type_no");
 	return list;
 	}
+	//建置取得欄位資料
+
+		public Object[] getCol(String col, Object[] param){
+		String SQL = "select "+col+" from art_types where art_type_no=?";
+		List<Object[]> list = new SQLHelper().executeQuery(SQL, param);
+		Object[] colData= list.get(0);
+		return colData;
+		}
 
 
 

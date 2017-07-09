@@ -15,24 +15,22 @@
 <% List<Forums> list=(List<Forums>)request.getAttribute("forums"); %>
 <h1>討論區</h1>
 <table border='1'>
-<tr><td>名次</td><td>板塊名稱</td><td>月點擊次數</td><td>總點擊次數</td></tr>
-<c:forEach begin="0" end="${fn:length(rankList)}" varStatus="loop">
+<tr><td>名次</td><td>板塊名稱</td><td>月點擊/總點擊</td></tr>
+<c:forEach begin="0" end="${fn:length(rankList)-1}" varStatus="loop">
 <tr>
 <td><c:out value="${loop.count}"/></td>
-<td><c:out value="${rankList[loop.count].forum_name }"/></td>
-<td><c:out value="${rankList[loop.count].forum_views }"/></td>
-<td><c:out value="${rankList[loop.count].forum_mviews }"/></td>
+<td><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=<c:out value='${rankList[loop.count-1].forum_no}'/>'><c:out value='${rankList[loop.count-1].forum_name }'/></a></td>
+<td align="center"><c:out value="${rankList[loop.count-1].forum_views }"/>/<c:out value="${rankList[loop.count-1].forum_mviews }"/></td>
 </tr>
 </c:forEach>
 </table>
 <table border='1'>
-<tr><td>名次</td><td>板塊名稱</td><td>月點擊次數</td><td>總點擊次數</td></tr>
-<c:forEach begin="0" end="${fn:length(articlesRankList)}" varStatus="loop2">
+<tr><td>名次</td><td>板塊名稱</td><td>月點擊/總點擊</td></tr>
+<c:forEach begin="0" end="${fn:length(articlesRankList)-1}" varStatus="loop2">
 <tr>
 <td><c:out value="${loop2.count}"/></td>
-<td><c:out value="${articlesRankList[loop2.count].art_name }"/></td>
-<td><c:out value="${articlesRankList[loop2.count].art_views }"/></td>
-<td><c:out value="${articlesRankList[loop2.count].art_mviews }"/></td>
+<td><a href='${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=<c:out value="${articlesRankList[loop2.count-1].forum_no}"/>&art_no=<c:out value="${articlesRankList[loop2.count-1].art_no}"/>'><c:out value="${articlesRankList[loop2.count-1].art_name }"/></a></td>
+<td><c:out value="${articlesRankList[loop2.count-1].art_views }"/>/<c:out value="${articlesRankList[loop2.count-1].art_mviews }"/></td>
 </tr>
 </c:forEach>
 </table>

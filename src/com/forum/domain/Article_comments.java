@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Article_comments {
 	String art_cmt_no,art_no,mem_no,art_cmt_ctx;
-	Blob art_cmt_img;
+	byte[] art_cmt_img;
 	Date art_cmt_time;
 	
 	public String getArt_cmt_no() {
@@ -32,10 +32,10 @@ public class Article_comments {
 	public void setArt_cmt_ctx(String art_cmt_ctx) {
 		this.art_cmt_ctx = art_cmt_ctx;
 	}
-	public Blob getArt_cmt_img() {
+	public byte[] getArt_cmt_img() {
 		return art_cmt_img;
 	}
-	public void setArt_cmt_img(Blob art_cmt_img) {
+	public void setArt_cmt_img(byte[] art_cmt_img) {
 		this.art_cmt_img = art_cmt_img;
 	}
 	public Date getArt_cmt_time() {

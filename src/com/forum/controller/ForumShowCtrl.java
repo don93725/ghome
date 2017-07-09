@@ -37,22 +37,27 @@ public class ForumShowCtrl extends HttpServlet {
 			}
 			int pageSize = 8;
 			String art_type_no = req.getParameter("art_type_no");
-			if(art_type_no==null) {
-				int allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"' and art_type_no='"+art_type_no+"'");
+			int allPageCount=0;
+			String art_type_name = null;
+			String where = forum_no;
+			if(art_type_no!=null) {
+				Object[] param = {art_type_no};
+				art_type_name = "["+(String)new Art_typesDAO().getCol("art_type_name", param)[0]+"]";
+				where = where +" and art_type='"+art_type_name+"'";
+				allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no="+where);
 			}else {
-				int allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"'");
+				allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"'");
 			}
 			List<Art_types> art_types = new Art_typesDAO()
 					.getVOBySQL("select * from art_types where forum_no=" + forum_no, null);
 			req.setAttribute("art_types", art_types);
-			int allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"'");
 			allPageCount = (allPageCount-1)/pageSize+1;
 			req.setAttribute("allPageCount", allPageCount);
 			String queryStr ="ForumShowCtrl?forum_no="+forum_no;
 			req.setAttribute("queryStr", queryStr);				
 			req.setAttribute("thisPage", thisPage);		
 			new ForumsSevice().increaseViews(forum_no);
-			List<Articles> articles=new ArticlesSevice().getPageData(Integer.parseInt(thisPage), pageSize, forum_no);
+			List<Articles> articles=new ArticlesSevice().getPageData(Integer.parseInt(thisPage), pageSize, where);
 			req.setAttribute("articles", articles);
 			req.getRequestDispatcher("/WEB-INF/forum/Forum.jsp").forward(req, res);
 		}else{

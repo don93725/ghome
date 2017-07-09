@@ -25,8 +25,8 @@ public class ForumCtrl extends HttpServlet {
 		ForumsDAO forumsDAO = new ForumsDAO();
 		
 		List<Forums> list = forumsDAO.getAll();
-		List<Forums> rankList = forumsDAO.pageAndRank(1, 5, null , "forum_mviews desc");
-		List<Articles> articlesRankList = new ArticlesDAO().pageAndRank(1, 5, null , "art_mviews desc");
+		List<Forums> rankList = forumsDAO.pageAndRank(1, 5, "forum_mviews desc", null );
+		List<Articles> articlesRankList = new ArticlesDAO().pageAndRank(1, 5, "art_mviews desc", null );
 		req.setAttribute("forums", list);
 		req.setAttribute("rankList", rankList);
 		req.setAttribute("articlesRankList", articlesRankList);

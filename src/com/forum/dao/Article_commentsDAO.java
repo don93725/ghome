@@ -32,9 +32,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	if(obj[3]!=null){
 	article_comments.setArt_cmt_ctx((String)obj[3]);
 	}
-	if(obj[4]!=null){
-	article_comments.setArt_cmt_img((Blob)obj[4]);
-	}
+	
 	if(obj[5]!=null){
 	article_comments.setArt_cmt_time((Date)obj[5]);
 	}
@@ -115,5 +113,10 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	public List<Article_comments> pageAndRankByPk(int page,int pageSize){
 	List<Article_comments> list=pageAndRank(page,pageSize,"art_cmt_no");
 	return list;
+	}
+	public byte[] getPic(String art_cmt_no){
+		String SQL= "select art_cmt_img from article_comments where art_cmt_no="+art_cmt_no;
+		byte[] pic = (byte[] )new Article_commentsDAO().executeQuery(SQL, null).get(0);
+		return pic;
 	}
 }
