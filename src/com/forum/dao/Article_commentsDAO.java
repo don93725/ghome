@@ -1,6 +1,9 @@
 package com.forum.dao;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +13,8 @@ import com.forum.domain.Article_comments;
 import com.forum.inteface.DAOInterface;
 import com.forum.util.BasicDAO;
 import com.forum.util.SQLHelper;
+
+import oracle.sql.BLOB;
 
 public class Article_commentsDAO extends BasicDAO implements DAOInterface<Article_comments>{
 	//建置查詢
@@ -116,7 +121,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	}
 	public byte[] getPic(String art_cmt_no){
 		String SQL= "select art_cmt_img from article_comments where art_cmt_no="+art_cmt_no;
-		byte[] pic = (byte[] )new Article_commentsDAO().executeQuery(SQL, null).get(0);
-		return pic;
+		byte[] b  = new SQLHelper().getPic(SQL, null).get(0);		
+		return b;
 	}
 }

@@ -21,7 +21,6 @@ import com.forum.domain.User;
 import com.forum.inteface.DAOInterface;
 import com.forum.service.Article_commentsSevice;
 import com.forum.util.TransData;
-import com.oreilly.servlet.MultipartRequest;
 
 
 

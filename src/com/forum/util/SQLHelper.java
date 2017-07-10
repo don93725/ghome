@@ -1,5 +1,6 @@
 package com.forum.util;
 
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -14,6 +16,38 @@ import javax.sql.DataSource;
 
 public class SQLHelper {
 	
+	public List<byte[]> getPic(String sql,Object[] params){
+		Connection con= null;
+		PreparedStatement pstmt = null;
+		ResultSet rs=null;
+		ResultSetMetaData rsmd = null;
+		con = getConnection();
+		ArrayList<byte[]> al = new ArrayList<byte[]>();
+		try {
+			pstmt=con.prepareStatement(sql);
+			if(params!=null){
+				for(int i = 0 ; i <params.length ; i++){
+					pstmt.setObject(i+1, params[i]);
+				}
+			}
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				byte[] b = rs.getBytes(1);
+				for(byte bb: b){
+					System.out.println(bb);
+				}
+				al.add(b);
+			}
+			
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return al;
+	}
 	//查詢
 	public ArrayList executeQuery(String sql,Object[] params){
 		Connection con= null;
@@ -47,6 +81,7 @@ public class SQLHelper {
 		finally {			
 			close(con, pstmt, rs);			
 		}
+		
 		return al;		
 	}
 	//執行更新

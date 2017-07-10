@@ -19,7 +19,7 @@ public class TransData {
 		Blob blob=null;
 		InputStream in = part.getInputStream();
 		byte[] b = new byte[in.available()];
-		
+		in.read(b);				
 		return b;
 	}
 	public static Clob transClob(String s) throws SerialException, SQLException{

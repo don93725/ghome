@@ -10,10 +10,13 @@
 <meta content="Pragma" content="no-cache">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
+<link rel="stylesheet" href="/Forum/forum/css/forum.css">
 </head>
 <body>
 <% List<Forums> list=(List<Forums>)request.getAttribute("forums"); %>
 <h1>討論區</h1>
+
+<div class='rank'>
 <table border='1'>
 <tr><td>名次</td><td>板塊名稱</td><td>月點擊/總點擊</td></tr>
 <c:forEach begin="0" end="${fn:length(rankList)-1}" varStatus="loop">
@@ -24,6 +27,8 @@
 </tr>
 </c:forEach>
 </table>
+</div>
+<div>
 <table border='1'>
 <tr><td>名次</td><td>板塊名稱</td><td>月點擊/總點擊</td></tr>
 <c:forEach begin="0" end="${fn:length(articlesRankList)-1}" varStatus="loop2">
@@ -34,6 +39,8 @@
 </tr>
 </c:forEach>
 </table>
+</div>
+<div class='rank'>
 <table border=1>
 <tr>
 <th>編號</th><th>論壇</th><th>介紹</th><th>點擊次數</th></tr>
@@ -47,6 +54,6 @@
 </tr>                 
 <% } %>
 </table>	
-
+</div>
 </body>
 </html>

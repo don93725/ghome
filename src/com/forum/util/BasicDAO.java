@@ -17,7 +17,7 @@ public class BasicDAO {
 		return num;
 	}
 	
-	public List executeQuery(String SQL,Object[] param){
+	public List<Object[]> executeQuery(String SQL,Object[] param){
 		return new SQLHelper().executeQuery(SQL, param);
 	}
 		
