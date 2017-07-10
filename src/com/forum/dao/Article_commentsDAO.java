@@ -119,6 +119,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	List<Article_comments> list=pageAndRank(page,pageSize,"art_cmt_no");
 	return list;
 	}
+	//尋找圖片
 	public byte[] getPic(String art_cmt_no){
 		String SQL= "select art_cmt_img from article_comments where art_cmt_no="+art_cmt_no;
 		byte[] b  = new SQLHelper().getPic(SQL, null).get(0);		

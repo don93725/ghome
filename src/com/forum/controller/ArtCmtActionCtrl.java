@@ -45,6 +45,7 @@ public class ArtCmtActionCtrl extends HttpServlet {
 				Part part = req.getPart("pic");				
 				String mem_no = user.getMem_no();				
 				String art_cmt_ctx = req.getParameter("art_cmt_ctx");
+				System.out.println(art_cmt_ctx);
 				Article_commentsSevice article_commentsSevice = new Article_commentsSevice();
 				boolean result = article_commentsSevice.add(art_no, mem_no, part, art_cmt_ctx);
 				if(result){

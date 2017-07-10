@@ -2,16 +2,21 @@
     pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 <head>
+
 <meta content="Expires" content="-1">
 <meta content="Catch-Control" content="no-cache">
 <meta content="Pragma" content="no-cache">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%Articles articles=(Articles)request.getAttribute("articles");
 	List<Article_comments> article_comments = (List<Article_comments>)request.getAttribute("article_comments");
-	int allPageCount=Integer.parseInt(request.getAttribute("allPageCount").toString());
+	int allPageCount=Integer.parseInt( request.getAttribute("allPageCount").toString());
 	int thisPage = Integer.parseInt(request.getAttribute("thisPage").toString());%>
+<script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<script type="Text/JavaScript" src="/Forum/forum/js/ArticleDisplay.js"></script>
+<link rel="stylesheet" href="/Forum/forum/css/ArticleDisplay.css">
 <title>Insert title here</title>
 </head>
 <body>
@@ -57,13 +62,15 @@
 <%if(session.getAttribute("user")!=null){ %>
 <div>
 <table border='1'>
-<form action="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?forum_no=${param.forum_no}&art_no=${articles.art_no}&action=create" method="post" enctype='multipart/form-data'>
+<form action="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?forum_no=${param.forum_no}&art_no=${articles.art_no}&action=create" method="post" enctype='multipart/form-data' onsubmit='return getContent()'>
 <tr>
-	<td rowspan='2' width='100' align="center"">留言</td>
-	<td width='600' height='100' align="center"><textarea style="width:592px;height:120px" name='art_cmt_ctx'></textarea>
-	</td>	
+<td rowspan='2' width='100' align="center"">留言</td>
+<td width='600' height='100' align="top">
+<div align='top' contentEditable="true" id='ctx' style='width:592px; height:120px'></div>
+<textarea style='display:none' name='art_cmt_ctx' id='art_cmt_ctx'></textarea>
+</td>	
 </tr>
-<tr><td  align="center" ><input type='file' name='pic'><input type='submit' value='送出'><input type='submit' value='重填'></td></tr>
+<tr><td  align="center" ><input type='file' name='pic' id='pic'><input type='submit' value='送出'><input type='submit' value='重填'></td></tr>
 
 </form>
 </table>
