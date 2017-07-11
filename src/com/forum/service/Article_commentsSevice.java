@@ -11,10 +11,11 @@ import com.forum.domain.Articles;
 import com.forum.util.TransData;
 
 public class Article_commentsSevice {
-	public boolean add(String art_no, String mem_no, Part part  , String art_cmt_ctx){
+	public boolean add(String art_no, String mem_no, Part part  , String art_cmt_ctx,String path){
 		Article_comments article_comments = new Article_comments();
 		article_comments.setArt_no(art_no);
 		article_comments.setMem_no(mem_no);
+		article_comments.setArt_cmt_ctx(art_cmt_ctx.replace("$ProjectRealPath$", path));
 		if(part!=null){				
 			try {
 				article_comments.setArt_cmt_img(TransData.transBlob(part));
@@ -25,8 +26,9 @@ public class Article_commentsSevice {
 		}else{
 			article_comments.setArt_cmt_img(null);		
 		}
-		article_comments.setArt_cmt_ctx(art_cmt_ctx);
-		boolean result = new Article_commentsDAO().executeInsert(article_comments);
+		Article_commentsDAO article_commentsDAO = new Article_commentsDAO();
+		boolean result = article_commentsDAO.executeInsert(article_comments);		
+		
 		return result;
 		
 	}

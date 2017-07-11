@@ -32,10 +32,7 @@ public class SQLHelper {
 			}
 			rs = pstmt.executeQuery();
 			while(rs.next()){
-				byte[] b = rs.getBytes(1);
-				for(byte bb: b){
-					System.out.println(bb);
-				}
+				byte[] b = rs.getBytes(1);				
 				al.add(b);
 			}
 			
@@ -44,6 +41,8 @@ public class SQLHelper {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			close(con, pstmt,rs);
 		}
 		
 		return al;

@@ -3,6 +3,9 @@ package com.forum.dao;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -78,10 +81,66 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	//建置新增
 
 	public boolean executeInsert(Article_comments article_comments){
-	String SQL="insert into article_comments values(article_comments_pk_seq.nextval,?,?,?,?,sysdate)";
-	Object[] param ={article_comments.getArt_no(),article_comments.getMem_no(),article_comments.getArt_cmt_ctx(),article_comments.getArt_cmt_img()};
-	boolean insertResult = new SQLHelper().executeUpdate(SQL,param);
-	return insertResult;
+	Connection con = new SQLHelper().getConnection();
+	PreparedStatement pstmt =null;
+	ResultSet rs = null;
+	boolean result = false;
+	try {
+		con.setAutoCommit(false);
+		String SQL="insert into article_comments values(article_comments_pk_seq.nextval,?,?,?,?,sysdate)";
+		String[] keys = {"art_cmt_no"};
+		pstmt = con.prepareStatement(SQL, keys);
+		Object[] param ={article_comments.getArt_no(),article_comments.getMem_no(),article_comments.getArt_cmt_ctx(),article_comments.getArt_cmt_img()};
+		for(int i = 0 ; i < param.length ; i++){
+			pstmt.setObject(i+1, param[i]);
+		}
+		pstmt.executeUpdate();
+		rs= pstmt.getGeneratedKeys(); 
+		String art_cmt_ctx = article_comments.getArt_cmt_ctx();
+		String key=null;
+		if(rs.next()){
+			key = rs.getString(1);
+			art_cmt_ctx = art_cmt_ctx.replace("$ArtCmtPrimaryKey$", key) ;
+			System.out.println(art_cmt_ctx);
+		}	
+		rs.close();
+		
+		String updateSQL = "update article_comments set art_cmt_ctx=? where art_cmt_no=?";
+		Object[] updateParam = {art_cmt_ctx,key};
+		System.out.println(art_cmt_ctx);
+		pstmt = con.prepareStatement(updateSQL);	
+		for(int i =0; i < updateParam.length ; i++){
+			pstmt.setObject(i+1, updateParam[i]);			
+		}
+		pstmt.executeUpdate();
+		con.commit();
+		result = true;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		try {
+			con.rollback();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	} finally{
+		try {
+			pstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			con.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	return result;
+	
+	
 	}
 	//建置刪除
 

@@ -22,8 +22,7 @@ public class ForumCtrl extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		
-		ForumsDAO forumsDAO = new ForumsDAO();
-		
+		ForumsDAO forumsDAO = new ForumsDAO();		
 		List<Forums> list = forumsDAO.getAll();
 		List<Forums> rankList = forumsDAO.pageAndRank(1, 5, "forum_mviews desc", null );
 		List<Articles> articlesRankList = new ArticlesDAO().pageAndRank(1, 5, "art_mviews desc", null );

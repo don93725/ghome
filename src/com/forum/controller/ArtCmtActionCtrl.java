@@ -47,7 +47,7 @@ public class ArtCmtActionCtrl extends HttpServlet {
 				String art_cmt_ctx = req.getParameter("art_cmt_ctx");
 				System.out.println(art_cmt_ctx);
 				Article_commentsSevice article_commentsSevice = new Article_commentsSevice();
-				boolean result = article_commentsSevice.add(art_no, mem_no, part, art_cmt_ctx);
+				boolean result = article_commentsSevice.add(art_no, mem_no, part, art_cmt_ctx,req.getContextPath());
 				if(result){
 					String forum_no=req.getParameter("forum_no");
 					String URL=getServletContext().getContextPath()+"/forum/ArticleShowCtrl?forum_no="+forum_no	+"&art_no="+art_no;
