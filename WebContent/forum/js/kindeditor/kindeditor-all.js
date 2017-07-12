@@ -7215,21 +7215,47 @@ KindEditor.plugin('image', function(K) {
 			var myarea = document.getElementById("ctx"); 
   			var file    = document.querySelector('#file').files[0];
  			var reader  = new FileReader();
- 			var img = new Image(); 			
+ 			var img = new Image();
+
   			reader.addEventListener("load", function () {  			
-  			img.height = 100;
-  			var picId = 'pic'+count;
+  			
+  			$('#ctx').html(editor.html());
+					var ctx = document.getElementById('ctx').childNodes;
+		 			var text = "";	
+		 			for(var i = 0 ; i<ctx.length ; i++){
+			 			var temp = ctx[i];	 			
+			 			if(temp.nodeType==1){
+			 				var tag = temp.tagName;
+			 				if(tag=='IMG'||tag=='BR'){
+			 					if(temp.hasAttribute('border')){
+			 						text = text + "<img src='"+temp.src+"' border='0'>";
+			 					}			 					
+				 			}else{
+			 					var tagInner = temp.innerHTML;
+			 					text = text +"<"+tag+">"+tagInner+"</"+tag+">";	 						
+				 			}					 	
+			 			
+			 			}
+			 			if(temp.nodeType==3){
+			 				text = text +temp.nodeValue;
+			 			}	 
+
+	 				}		 			
+	 				self.html(text);
+	 		img.height = 100;
+	 	  	var picId = 'pic'+(count++);
   			img.id = picId;   		
-    		img.src = reader.result;
-    		self.insertHtml("<br> <img height='"+img.height+"' id='"+img.id+"' src='"+img.src+"''> <br>")
-    		          
+    		img.src = reader.result;    		    		
+    		    		
+    		self.insertHtml("<br> <img height='"+img.height+"' id='"+img.id+"' src='"+img.src+"'> <br>");
+    		  
   			}, false);
 
   			if (file) {
    			reader.readAsDataURL(file);
   			}  			
 			});		
-		$("input[name='file']").trigger("click");
+		$("input[name='file']").trigger("click");		
 	
 	};
 	self.plugin.image = {

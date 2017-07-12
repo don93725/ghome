@@ -11,8 +11,7 @@ var editor;
 			 			var temp = ctx[i];	 			
 			 			if(temp.nodeType==1){
 			 				var tag = temp.tagName;
-			 				if(tag=='IMG'){
-			 					alert(temp.hasAttribute('alt'));
+			 				if(tag=='IMG'){			 					
 			 					if(temp.hasAttribute('alt')){
 			 						text = text + "<img src='"+temp.src+"' border='0'>";
 			 					}else{
