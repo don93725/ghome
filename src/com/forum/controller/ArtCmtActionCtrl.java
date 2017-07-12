@@ -42,10 +42,9 @@ public class ArtCmtActionCtrl extends HttpServlet {
 			res.sendRedirect(URL);
 		}else if(art_no!=null){
 			if("create".equals(action)){
-				Part part = req.getPart("pic");				
+				Part part = req.getPart("file");				
 				String mem_no = user.getMem_no();				
 				String art_cmt_ctx = req.getParameter("art_cmt_ctx");
-				System.out.println(art_cmt_ctx);
 				Article_commentsSevice article_commentsSevice = new Article_commentsSevice();
 				boolean result = article_commentsSevice.add(art_no, mem_no, part, art_cmt_ctx,req.getContextPath());
 				if(result){

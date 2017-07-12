@@ -15,15 +15,12 @@
 <%int allPageCount=Integer.parseInt(request.getAttribute("allPageCount").toString());
   int thisPage = Integer.parseInt(request.getAttribute("thisPage").toString());
   %>
-  <div style="width: 465px ; height: 50px" align="right">
-	<table>
-	<tr><td colspan='5' style='text-align: center'>
+  <div style="width: 465px ; margin-bottom:1em;height: 50px" align="right">
 	
 	<ul class="pagination">  
 	<%if(thisPage>1){ %>
 	<li><a href="${pageContext.request.contextPath}/forum/${queryStr}&thisPage=${thisPage-1}">&laquo;</a></li>
-	
-	
+		
 	<%}for(int i = thisPage-3; i<thisPage+3;i++){
 		if(i>0&&i<allPageCount+1){
 			if(i==thisPage){ %>
@@ -36,12 +33,7 @@
 	<li><a href="${pageContext.request.contextPath}/forum/${queryStr}&thisPage=${thisPage+1}">&raquo;</a></li>
 	<%}%>
 		</ul>
-	</td>
-	</tr>
-	<tr><td colspan='5' style='text-align: center'>
-	²{¦b­¶¼Æ ${thisPage}/${allPageCount}
-	</td></tr>	
-	</table>
+	
 </div>
 </body>
 </html>

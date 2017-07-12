@@ -14,9 +14,13 @@
 	List<Article_comments> article_comments = (List<Article_comments>)request.getAttribute("article_comments");
 	int allPageCount=Integer.parseInt( request.getAttribute("allPageCount").toString());
 	int thisPage = Integer.parseInt(request.getAttribute("thisPage").toString());%>
+
 <script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-<script type="Text/JavaScript" src="/Forum/forum/js/ArticleDisplay.js"></script>
 <link rel="stylesheet" href="/Forum/forum/css/ArticleDisplay.css">
+<link rel="stylesheet" href="/Forum/forum/js/kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="/Forum/forum/js/kindeditor/kindeditor-all.js"></script>
+<script charset="utf-8" src="/Forum/forum/js/kindeditor/lang/zh-TW.js"></script>
+<script type="Text/JavaScript" src="/Forum/forum/js/ArticleDisplay.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
@@ -66,11 +70,14 @@
 <tr>
 <td rowspan='2' width='100' align="center"">留言</td>
 <td width='600' height='100' align="top">
-<div align='top' contentEditable="true" id='ctx' style='width:592px; height:120px'></div>
-<textarea style='display:none' name='art_cmt_ctx' id='art_cmt_ctx'></textarea>
+<div contentEditable="true" id='ctx' name='content' style='width:592px; height:250px '></div>
+<textarea id="my-textarea" name='art_cmt_ctx' style="display:none"></textarea>    
+<input type="file" id='file' name='file' style="display:none"/>
+</div>
+
 </td>	
 </tr>
-<tr><td  align="center" ><input type='file' name='pic' id='pic'><input type='submit' value='送出'><input type='submit' value='重填'></td></tr>
+<tr><td  align="center" ><input type='submit' name="getHtml"  value='送出'><input type='reset' value='重填'></td></tr>
 
 </form>
 </table>
