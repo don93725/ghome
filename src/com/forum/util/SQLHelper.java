@@ -16,13 +16,13 @@ import javax.sql.DataSource;
 
 public class SQLHelper {
 	
-	public List<byte[]> getPic(String sql,Object[] params){
+	public byte[] getPic(String sql,Object[] params){
 		Connection con= null;
 		PreparedStatement pstmt = null;
 		ResultSet rs=null;
 		ResultSetMetaData rsmd = null;
 		con = getConnection();
-		ArrayList<byte[]> al = new ArrayList<byte[]>();
+		byte[] b = null;
 		try {
 			pstmt=con.prepareStatement(sql);
 			if(params!=null){
@@ -32,8 +32,8 @@ public class SQLHelper {
 			}
 			rs = pstmt.executeQuery();
 			while(rs.next()){
-				byte[] b = rs.getBytes(1);				
-				al.add(b);
+				b = rs.getBytes(1);				
+				
 			}
 			
 			
@@ -45,7 +45,7 @@ public class SQLHelper {
 			close(con, pstmt,rs);
 		}
 		
-		return al;
+		return b;
 	}
 	//查詢
 	public ArrayList executeQuery(String sql,Object[] params){
@@ -103,8 +103,8 @@ public class SQLHelper {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			try {
-				con.rollback();
 				updateResult = false;
+				con.rollback();
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 				
@@ -175,7 +175,7 @@ public class SQLHelper {
 		return con;
 	}
 	//關閉連線1
-	private void close(Connection con, PreparedStatement pstmt, ResultSet rs) {
+	public static void close(Connection con, PreparedStatement pstmt, ResultSet rs) {
 		if(rs!=null){
 			try {
 				rs.close();
@@ -202,7 +202,7 @@ public class SQLHelper {
 		}
 	}
 	//關閉連線2
-	private void close(Connection con, PreparedStatement pstmt) {		
+	public static void close(Connection con, PreparedStatement pstmt) {		
 		if(pstmt!=null){
 			try {
 				pstmt.close();

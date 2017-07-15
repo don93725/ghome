@@ -1,9 +1,15 @@
 package com.forum.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.forum.domain.Article_comments;
+import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.forum.inteface.DAOInterface;
 import com.forum.util.BasicDAO;
@@ -83,13 +89,71 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 		boolean updateResult = new SQLHelper().executeUpdate(SQL, param);
 		return updateResult;
 	}
-	// 建置新增
-
+	// 新增沒照片
 	public boolean executeInsert(Articles articles) {
+		SQLHelper helper = new SQLHelper();		
 		String SQL = "insert into articles values(articles_pk_seq.nextval,?,?,?,SYSDATE,null,?,?,default,default)";
 		Object[] param = { articles.getMem_no(), articles.getForum_no(), articles.getArt_type(), articles.getArt_name(), articles.getArt_ctx()};
-		boolean insertResult = new SQLHelper().executeUpdate(SQL, param);
-		return insertResult;
+		boolean result =helper.executeUpdate(SQL, param);
+		return result;
+	}
+	// 建置新增
+
+	public boolean executeInsert(Articles articles , List<Article_photos> article_photos) {
+		SQLHelper helper =	new SQLHelper();
+		Connection con = helper.getConnection();
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		boolean result = false;
+		try {
+			con.setAutoCommit(false);
+			String SQL = "insert into articles values(articles_pk_seq.nextval,?,?,?,SYSDATE,null,?,?,default,default)";
+			Object[] param = { articles.getMem_no(), articles.getForum_no(), articles.getArt_type(), articles.getArt_name(), articles.getArt_ctx()};
+			String[] keyName ={"art_no"};
+			pstmt = con.prepareStatement(SQL, keyName);
+			for(int i = 0; i < param.length ; i++){
+				pstmt.setObject(i+1, param[i]);
+			}
+			pstmt.executeUpdate();			
+			con.commit();
+			result = true;
+		
+			rs = pstmt.getGeneratedKeys();
+			while(rs.next()){
+				String key = rs.getString(1);
+				for(int i = 0 ; i < article_photos.size() ; i++){
+					Article_photos temp = article_photos.get(i);
+					temp.setArt_no(temp.getArt_no());
+				}
+				articles.setArt_ctx(articles.getArt_ctx().replace("$ArtPhotoPrimaryKey$", key));					
+				articles.setArt_no(key);
+			}
+			String SQL2 = "update articles set art_ctx=? where art_no=?";
+			String[] param2 = {articles.getArt_ctx(),articles.getArt_no()};
+			pstmt = con.prepareStatement(SQL2);
+			for(int i = 0; i < param.length ; i++){
+				pstmt.setObject(i+1, param2[i]);
+			}
+			pstmt.executeUpdate();
+			
+			Article_photosDAO article_photosDAO = new Article_photosDAO();
+			result = article_photosDAO.executeInsert(article_photos, con);
+			
+			
+			
+			
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			helper.close(con, pstmt);
+		}
+		return result;
 	}
 	// 建置刪除
 
@@ -133,6 +197,7 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 	return colData;
 	}
 	//Service層實作
+
 
 //	public class ArticlesServiece implements ServiceIntface<Articles>{
 //	//封裝新增物件

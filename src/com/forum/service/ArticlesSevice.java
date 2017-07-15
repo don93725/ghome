@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
+import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.forum.domain.User;
 
 public class ArticlesSevice {
+	//含相片
 	public boolean add(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx) {
 		Articles articles=new Articles();
 		articles.setMem_no(mem_no);
@@ -16,6 +18,17 @@ public class ArticlesSevice {
 		articles.setArt_name(art_name);
 		articles.setArt_ctx(art_ctx);
 		boolean result = new ArticlesDAO().executeInsert(articles);
+		return result;
+	}
+	//含相片
+	public boolean add(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx, List<Article_photos> aArticle_photos) {
+		Articles articles=new Articles();
+		articles.setMem_no(mem_no);
+		articles.setForum_no(forum_no);
+		articles.setArt_type(art_type_name);
+		articles.setArt_name(art_name);
+		articles.setArt_ctx(art_ctx);
+		boolean result = new ArticlesDAO().executeInsert(articles,aArticle_photos);
 		return result;
 	}
 	public boolean update(String art_type_name, String art_name, String art_ctx,String art_no) {

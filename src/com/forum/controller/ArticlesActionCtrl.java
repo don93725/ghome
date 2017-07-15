@@ -1,6 +1,7 @@
 package com.forum.controller;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -10,12 +11,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.forum.dao.Art_typesDAO;
 import com.forum.dao.ArticlesDAO;
 import com.forum.domain.Art_types;
 import com.forum.domain.Articles;
 import com.forum.domain.User;
+import com.forum.service.Article_photosService;
 import com.forum.service.ArticlesSevice;
 
 /**
@@ -51,6 +54,10 @@ public class ArticlesActionCtrl extends HttpServlet {
 				String art_type_name = req.getParameter("art_type_name");
 				String art_ctx = req.getParameter("art_ctx");
 				String mem_no = user.getMem_no();
+				Article_photosService article_photosService = new Article_photosService();
+				Collection<Part> parts = req.getParts();
+				System.out.println("總共大小為"+parts.size());
+				article_photosService.setArticle_photos(parts);
 				ArticlesSevice articlesSevice = new ArticlesSevice();
 				boolean createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
 				if (createResult) {

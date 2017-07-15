@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.forum.dao.Article_commentsDAO;
+import com.forum.dao.Article_photosDAO;
 
 /**
  * Servlet implementation class OutputPic
@@ -22,28 +23,30 @@ public class OutputPic extends HttpServlet {
 		res.setContentType("image/JPEG");
 		ServletOutputStream out = res.getOutputStream();
 		String art_cmt_no = req.getParameter("art_cmt_no");
-		byte[] b=null;
+		String art_no = req.getParameter("art_no");
+		byte[] bytes=null;
 		try {
 			//判斷區請寫入B
 			if(art_cmt_no!=null){
-				b = new Article_commentsDAO().getPic(art_cmt_no);	
+				bytes = new Article_commentsDAO().getPic(art_cmt_no);	
 			}
-			
-			if(b!=null){			
-				out.write(b);
-				
+			if(art_no!=null){
+				bytes = new Article_photosDAO().getPic(art_cmt_no);
+			}
+			if(bytes!=null){			
+				out.write(bytes);				
 			}else{
 				 InputStream in =getServletContext().getResourceAsStream("/forum/images/tomcat.gif");              
-			     b = new byte[in.available()];			     		    
-			     out.write(b);
+				 bytes = new byte[in.available()];			     		    
+			     out.write(bytes);
 			     in.close();
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			 InputStream in =getServletContext().getResourceAsStream("/forum/images/tomcat.gif");              
-		     b = new byte[in.available()];
-		     in.read(b);
-		     out.write(b);
+			 bytes = new byte[in.available()];
+		     in.read(bytes);
+		     out.write(bytes);
 		     in.close();
 		}
 	

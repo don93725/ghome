@@ -78,10 +78,15 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	boolean updateResult = new SQLHelper().executeUpdate(SQL,param);
 	return updateResult;
 	}
+	
+	
+	
+	
 	//建置新增
 
 	public boolean executeInsert(Article_comments article_comments){
-	Connection con = new SQLHelper().getConnection();
+	SQLHelper helper =	new SQLHelper();
+	Connection con = helper.getConnection();
 	PreparedStatement pstmt =null;
 	ResultSet rs = null;
 	boolean result = false;
@@ -94,27 +99,31 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 		for(int i = 0 ; i < param.length ; i++){
 			pstmt.setObject(i+1, param[i]);
 		}
-		pstmt.executeUpdate();
-		rs= pstmt.getGeneratedKeys(); 
-		String art_cmt_ctx = article_comments.getArt_cmt_ctx();
-		String key=null;
-		if(rs.next()){
-			key = rs.getString(1);
-			art_cmt_ctx = art_cmt_ctx.replace("$ArtCmtPrimaryKey$", key) ;
-			System.out.println(art_cmt_ctx);
-		}	
-		rs.close();
 		
-		String updateSQL = "update article_comments set art_cmt_ctx=? where art_cmt_no=?";
-		Object[] updateParam = {art_cmt_ctx,key};
-		System.out.println(art_cmt_ctx);
-		pstmt = con.prepareStatement(updateSQL);	
-		for(int i =0; i < updateParam.length ; i++){
-			pstmt.setObject(i+1, updateParam[i]);			
-		}
 		pstmt.executeUpdate();
+		if(article_comments.getArt_cmt_img()!=null){			
+			rs= pstmt.getGeneratedKeys(); 
+			String art_cmt_ctx = article_comments.getArt_cmt_ctx();
+			String key=null;
+			if(rs.next()){
+				key = rs.getString(1);
+				art_cmt_ctx = art_cmt_ctx.replace("$ArtCmtPrimaryKey$", key) ;
+				System.out.println(art_cmt_ctx);
+			}	
+			rs.close();
+			
+			String updateSQL = "update article_comments set art_cmt_ctx=? where art_cmt_no=?";
+			Object[] updateParam = {art_cmt_ctx,key};
+			System.out.println(art_cmt_ctx);
+			pstmt = con.prepareStatement(updateSQL);	
+			for(int i =0; i < updateParam.length ; i++){
+				pstmt.setObject(i+1, updateParam[i]);			
+			}
+			pstmt.executeUpdate();			
+		}
 		con.commit();
 		result = true;
+		
 	} catch (SQLException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -125,18 +134,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 			e1.printStackTrace();
 		}
 	} finally{
-		try {
-			pstmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		helper.close(con,pstmt,rs);
 	}
 	return result;
 	
@@ -181,7 +179,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	//尋找圖片
 	public byte[] getPic(String art_cmt_no){
 		String SQL= "select art_cmt_img from article_comments where art_cmt_no="+art_cmt_no;
-		byte[] b  = new SQLHelper().getPic(SQL, null).get(0);		
+		byte[] b  = new SQLHelper().getPic(SQL, null);		
 		return b;
 	}
 }
