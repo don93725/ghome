@@ -7196,6 +7196,7 @@ KindEditor.plugin('flash', function(K) {
 * @site http://www.kindsoft.net/
 * @licence http://www.kindsoft.net/license.php
 *******************************************************************************/
+
 KindEditor.plugin('image', function(K) {
 	var self = this, name = 'image',
 		allowImageUpload = K.undef(self.allowImageUpload, true),
@@ -7209,53 +7210,98 @@ KindEditor.plugin('image', function(K) {
 		filePostName = K.undef(self.filePostName, 'imgFile'),
 		fillDescAfterUploadImage = K.undef(self.fillDescAfterUploadImage, false),
 		lang = self.lang(name + '.');
-	self.plugin.imageDialog = function(options) {
-		$('#file').change(function(event){
-			$('#file').unbind('change');
-			var myarea = document.getElementById("ctx"); 
-  			var file    = document.querySelector('#file').files[0];
- 			var reader  = new FileReader();
- 			var img = new Image();
+	self.plugin.imageDialog = function(options) {		
+		
+		
+		
+		$('#ctx').html(editor.html());
+		
+		for(var i = 0 ; i < count ; i++){
+			AllPic[i] = i + "";
+		}
+		
+		var ctx = document.getElementById('ctx').childNodes;			
+	 	for(var i = 0 ; i<ctx.length ; i++){
+		 	var temp = ctx[i];
+ 			if(temp.nodeType==1){
+ 				var tag = temp.tagName;			 			
+ 				if(tag=='IMG'){
+ 					if(!temp.hasAttribute('alt')){
+ 						var id = temp.id;
+ 						id = id.substring(id.length-1,id.length); 								 						
+ 						for(var j = 0 ; j < AllPic.length ; j++){
+ 							if(AllPic[j]==id){
+ 								delete AllPic[j];	 								
+ 							}
+ 						}	 					 						 				
+ 					}	 					
+	 			}					 	
+ 			
+ 			}
+ 		}
+ 		var flag = false;
+ 		var count2 = "";
+ 		for(var i = 0 ; i < AllPic.length ; i++){
+ 			if(AllPic[i]!=undefined){
+ 				flag = true;
+ 				count2 = AllPic[i];
+ 				break;
+ 			}
+ 		}
+ 	
 
-  			reader.addEventListener("load", function () {  			
-  			
-  			$('#ctx').html(editor.html());
-					var ctx = document.getElementById('ctx').childNodes;
-		 			var text = "";	
-		 			for(var i = 0 ; i<ctx.length ; i++){
-			 			var temp = ctx[i];	 			
-			 			if(temp.nodeType==1){
-			 				var tag = temp.tagName;
-			 				if(tag=='IMG'||tag=='BR'){
-			 					if(temp.hasAttribute('border')){
-			 						text = text + "<img src='"+temp.src+"' border='0'>";
-			 					}			 					
-				 			}else{
-			 					var tagInner = temp.innerHTML;
-			 					text = text +"<"+tag+">"+tagInner+"</"+tag+">";	 						
-				 			}					 	
-			 			
-			 			}
-			 			if(temp.nodeType==3){
-			 				text = text +temp.nodeValue;
-			 			}	 
+ 		if(flag){	 			
+ 			$("#file"+count2).change(function(event){
+			$("#file"+count2).unbind('change');			
+	  			var file    = event.target.files[0];
+	 			var reader  = new FileReader();
+	 			var img = new Image();
+	  			reader.addEventListener("load", function () {
+	  			img.height = 100;					
+	  			var picId = 'pic'+count2;	  			
+	  			img.id = picId;   		
+	    		img.src = reader.result;
+	    		self.insertHtml("&nbsp<img height='"+img.height+"' id='"+img.id+"' src='"+img.src+"'>&nbsp");
+	     		var updateInfo =""
+	     	 	for(var i = 0; i < originPic.length ; i++){
+	     	 		if(originPic[i]==count2){
+	     	 			updateInfo = updateInfo + originPic[i]+",";	
+	     	 		}
+	     	 	} 		
+	     	 	$("#updateInfo").val(updateInfo); 
+	     	 	
+	    		  
+	  			}, false);
 
-	 				}		 			
-	 				self.html(text);
-	 		img.height = 100;
-	 	  	var picId = 'pic'+(count++);
-  			img.id = picId;   		
-    		img.src = reader.result;    		    		
-    		    		
-    		self.insertHtml("&nbsp<img height='"+img.height+"' id='"+img.id+"' src='"+img.src+"'>&nbsp");
-    		  
-  			}, false);
-
-  			if (file) {
-   			reader.readAsDataURL(file);
-  			}  			
+	  			if (file) {
+	   			reader.readAsDataURL(file);
+	  			}  			
 			});		
-		$("input[name='file']").trigger("click");		
+			$("#file"+count2).trigger("click");	
+ 		}else if(count==5){
+ 			alert("照片僅能五張");
+ 		}else{
+
+ 			$("#file"+count).change(function(event){
+			$("#file"+count).unbind('change');			
+	  			var file    = event.target.files[0];
+	 			var reader  = new FileReader();
+	 			var img = new Image();
+	  			reader.addEventListener("load", function () {
+	  			img.height = 100;					
+	  			var picId = 'pic'+(count++);	  			
+	  			img.id = picId;   		
+	    		img.src = reader.result; 	
+	    		self.insertHtml("&nbsp<img height='"+img.height+"' id='"+img.id+"' src='"+img.src+"'>&nbsp");
+	    		  
+	  			}, false);
+
+	  			if (file) {
+	   			reader.readAsDataURL(file);
+	  			}  			
+			});		
+			$("#file"+count).trigger("click");	
+ 		} 	
 	
 	};
 	self.plugin.image = {
@@ -7299,7 +7345,30 @@ KindEditor.plugin('image', function(K) {
 	};
 	self.clickToolbar(name, self.plugin.image.edit);
 });
+
 var count = 0;
+var AllPic =[];
+var originPic = [];
+KindEditor.ready(function(K) {
+	editor = K.create('textarea[name="content"]', {
+		allowFileManager : true
+	});
+	
+for(var i = 0 ; i < $('#ctx img').length ; i ++){				
+	var temp = $('#ctx img').eq(i).attr("id");
+	
+	temp = temp.substring(temp.length-1,temp.length); 
+	
+	originPic[i] = temp;
+	
+	temp = parseInt(temp,10)+1;				
+	if(temp>count){							
+		count = temp;		
+	}	
+}	
+})
+
+
 
 /*******************************************************************************
 * KindEditor - WYSIWYG HTML Editor for Internet

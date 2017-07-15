@@ -10,29 +10,45 @@
 <meta content="Pragma" content="no-cache">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>增加文章</title>
+<script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<link rel="stylesheet" href="/Forum/forum/css/ArticleDisplay.css">
+<link rel="stylesheet" href="/Forum/forum/js/kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="/Forum/forum/js/kindeditor/kindeditor-all2.js"></script>
+<script charset="utf-8" src="/Forum/forum/js/kindeditor/lang/zh-TW.js"></script>
+<script type="Text/JavaScript" src="/Forum/forum/js/ArticlesMaker.js"></script>
+
 </head>
 <body>
 <c:if test="${param.action=='goCreatePage'}">
 <table>
-<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post'>
+<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post' enctype='multipart/form-data'>
 <tr>
 	<td>標題</td>
 	<td>
-		<select name='art_type_name'>
+		<select name='art_type_name'>		
 		<c:forEach begin="0" end="${fn:length(art_types)-1 }" varStatus="loop2">
 		<option value='[${art_types[loop2.count-1].art_type_name}]'>${art_types[loop2.count-1].art_type_name}</option>		
 		</c:forEach>		
 		</select></td>
 	<td><input type='text' name='art_name'  ><input type='hidden' name='forum_no' value='${param.forum_no }'><input type='hidden' name='action' value='create'></td>
 </tr>
-<tr><td>內文</td><td colspan='2'><textarea name='art_ctx' cols='30' rows='20' ></textarea></td></tr>
-<tr><td style='text-align: center' colspan='3'><button type='submit'>送出</button><button type='reset'>清除</button></td></tr>
+<tr>
+<td>內文</td><td colspan='2'>
+<div contentEditable="true" id='ctx' name='content' style='width:600px; height:300px '></div>
+<textarea id="my-textarea" name='art_ctx' style="display:none"></textarea>
+<input type="text" id='order' name='order' />       
+<input type="file" id='file0' name='file' style="display:none"/> 
+<input type="file" id='file1' name='file' style="display:none"/>
+<input type="file" id='file2' name='file' style="display:none"/>
+<input type="file" id='file3' name='file' style="display:none"/>
+<input type="file" id='file4' name='file' style="display:none"/></td></tr>
+<tr><td style='text-align: center' colspan='3'><input type='submit' name="getHtml" value='送出'/><button type='reset'>清除</button></td></tr>
 </form>
 </table>
 </c:if>
 <c:if test="${param.action=='goUpdatePage'}">
 <table>
-<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post'>
+<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post' enctype='multipart/form-data'>
 <tr>
 	<td>標題</td>
 	<td>
@@ -44,8 +60,20 @@
 		</select></td>
 	<td><input type='text' name='art_name' value='${articles.art_name }' ><input type='hidden' name='forum_no' value='${param.forum_no }'><input type='hidden' name='art_no' value='${param.art_no }'><input type='hidden' name='action' value='update'></td>
 </tr>
-<tr><td>內文</td><td colspan='2'><textarea name='art_ctx' cols='30' rows='20' >${articles.art_ctx }</textarea></td></tr>
-<tr><td style='text-align: center' colspan='3'><button type='submit'>更新</button><button type='reset'>清除</button></td></tr>
+<tr><td>內文</td>
+<td colspan='2'>
+<div contentEditable="true" id='ctx' name='content' style='width:600px; height:300px '>${articles.art_ctx}</div>
+<textarea id="my-textarea" name='art_ctx' style="display:none"></textarea> 
+<input type="text" id='updateInfo' name='updateInfo' />   
+<input type="text" id='order' name='order' />   
+<input type="text" id='deleteInfo' name='deleteInfo' />  
+<input type="file" id='file0' name='file' /> 
+<input type="file" id='file1' name='file' />
+<input type="file" id='file2' name='file' />
+<input type="file" id='file3' name='file' />
+<input type="file" id='file4' name='file' />
+</td></tr>
+<tr><td style='text-align: center' colspan='3'><input type='submit' name="getHtml" value='更新'><button type='reset'>清除</button></td></tr>
 </form>
 </table>
 </c:if>

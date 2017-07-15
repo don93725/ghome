@@ -89,6 +89,43 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 		boolean updateResult = new SQLHelper().executeUpdate(SQL, param);
 		return updateResult;
 	}
+	// 建置修改相片一起處理
+	public boolean updateByVO(Articles articles,List<Article_photos> article_photos,String[] updateInfos,String[] deleteInfos) {
+		SQLHelper helper =	new SQLHelper();
+		Connection con = helper.getConnection();
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		boolean result = false;
+		try {
+			con.setAutoCommit(false);
+			String SQL = "update articles set art_type=?,art_upd_date=sysdate,art_name=?,art_ctx=? where art_no=?";
+			Object[] param = { articles.getArt_type(), articles.getArt_name(), articles.getArt_ctx(), articles.getArt_no() };
+			pstmt = con.prepareStatement(SQL);
+			for(int i = 0 ; i < param.length ; i++){
+				pstmt.setObject(i+1, param[i]);
+			}
+			pstmt.executeUpdate();
+			Article_photosDAO article_photosDAO = new Article_photosDAO();
+			if(updateInfos!=null){
+				result = article_photosDAO.updateByVO(article_photos,articles.getArt_no(),con,updateInfos,deleteInfos);
+			}else{
+				con.commit();
+				result = true;
+			}											
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			helper.close(con, pstmt);
+		}
+		return result;
+	}
 	// 新增沒照片
 	public boolean executeInsert(Articles articles) {
 		SQLHelper helper = new SQLHelper();		
@@ -97,7 +134,7 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 		boolean result =helper.executeUpdate(SQL, param);
 		return result;
 	}
-	// 建置新增
+	// 建置新增有照片
 
 	public boolean executeInsert(Articles articles , List<Article_photos> article_photos) {
 		SQLHelper helper =	new SQLHelper();
@@ -114,24 +151,23 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 			for(int i = 0; i < param.length ; i++){
 				pstmt.setObject(i+1, param[i]);
 			}
-			pstmt.executeUpdate();			
-			con.commit();
-			result = true;
+			pstmt.executeUpdate();
 		
 			rs = pstmt.getGeneratedKeys();
 			while(rs.next()){
 				String key = rs.getString(1);
 				for(int i = 0 ; i < article_photos.size() ; i++){
 					Article_photos temp = article_photos.get(i);
-					temp.setArt_no(temp.getArt_no());
+					temp.setArt_no(key);
 				}
-				articles.setArt_ctx(articles.getArt_ctx().replace("$ArtPhotoPrimaryKey$", key));					
+				articles.setArt_ctx(articles.getArt_ctx().replace("$ArticlesPrimaryKey$", key));					
 				articles.setArt_no(key);
+
 			}
 			String SQL2 = "update articles set art_ctx=? where art_no=?";
 			String[] param2 = {articles.getArt_ctx(),articles.getArt_no()};
 			pstmt = con.prepareStatement(SQL2);
-			for(int i = 0; i < param.length ; i++){
+			for(int i = 0; i < param2.length ; i++){
 				pstmt.setObject(i+1, param2[i]);
 			}
 			pstmt.executeUpdate();
@@ -158,10 +194,36 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 	// 建置刪除
 
 	public boolean executeDelete(String art_no) {
-		String SQL = "delete from articles where art_no=?";
-		Object[] param = { art_no };
-		boolean deleteResult = new SQLHelper().executeUpdate(SQL, param);
-		return deleteResult;
+		SQLHelper helper =	new SQLHelper();
+		Connection con = helper.getConnection();
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		boolean result = false;
+		try {
+			con.setAutoCommit(false);
+			Article_photosDAO article_photosDAO = new Article_photosDAO();
+			article_photosDAO.executeDelete(art_no, con);
+			String SQL = "delete from articles where art_no=?";
+			Object[] param = { art_no };
+			pstmt = con.prepareStatement(SQL);
+			pstmt.setObject(1, param[0]);
+			pstmt.executeUpdate();
+			con.commit();
+			result = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			helper.close(con, pstmt);
+		}
+		return result;
 	}
 	//建置分頁(彈性排序可設條件)
 

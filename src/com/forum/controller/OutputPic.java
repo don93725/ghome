@@ -24,6 +24,7 @@ public class OutputPic extends HttpServlet {
 		ServletOutputStream out = res.getOutputStream();
 		String art_cmt_no = req.getParameter("art_cmt_no");
 		String art_no = req.getParameter("art_no");
+		
 		byte[] bytes=null;
 		try {
 			//判斷區請寫入B
@@ -31,7 +32,9 @@ public class OutputPic extends HttpServlet {
 				bytes = new Article_commentsDAO().getPic(art_cmt_no);	
 			}
 			if(art_no!=null){
-				bytes = new Article_photosDAO().getPic(art_cmt_no);
+				String art_pt_idx = req.getParameter("art_pt_idx");
+				String where = "art_no="+art_no+"and art_pt_idx="+art_pt_idx;
+				bytes = new Article_photosDAO().getPic(where);
 			}
 			if(bytes!=null){			
 				out.write(bytes);				

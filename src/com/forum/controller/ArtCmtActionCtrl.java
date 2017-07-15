@@ -25,7 +25,7 @@ import com.forum.util.TransData;
 
 
 @WebServlet("/forum/ArtCmtActionCtrl")
-@MultipartConfig(fileSizeThreshold=100,maxFileSize=100*1024,maxRequestSize=100*1024)
+@MultipartConfig(fileSizeThreshold=100,maxFileSize=10*1024*1024,maxRequestSize=10*1024*1024)
 public class ArtCmtActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 

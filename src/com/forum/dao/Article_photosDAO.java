@@ -56,14 +56,6 @@ public class Article_photosDAO extends BasicDAO implements DAOInterface<Article_
 	String SQL = "select * from article_photos";
 	return countBySQL(SQL);
 	}
-	//建置修改
-
-	public boolean updateByVO(Article_photos article_photos){
-	String SQL="update article_photos set art_no=?,art_pt=?,art_pt_idx=? where art_pt_no=?";
-	Object[] param ={article_photos.getArt_pt_no(),article_photos.getArt_no(),article_photos.getArt_pt(),article_photos.getArt_pt_idx()};
-	boolean updateResult = new SQLHelper().executeUpdate(SQL,param);
-	return updateResult;
-	}
 	//建置新增
 
 	public boolean executeInsert(List<Article_photos> article_photos, Connection conn){
@@ -85,9 +77,9 @@ public class Article_photosDAO extends BasicDAO implements DAOInterface<Article_
 					pstmt.setObject(j+1 , param[j] );
 				}
 			}
-			pstmt.addBatch();
+			pstmt.executeUpdate();
 		}
-		pstmt.executeBatch();
+	
 		con.commit();
 		result= true;
 	} catch (SQLException e) {
@@ -107,12 +99,135 @@ public class Article_photosDAO extends BasicDAO implements DAOInterface<Article_
 	}
 	//建置刪除
 
+	public boolean executeDelete(String art_no,Connection conn){
+	SQLHelper helper =	new SQLHelper();
+	Connection con = conn;
+	PreparedStatement pstmt =null;
+	boolean result = false;
+	try {		
+		String SQL="delete from article_photos where art_no=?";
+		Object[] param={art_no};
+		pstmt = con.prepareStatement(SQL);
+		pstmt.setObject(1, art_no);
+		pstmt.executeUpdate();
+		result = true;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		try {
+			con.rollback();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+	
+	return result;
+	}
+	//修改失效
+	
+	public boolean updateByVO(Article_photos article_photos){
+		String SQL="update article_photos set art_no=?,art_pt=?,art_pt_idx=? where art_pt_no=?";
+		Object[] param ={article_photos.getArt_pt_no(),article_photos.getArt_no(),article_photos.getArt_pt(),article_photos.getArt_pt_idx()};
+		boolean updateResult = new SQLHelper().executeUpdate(SQL,param);
+		return updateResult;
+	}
+	//建置修改
+	
+	public boolean updateByVO(List<Article_photos> article_photos,String art_no,Connection conn,String[] updateInfos,String[] deleteInfos){
+		SQLHelper helper =	new SQLHelper();
+		Connection con = conn;
+		PreparedStatement pstmt =null;
+		boolean result = false;
+		try {
+			for(int i = 0 ; i < article_photos.size() ; i++){
+				Article_photos article_photo = article_photos.get(i);
+				String SQL = null;
+				boolean flag = false;
+				for(int j = 0 ; j < updateInfos.length ; j++){
+					if(article_photo.getArt_pt_idx().equals(updateInfos[j])){
+						flag = true;
+						break;
+					}
+				}
+				
+				if(flag){
+					SQL="update article_photos set art_pt=? where art_no=? and art_pt_idx=?";
+					pstmt = con.prepareStatement(SQL);
+					Object[] param ={article_photo.getArt_pt(),art_no,article_photo.getArt_pt_idx()};
+					pstmt.setObject(1, param[0]);
+					pstmt.setObject(2, param[1]);				
+					pstmt.setObject(3, param[2]);		
+					
+				}else{
+					SQL="insert into article_photos values(ARTICLE_PHOTOS_PK_SEQ.nextval,?,?,?)";
+					pstmt = con.prepareStatement(SQL);
+					Object[] param ={art_no,article_photo.getArt_pt(),article_photo.getArt_pt_idx()};
+					pstmt.setObject(1, param[0]);
+					pstmt.setObject(2, param[1]);
+					pstmt.setObject(3, param[2]);	
+				}			
+				pstmt.executeUpdate();
+				if(deleteInfos!=null){
+					result = executeDelete(art_no,deleteInfos,con);					
+				}else{
+					con.commit();
+					result = true;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			helper.close(con, pstmt);
+		}
+		
+
+		return result;
+	}
+	//刪除單一相片
+	public boolean executeDelete(String art_no,String[] art_pt_idx,Connection conn){
+	SQLHelper helper =	new SQLHelper();
+	Connection con = conn;
+	PreparedStatement pstmt =null;
+	boolean result = false;
+	try {
+		for(int i =0 ; i<art_pt_idx.length ; i++){			
+				String SQL="delete from article_photos where art_no=? and art_pt_idx=?";
+				pstmt = con.prepareStatement(SQL);
+				Object[] param={art_no,art_pt_idx[i]};
+				pstmt.setObject(1, param[0]);
+				pstmt.setObject(2, param[1]);
+				pstmt.executeUpdate();			
+		}
+		con.commit();
+		result = true;
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		try {
+			con.rollback();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		e.printStackTrace();
+	}
+	return result;
+	}
+	
+	
 	public boolean executeDelete(String art_pt_no){
-	String SQL="delete from article_photos where art_pt_no=?";
+	String SQL="delete from article_photos where art_no=?";
 	Object[] param={art_pt_no};
 	boolean deleteResult = new SQLHelper().executeUpdate(SQL,param);
 	return deleteResult;
 	}
+
 	//建置分頁(彈性排序可設條件)
 
 	public List<Article_photos> pageAndRank(int page,int pageSize,String order,String where){

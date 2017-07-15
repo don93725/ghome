@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import javax.servlet.http.Part;
 import com.forum.dao.Art_typesDAO;
 import com.forum.dao.ArticlesDAO;
 import com.forum.domain.Art_types;
+import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.forum.domain.User;
 import com.forum.service.Article_photosService;
@@ -25,6 +27,7 @@ import com.forum.service.ArticlesSevice;
  * Servlet implementation class ArticlesMakerCtrl
  */
 @WebServlet("/forum/ArticlesActionCtrl")
+@MultipartConfig(fileSizeThreshold=100,maxFileSize=10*1024*1024,maxRequestSize=10*1024*1024)
 public class ArticlesActionCtrl extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -52,14 +55,19 @@ public class ArticlesActionCtrl extends HttpServlet {
 			if (action.equals("create")) {
 				String art_name = req.getParameter("art_name");
 				String art_type_name = req.getParameter("art_type_name");
-				String art_ctx = req.getParameter("art_ctx");
+				String order = req.getParameter("order");
+				String art_ctx = req.getParameter("art_ctx").replace("$ProjectRealPath$", req.getContextPath());
 				String mem_no = user.getMem_no();
 				Article_photosService article_photosService = new Article_photosService();
 				Collection<Part> parts = req.getParts();
-				System.out.println("總共大小為"+parts.size());
-				article_photosService.setArticle_photos(parts);
+				List<Article_photos> list = article_photosService.setArticle_photos(parts);
 				ArticlesSevice articlesSevice = new ArticlesSevice();
-				boolean createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
+				boolean createResult = false;
+				if(list.size()==0){
+					createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
+				}else{
+					createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx,list);
+				}				
 				if (createResult) {
 					String URL = this.getServletContext().getContextPath() + "/forum/ForumShowCtrl?forum_no="
 							+ forum_no;
@@ -71,11 +79,21 @@ public class ArticlesActionCtrl extends HttpServlet {
 			} else if (action.equals("update")) {
 				String art_name = req.getParameter("art_name");
 				String art_type_name = req.getParameter("art_type_name");
-				String art_ctx = req.getParameter("art_ctx");
 				String art_no = req.getParameter("art_no");
+				String art_ctx = req.getParameter("art_ctx").replace("$ProjectRealPath$", req.getContextPath());
+				art_ctx = art_ctx.replace("$ArticlesPrimaryKey$", art_no);
+				String order = req.getParameter("order");
+				String updateInfo = req.getParameter("updateInfo");
+				String deleteInfo = req.getParameter("deleteInfo");
+				System.out.println("order="+order+",updateInfo="+updateInfo+",deleteInfo="+deleteInfo);
+				Article_photosService article_photosService = new Article_photosService();
+				Collection<Part> parts = req.getParts();					
+				List<Article_photos> list = article_photosService.setArticle_photos(parts,order,updateInfo);					
 				ArticlesSevice articlesSevice = new ArticlesSevice();
-
-				boolean createResult = articlesSevice.update(art_type_name, art_name, art_ctx, art_no);
+				boolean createResult = false;
+				System.out.println(parts.size()+"list"+list.size());				
+				createResult = articlesSevice.update(art_type_name, art_name, art_ctx,art_no,list,updateInfo,deleteInfo);
+				
 				if (createResult) {
 					String URL = this.getServletContext().getContextPath() + "/forum/ArticleShowCtrl?forum_no="
 							+ forum_no + "&art_no=" + art_no;

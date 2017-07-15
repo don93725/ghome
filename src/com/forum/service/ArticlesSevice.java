@@ -21,14 +21,15 @@ public class ArticlesSevice {
 		return result;
 	}
 	//含相片
-	public boolean add(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx, List<Article_photos> aArticle_photos) {
+	public boolean add(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx, List<Article_photos> article_photos) {
 		Articles articles=new Articles();
 		articles.setMem_no(mem_no);
 		articles.setForum_no(forum_no);
 		articles.setArt_type(art_type_name);
 		articles.setArt_name(art_name);
 		articles.setArt_ctx(art_ctx);
-		boolean result = new ArticlesDAO().executeInsert(articles,aArticle_photos);
+		
+		boolean result = new ArticlesDAO().executeInsert(articles,article_photos);
 		return result;
 	}
 	public boolean update(String art_type_name, String art_name, String art_ctx,String art_no) {
@@ -38,6 +39,29 @@ public class ArticlesSevice {
 		articles.setArt_ctx(art_ctx);
 		articles.setArt_no(art_no);
 		boolean result = new ArticlesDAO().updateByVO(articles);
+		return result;
+	}
+	public boolean update(String art_type_name, String art_name, String art_ctx,String art_no,List<Article_photos> article_photos, String updateInfo, String deleteInfo) {
+		Articles articles=new Articles();
+		articles.setArt_type(art_type_name);
+		articles.setArt_name(art_name);
+		articles.setArt_ctx(art_ctx);
+		articles.setArt_no(art_no);
+		String[] updateInfos = null;
+		String[] deleteInfos = null;
+		boolean result = false;
+		if(updateInfo.length()>1){
+			updateInfos = updateInfo.split(",");			
+		}
+		if(deleteInfo.length()>1){
+			deleteInfos = updateInfo.split(",");		
+		}
+		if(article_photos.size()==0&&deleteInfos==null){
+			result = update(art_type_name, art_name,art_no, art_ctx);
+		}else {			
+			result = new ArticlesDAO().updateByVO(articles,article_photos,updateInfos,deleteInfos);
+		}
+		
 		return result;
 	}
 	
