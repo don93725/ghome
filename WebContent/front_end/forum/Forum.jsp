@@ -22,6 +22,7 @@
 <%if(session.getAttribute("user")!=null){ %>
 <a href='${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goCreatePage&forum_no=${param.forum_no }'>新增文章</a>
 <%} %>
+<c:if test="${mem_no==user.mem_no&&!empty user.mem_no }"><a href="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=goUpdate&forum_no=${param.forum_no}">編輯論壇</a></c:if>
 <div>
 <table border='1'>
 <tr>
@@ -46,7 +47,7 @@
 	</tr>
 	<%} %>
 	</table>
-<jsp:include page="/WEB-INF/forum/ChangePage.jsp"/>
+<jsp:include page="/front_end/forum/ChangePage.jsp"/>
 
 
 

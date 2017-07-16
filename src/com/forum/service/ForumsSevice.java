@@ -1,12 +1,14 @@
 package com.forum.service;
 
+import java.util.List;
+
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Forums;
 import com.forum.inteface.DAOInterface;
 
 public class ForumsSevice {
 	// 封裝新增物件
-	DAOInterface dao;
+	DAOInterface<Forums> dao;
 
 	public ForumsSevice() {
 		dao = new ForumsDAO();
@@ -35,5 +37,30 @@ public class ForumsSevice {
 
 		boolean result = forumDAO.executeUpdate(SQL, viewVal);
 		return result;
+	}
+	public List<Forums> getApplyForums(int page, int pageSize){
+		
+		String where = "forum_stat=0";
+		String order = "forum_date";
+		List<Forums> list = dao.pageAndRank(page, pageSize, order, where);
+		return list;
+		
+	}
+	public boolean confirm(String forum_no,String forum_stat){
+		boolean result = false;
+		ForumsDAO forumDAO = new ForumsDAO();
+		String SQL = "update forums set forum_stat=? where forum_no=?";
+		Object[] param = {forum_no,forum_stat};
+		result = forumDAO.executeUpdate(SQL, param);
+		return result;
+	}
+	public Forums findByPK(String forum_no){
+		return (Forums) dao.getVOByPK(forum_no);
+	}
+	public String getMem(String forum_no){
+		ForumsDAO forumDAO = new ForumsDAO();
+		Object[] param = {forum_no};
+		String mem_no = String.valueOf(forumDAO.getCol("mem_no", param)[0]);
+		return mem_no;
 	}
 }

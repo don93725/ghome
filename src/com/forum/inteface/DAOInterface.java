@@ -15,6 +15,8 @@ public interface DAOInterface<T> {
 	public int countAll();
 	//建置刪除
 	public boolean executeDelete(String no);
+	//
+	public List pageAndRank(int page,int pageSize,String order,String where);
 	//建置分頁(彈性排序)
 	public List pageAndRank(int page,int pageSize,String order);
 	//建置分頁(PK排序)

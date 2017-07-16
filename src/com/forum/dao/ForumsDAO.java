@@ -1,6 +1,8 @@
 package com.forum.dao;
 
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.forum.domain.*;
@@ -33,14 +35,17 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 				forums.setForum_note((String) obj[4]);
 			}
 			if (obj[5] != null) {
-				forums.setForum_stat((String) obj[5]);
+				forums.setForum_stat(Integer.parseInt(String.valueOf(obj[5])));
 			}
 			if (obj[6] != null) {
 				forums.setForum_views(Integer.parseInt(obj[6].toString()));
 			}
-			if (obj[7] != null) {
+			if(obj[7]!=null){
 				forums.setForum_mviews(Integer.parseInt(obj[7].toString()));
-			}
+				}
+			if(obj[8]!=null){
+				forums.setForum_date((Date)obj[8]);
+				}
 			tempList.add(forums);
 		}
 		return tempList;
@@ -70,16 +75,16 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 	// 建置修改
 
 	public boolean updateByVO(Forums forums) {
-		String SQL = "update forums set mem_no=?,forum_name=?,forum_desc=?,forum_note=?,forum_stat=?,forum_views=?,forum_mviews=? where forum_no=?";
+		String SQL = "update forums set mem_no=?,forum_name=?,forum_desc=?,forum_note=?,forum_stat=?,forum_views=?,forum_mviews=?,forum_date=? where forum_no=?";
 		Object[] param = { forums.getForum_no(), forums.getMem_no(), forums.getForum_name(), forums.getForum_desc(),
-				forums.getForum_note(), forums.getForum_stat(), forums.getForum_views(), forums.getForum_mviews() };
+				forums.getForum_note(), forums.getForum_stat(), forums.getForum_views(), forums.getForum_mviews(),forums.getForum_date() };
 		boolean updateResult = new SQLHelper().executeUpdate(SQL, param);
 		return updateResult;
 	}
 	// 建置新增
 
 	public boolean executeInsert(Forums forums) {
-		String SQL = "insert into forums values(forums_pk_seq.nextval,?,?,?,?,default,default,default)";
+		String SQL = "insert into forums values(forums_pk_seq.nextval,?,?,?,?,default,default,default,default)";
 		Object[] param = { forums.getMem_no(), forums.getForum_name(), forums.getForum_desc(),
 				forums.getForum_note() };
 		boolean insertResult = new SQLHelper().executeUpdate(SQL, param);
@@ -98,7 +103,7 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 	public List<Forums> pageAndRank(int page, int pageSize, String order, String where) {
 		int firstPage = (page - 1) * pageSize + 1;
 		int lastPage = page * pageSize;
-		String SQL = "select forum_no,mem_no,forum_name,forum_desc,forum_note,forum_stat,forum_views,forum_mviews from (select forum_no,mem_no,forum_name,forum_desc,forum_note,forum_stat,forum_views,forum_mviews, rownum rn from (select * from forums";
+		String SQL = "select forum_no,mem_no,forum_name,forum_desc,forum_note,forum_stat,forum_views,forum_mviews,forum_date from (select forum_no,mem_no,forum_name,forum_desc,forum_note,forum_stat,forum_views,forum_mviews,forum_date, rownum rn from (select * from forums";
 		if (where != null) {
 			SQL = SQL + " where " + where;
 		}

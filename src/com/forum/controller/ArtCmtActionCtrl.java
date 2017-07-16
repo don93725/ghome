@@ -35,8 +35,6 @@ public class ArtCmtActionCtrl extends HttpServlet {
 		String art_no = req.getParameter("art_no");
 		String action = req.getParameter("action");
 		
-		//part 要在補
-		
 		if(user==null){
 			String URL = this.getServletContext().getContextPath()+"/forum/LoginCtrl";
 			res.sendRedirect(URL);
@@ -53,7 +51,7 @@ public class ArtCmtActionCtrl extends HttpServlet {
 					res.sendRedirect(URL);
 				}else{
 					req.setAttribute("msg", "fail create comment");
-					req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
 			}else if(action.equals("delete")){
 				Article_commentsDAO article_commentsDAO = new Article_commentsDAO();
@@ -65,17 +63,17 @@ public class ArtCmtActionCtrl extends HttpServlet {
 					res.sendRedirect(URL);
 				}else{
 					req.setAttribute("msg", "fail delete comment");
-					req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
 			}else {
 				req.setAttribute("msg", "from cmt els");
-				req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+				req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 			}
 			
 			
 		}else{
 			req.setAttribute("msg", "from cmtMaker");
-			req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+			req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 		}
 	}
 

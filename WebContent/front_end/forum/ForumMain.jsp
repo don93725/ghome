@@ -10,7 +10,7 @@
 <meta content="Pragma" content="no-cache">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
-<link rel="stylesheet" href="/Forum/forum/css/forum.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/css/forum.css">
 </head>
 <body>
 <h1>討論區</h1>
@@ -19,7 +19,7 @@
 
 <c:if test="${not empty user }">
 <div>
-<a href='${pageContext.request.contextPath }/forum/ForumApplyCtrl?action=create'>申請板塊</a>
+<a href='${pageContext.request.contextPath }/forum/ForumApplyCtrl?action=wantCreate'>申請板塊</a>
 </div>
 </c:if>
 <div class='rank'>
@@ -38,13 +38,15 @@
 <div>
 <table border='1'>
 <tr><td>名次</td><td>文章名稱</td><td>月點擊/總點擊</td></tr>
-<c:forEach begin="0" end="${fn:length(articlesRankList)-1}" varStatus="loop2">
+
+<c:forEach var="rankArticles" items="${articlesRankList}" varStatus="loop2">
 <tr>
 <td><c:out value="${loop2.count}"/></td>
-<td><a href='${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=<c:out value="${articlesRankList[loop2.count-1].forum_no}"/>&art_no=<c:out value="${articlesRankList[loop2.count-1].art_no}"/>'><c:out value="${articlesRankList[loop2.count-1].art_name }"/></a></td>
-<td><c:out value="${articlesRankList[loop2.count-1].art_views }"/>/<c:out value="${articlesRankList[loop2.count-1].art_mviews }"/></td>
+<td><a href='${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=<c:out value="${rankArticles.forum_no}"/>&art_no=<c:out value="${rankArticles.art_no}"/>'><c:out value="${rankArticles.art_name }"/></a></td>
+<td><c:out value="${rankArticles.art_views }"/>/<c:out value="${rankArticles.art_mviews }"/></td>
 </tr>
 </c:forEach>
+
 </table>
 </div>
 </div>

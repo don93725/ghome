@@ -42,7 +42,7 @@ public class ForumShowCtrl extends HttpServlet {
 			String where = forum_no;
 			if(art_type_no!=null) {
 				Object[] param = {art_type_no};
-				art_type_name = "["+(String)new Art_typesDAO().getCol("art_type_name", param)[0]+"]";
+				art_type_name = (String)new Art_typesDAO().getCol("art_type_name", param)[0];
 				where = where +" and art_type='"+art_type_name+"'";
 				allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no="+where);
 			}else {
@@ -55,14 +55,17 @@ public class ForumShowCtrl extends HttpServlet {
 			req.setAttribute("allPageCount", allPageCount);
 			String queryStr ="ForumShowCtrl?forum_no="+forum_no;
 			req.setAttribute("queryStr", queryStr);				
-			req.setAttribute("thisPage", thisPage);		
-			new ForumsSevice().increaseViews(forum_no);
+			req.setAttribute("thisPage", thisPage);	
+			ForumsSevice forumsSevice = new ForumsSevice();
+			forumsSevice.increaseViews(forum_no);
+			String mem_no = forumsSevice.getMem(forum_no);
+			req.setAttribute("mem_no", mem_no);
 			List<Articles> articles=new ArticlesSevice().getPageData(Integer.parseInt(thisPage), pageSize, where);
 			req.setAttribute("articles", articles);
-			req.getRequestDispatcher("/WEB-INF/forum/Forum.jsp").forward(req, res);
+			req.getRequestDispatcher("/front_end/forum/Forum.jsp").forward(req, res);
 		}else{
 			req.setAttribute("msg", "不知哪版怎去?");
-			req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+			req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 		}
 		
 	}

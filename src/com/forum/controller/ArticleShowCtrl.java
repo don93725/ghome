@@ -54,10 +54,10 @@ public class ArticleShowCtrl extends HttpServlet {
 			req.setAttribute("article_comments", article_comments);
 			req.setAttribute("queryStr", queryStr);	
 			new ArticlesSevice().increaseViews(art_no);
-			req.getRequestDispatcher("/WEB-INF/forum/ArticleDisplay.jsp").forward(req, res);
+			req.getRequestDispatcher("/front_end/forum/ArticleDisplay.jsp").forward(req, res);
 		}else{
 			req.setAttribute("msg", "from ArticleShowCtrl");
-			req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+			req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 		}
 	}
 

@@ -48,7 +48,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 				Articles articles = (Articles) new ArticlesDAO().getVOByPK(art_no);
 				req.setAttribute("articles", articles);
 			}
-			req.getRequestDispatcher("/WEB-INF/forum/ArticlesMaker.jsp").forward(req, res);
+			req.getRequestDispatcher("/front_end/forum/ArticlesMaker.jsp").forward(req, res);
 
 		} else if (forum_no != null) {
 
@@ -74,7 +74,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 					res.sendRedirect(URL);
 				} else {
 					req.setAttribute("msg", "失敗");
-					req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
 			} else if (action.equals("update")) {
 				String art_name = req.getParameter("art_name");
@@ -100,7 +100,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 					res.sendRedirect(URL);
 				} else {
 					req.setAttribute("msg", "失敗");
-					req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
 			} else if (action.equals("delete")) {
 				String art_no = req.getParameter("art_no");
@@ -111,7 +111,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 					res.sendRedirect(URL);
 				} else {
 					req.setAttribute("msg", "fail to delete article");
-					req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
 			} else if (action.equals("report")) {
 				System.out.println("report?");
@@ -121,7 +121,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 
 		} else {
 			req.setAttribute("msg", "不知哪版怎去?");
-			req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+			req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 		}
 
 	}

@@ -11,11 +11,11 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>增加文章</title>
 <script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-<link rel="stylesheet" href="/Forum/forum/css/ArticleDisplay.css">
-<link rel="stylesheet" href="/Forum/forum/js/kindeditor/themes/default/default.css" />
-<script charset="utf-8" src="/Forum/forum/js/kindeditor/kindeditor-all2.js"></script>
-<script charset="utf-8" src="/Forum/forum/js/kindeditor/lang/zh-TW.js"></script>
-<script type="Text/JavaScript" src="/Forum/forum/js/ArticlesMaker.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/css/ArticleDisplay.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/kindeditor-all2.js"></script>
+<script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/lang/zh-TW.js"></script>
+<script type="Text/JavaScript" src="${pageContext.request.contextPath}/front_end/forum/js/ArticlesMaker.js"></script>
 
 </head>
 <body>

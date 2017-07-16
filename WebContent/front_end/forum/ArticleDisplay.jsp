@@ -16,11 +16,11 @@
 	int thisPage = Integer.parseInt(request.getAttribute("thisPage").toString());%>
 
 <script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-<link rel="stylesheet" href="/Forum/forum/css/ArticleDisplay.css">
-<link rel="stylesheet" href="/Forum/forum/js/kindeditor/themes/default/default.css" />
-<script charset="utf-8" src="/Forum/forum/js/kindeditor/kindeditor-all.js"></script>
-<script charset="utf-8" src="/Forum/forum/js/kindeditor/lang/zh-TW.js"></script>
-<script type="Text/JavaScript" src="/Forum/forum/js/ArticleDisplay.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/css/ArticleDisplay.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/themes/default/default.css" />
+<script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/kindeditor-all.js"></script>
+<script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/lang/zh-TW.js"></script>
+<script type="Text/JavaScript" src="${pageContext.request.contextPath}/front_end/forum/js/ArticleDisplay.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
@@ -50,7 +50,7 @@
 <table border='1'>
 <tr>
 	
-	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br><%=comments.getMem_no() %><br>名稱<br>身份</td>
+	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br><a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=<%=comments.getMem_no()%>'>名稱</a><br>身份</td>
 	
 </tr>
 <tr><td width='600' height='100' valign="top"><%=comments.getArt_cmt_ctx() %></td></tr>
@@ -62,7 +62,7 @@
 </table>
 </div>
 <%} %>
-<jsp:include page="/WEB-INF/forum/ChangePage.jsp"/>
+<jsp:include page="/front_end/forum/ChangePage.jsp"/>
 <%if(session.getAttribute("user")!=null){ %>
 <div>
 <table border='1'>

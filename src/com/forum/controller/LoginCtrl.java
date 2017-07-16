@@ -16,7 +16,7 @@ public class LoginCtrl extends HttpServlet {
        
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setAttribute("msg", "請先登入");
-		req.getRequestDispatcher("/WEB-INF/forum/ok.jsp").forward(req, res);
+		req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
