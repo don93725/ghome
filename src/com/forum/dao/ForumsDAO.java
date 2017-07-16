@@ -79,9 +79,9 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 	// 建置新增
 
 	public boolean executeInsert(Forums forums) {
-		String SQL = "insert into forums values(?,?,?,?,?,?,?,?)";
-		Object[] param = { forums.getForum_no(), forums.getMem_no(), forums.getForum_name(), forums.getForum_desc(),
-				forums.getForum_note(), forums.getForum_stat(), forums.getForum_views(), forums.getForum_mviews() };
+		String SQL = "insert into forums values(forums_pk_seq.nextval,?,?,?,?,default,default,default)";
+		Object[] param = { forums.getMem_no(), forums.getForum_name(), forums.getForum_desc(),
+				forums.getForum_note() };
 		boolean insertResult = new SQLHelper().executeUpdate(SQL, param);
 		return insertResult;
 	}

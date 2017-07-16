@@ -28,8 +28,7 @@ KindEditor.ready(function(K) {
  			var temp = ctx[i];
 
  			if(temp.nodeType==1){
- 				var tag = temp.tagName;	
- 				alert(tag);
+ 				var tag = temp.tagName;
  				if(tag=='IMG'){
  					if(temp.hasAttribute('alt')){
  						text = text + "<img src='"+temp.src+"' border='0'>";
@@ -40,7 +39,7 @@ KindEditor.ready(function(K) {
  							if(arr[j]==id){
  								delete arr[j];
  							}
- 						}
+ 						} 						
  						order = order + id + ",";
  						text = text + "<img width=100 id='pic"+id+"' src='$ProjectRealPath$/"+
 		 				"forum/OutputPic?art_no=$ArticlesPrimaryKey$&art_pt_idx="+id+"'>";
@@ -64,19 +63,15 @@ KindEditor.ready(function(K) {
 				$('#file'+arr[i]).remove();
 				for(var j = 0 ; j < originPic.length ; j++){
 					
-					if(arr[i]==originPic[j]){
+					if(arr[i]==originPic[j]){						
+						deleteInfo = deleteInfo + originPic[j]+",";						
+						$('#file'+originPic[j]).remove();			
 						
-						deleteInfo = deleteInfo + originPic[j]+",";
-						
-						$('#file'+originPic[j]).remove();					
-						
-						alert(deleteInfo);
 					}	
 				}								
 			}							
 		}
 		$('#order').val(order);
-		alert("ok");
 		$('#deleteInfo').val(deleteInfo);
 		var art_ctx = document.getElementsByName("art_ctx")[0]; 
 		art_ctx.innerHTML = text;

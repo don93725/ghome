@@ -38,7 +38,7 @@
 	Articles art =list.get(i);%>
 	<tr>
 		
-		<td><%= art.getArt_type()%></td>
+		<td>[<%= art.getArt_type()%>]</td>
 		<td><a href="${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=${param.forum_no }&art_no=<%=art.getArt_no()%>"><%=art.getArt_name() %></a></td>
 		<td><%= art.getMem_no()%></td>
 		<td><%=sdf.format(art.getArt_add_date())%></td>

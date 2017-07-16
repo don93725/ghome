@@ -1,6 +1,6 @@
 package com.forum.domain;
 
-public class Forums {
+public class Forums  {
 	Integer forum_views,forum_mviews;
 	String forum_no,mem_no,forum_name,forum_desc,forum_note,forum_stat;
 	public Integer getForum_views() {
