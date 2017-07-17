@@ -62,7 +62,7 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 	// 建置查詢全部
 
 	public List<Forums> getAll() {
-		String SQL = "select * from forums";
+		String SQL = "select * from forums where forum_stat=1";
 		List<Forums> list = getVOBySQL(SQL, null);
 		return list;
 	}
@@ -75,9 +75,8 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 	// 建置修改
 
 	public boolean updateByVO(Forums forums) {
-		String SQL = "update forums set mem_no=?,forum_name=?,forum_desc=?,forum_note=?,forum_stat=?,forum_views=?,forum_mviews=?,forum_date=? where forum_no=?";
-		Object[] param = { forums.getForum_no(), forums.getMem_no(), forums.getForum_name(), forums.getForum_desc(),
-				forums.getForum_note(), forums.getForum_stat(), forums.getForum_views(), forums.getForum_mviews(),forums.getForum_date() };
+		String SQL = "update forums set forum_name=?,forum_desc=?,forum_note=? where forum_no=?";
+		Object[] param = { forums.getForum_name(), forums.getForum_desc(), forums.getForum_note(),forums.getForum_no()  };
 		boolean updateResult = new SQLHelper().executeUpdate(SQL, param);
 		return updateResult;
 	}

@@ -1,3 +1,14 @@
-#ctx{
+#ctx {
 	overflow: scroll;
+}
+
+#tips {
+	position: fixed;
+	top: 25%;
+	left: 40%;
+	width: 300px;
+	height: 300px;
+	backgroun-color:blue;
+	background: url(images/cross.png) no-repeat center center;
+	opacity: 0;
 }

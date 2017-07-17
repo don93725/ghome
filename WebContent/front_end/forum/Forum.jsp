@@ -19,13 +19,15 @@
 	SimpleDateFormat sdf= new SimpleDateFormat("yyyy MMM d HH:mm",Locale.US);%>
 <body>
 ><a href="${pageContext.request.contextPath}/forum/ForumCtrl">討論大廳</a><br>
-<%if(session.getAttribute("user")!=null){ %>
+<c:if test="${! empty user }">
 <a href='${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goCreatePage&forum_no=${param.forum_no }'>新增文章</a>
-<%} %>
+</c:if>
 <c:if test="${mem_no==user.mem_no&&!empty user.mem_no }"><a href="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=goUpdate&forum_no=${param.forum_no}">編輯論壇</a></c:if>
 <div>
 <table border='1'>
 <tr>
+<td><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }">全部</a></td>
+
 <c:forEach begin="0" end="${fn:length(art_types)}" varStatus="loop">
 <td><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }&art_type_no=${art_types[loop.count-1].art_type_no}"><c:out value="${art_types[loop.count-1].art_type_name }"/></a></td>
 </c:forEach>
@@ -37,8 +39,7 @@
 <tr><th>文章類型</th><th>文章標題</th><th>發文者</th><th>發文時間</th><th>瀏覽次數</th></tr>
 <%for(int i = 0 ;i<list.size();i++){
 	Articles art =list.get(i);%>
-	<tr>
-		
+	<tr>		
 		<td>[<%= art.getArt_type()%>]</td>
 		<td><a href="${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=${param.forum_no }&art_no=<%=art.getArt_no()%>"><%=art.getArt_name() %></a></td>
 		<td><%= art.getMem_no()%></td>

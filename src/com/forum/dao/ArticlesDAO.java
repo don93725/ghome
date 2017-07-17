@@ -203,6 +203,8 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 			con.setAutoCommit(false);
 			Article_photosDAO article_photosDAO = new Article_photosDAO();
 			article_photosDAO.executeDelete(art_no, con);
+			Article_commentsDAO article_commentsDAO = new Article_commentsDAO();
+			article_commentsDAO.executeDelete(art_no, con);
 			String SQL = "delete from articles where art_no=?";
 			Object[] param = { art_no };
 			pstmt = con.prepareStatement(SQL);

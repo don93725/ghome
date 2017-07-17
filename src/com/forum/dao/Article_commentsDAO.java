@@ -21,7 +21,9 @@ import oracle.sql.BLOB;
 
 public class Article_commentsDAO extends BasicDAO implements DAOInterface<Article_comments>{
 	//建置查詢
-
+	Integer i =new Integer(123);
+	Integer x = i;
+	Integer b = i.getInteger("123");
 	public List<Article_comments> getVOBySQL(String SQL,Object[] param){
 	List list = new SQLHelper().executeQuery(SQL, param);
 	List<Article_comments> tempList = new ArrayList<Article_comments>();
@@ -148,6 +150,29 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	boolean deleteResult = new SQLHelper().executeUpdate(SQL,param);
 	return deleteResult;
 	}
+	//帶連線
+	public boolean executeDelete(String art_no,Connection conn){
+		SQLHelper helper =	new SQLHelper();
+		Connection con = conn;
+		PreparedStatement pstmt =null;
+		boolean result = false;		
+		try {
+			String SQL="delete from article_comments where art_no=?";
+			pstmt = con.prepareStatement(SQL);
+			pstmt.setObject(1, art_no);
+			pstmt.executeUpdate();
+			result=true;
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return result;
+		}
 	//建置分頁(彈性排序可設條件)
 
 	public List<Article_comments> pageAndRank(int page,int pageSize,String order,String where){

@@ -11,7 +11,7 @@
 </head>
 <body>
 <h1>版塊申請</h1>
-<form action="${pageContext.request.contextPath}/forum/ForumApplyCtrl?action=${(empty forums)?'createApply':'update' }" method="post">
+<form action="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=${(empty forums)?'createApply':'update&forum_no=' }${(empty forums)?'':forums.forum_no }" method="post">
 	<table>
 		<tr>
 			<td><label >版塊名字</label></td><td><input type="text" name='forum_name' value='${forums.forum_name }'> </td>			
@@ -27,5 +27,6 @@
 		</tr>
 	</table>
 </form>
+<a href='${pageContext.request.contextPath}/forum/${(empty forums)?"ForumCtrl":"ForumShowCtrl?forum_no="}${(empty forums)?"":forums.forum_no}'>返回板塊區</a>
 </body>
 </html>

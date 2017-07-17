@@ -19,23 +19,23 @@
 
 <c:if test="${not empty user }">
 <div>
-<a href='${pageContext.request.contextPath }/forum/ForumApplyCtrl?action=wantCreate'>申請板塊</a>
+<a href='${pageContext.request.contextPath }/forum/ForumActionCtrl?action=wantCreate'>申請板塊</a>
 </div>
 </c:if>
-<div class='rank'>
 <div>
+<div class='rank'>
 <table border='1'>
 <tr><td>名次</td><td>板塊名稱</td><td>月點擊/總點擊</td></tr>
-<c:forEach begin="0" end="${fn:length(rankList)-1}" varStatus="loop">
+<c:forEach var='rankList' items="${rankList}" varStatus="loop">
 <tr>
 <td><c:out value="${loop.count}"/></td>
-<td><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=<c:out value='${rankList[loop.count-1].forum_no}'/>'><c:out value='${rankList[loop.count-1].forum_name }'/></a></td>
-<td align="center"><c:out value="${rankList[loop.count-1].forum_views }"/>/<c:out value="${rankList[loop.count-1].forum_mviews }"/></td>
+<td><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=<c:out value='${rankList.forum_no}'/>'><c:out value='${rankList.forum_name }'/></a></td>
+<td align="center"><c:out value="${rankList.forum_views }"/>/<c:out value="${rankList.forum_mviews }"/></td>
 </tr>
 </c:forEach>
 </table>
 </div>
-<div>
+<div >
 <table border='1'>
 <tr><td>名次</td><td>文章名稱</td><td>月點擊/總點擊</td></tr>
 
@@ -46,7 +46,6 @@
 <td><c:out value="${rankArticles.art_views }"/>/<c:out value="${rankArticles.art_mviews }"/></td>
 </tr>
 </c:forEach>
-
 </table>
 </div>
 </div>

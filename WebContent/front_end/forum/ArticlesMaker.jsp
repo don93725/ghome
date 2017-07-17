@@ -36,7 +36,7 @@
 <td>內文</td><td colspan='2'>
 <div contentEditable="true" id='ctx' name='content' style='width:600px; height:300px '></div>
 <textarea id="my-textarea" name='art_ctx' style="display:none"></textarea>
-<input type="text" id='order' name='order' />       
+<input type="text" id='order' name='order' style="display:none"/>       
 <input type="file" id='file0' name='file' style="display:none"/> 
 <input type="file" id='file1' name='file' style="display:none"/>
 <input type="file" id='file2' name='file' style="display:none"/>
@@ -64,14 +64,14 @@
 <td colspan='2'>
 <div contentEditable="true" id='ctx' name='content' style='width:600px; height:300px '>${articles.art_ctx}</div>
 <textarea id="my-textarea" name='art_ctx' style="display:none"></textarea> 
-<input type="text" id='updateInfo' name='updateInfo' />   
-<input type="text" id='order' name='order' />   
-<input type="text" id='deleteInfo' name='deleteInfo' />  
-<input type="file" id='file0' name='file' /> 
-<input type="file" id='file1' name='file' />
-<input type="file" id='file2' name='file' />
-<input type="file" id='file3' name='file' />
-<input type="file" id='file4' name='file' />
+<input type="text" id='updateInfo' name='updateInfo' style="display:none"/>   
+<input type="text" id='order' name='order' style="display:none"/>   
+<input type="text" id='deleteInfo' name='deleteInfo' style="display:none"/>  
+<input type="file" id='file0' name='file' style="display:none"/> 
+<input type="file" id='file1' name='file' style="display:none"/>
+<input type="file" id='file2' name='file' style="display:none"/>
+<input type="file" id='file3' name='file' style="display:none"/>
+<input type="file" id='file4' name='file' style="display:none"/>
 </td></tr>
 <tr><td style='text-align: center' colspan='3'><input type='submit' name="getHtml" value='更新'><button type='reset'>清除</button></td></tr>
 </form>

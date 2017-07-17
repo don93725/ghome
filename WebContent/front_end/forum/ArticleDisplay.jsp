@@ -16,11 +16,12 @@
 	int thisPage = Integer.parseInt(request.getAttribute("thisPage").toString());%>
 
 <script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+
 <link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/css/ArticleDisplay.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/themes/default/default.css" />
 <script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/kindeditor-all.js"></script>
 <script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/lang/zh-TW.js"></script>
-<script type="Text/JavaScript" src="${pageContext.request.contextPath}/front_end/forum/js/ArticleDisplay.js"></script>
+
 <title>Insert title here</title>
 </head>
 <body>
@@ -38,14 +39,15 @@
 	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goUpdatePage&forum_no=${param.forum_no }&art_no=${articles.art_no}">修改</a>&nbsp
 	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}" onclick="return confirm('確定要刪除文章?')">刪除</a>&nbsp
 	</c:if>
-	<c:if test="${articles.mem_no!=user.mem_no}">
-	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=report&forum_no=${param.forum_no }&art_no=${articles.art_no}">檢舉</a></c:if>
+	<c:if test="${articles.mem_no!=user.mem_no&&! empty user}">
+	<a class='inline' href="#inline_content">檢舉</a>	</c:if>
 	</td></tr>	
 </table>
 </div>
 </c:if>
 <%for(int i = 0 ; i < article_comments.size() ; i++){
 	Article_comments comments=article_comments.get(i);%>
+	
 <div>
 <table border='1'>
 <tr>
@@ -86,14 +88,35 @@
 <div>
 <table border='1'>
 <tr>
-	<td width='100' align="center"">留言</td>
-	<td width='600' height='100' align="center"><a href="${pageContext.request.contextPath}/forum/LoginCtrl">請先登入</a></td>	
+<td width='100' align="center">留言</td>
+<td width='600' height='100' align="center"><a href="${pageContext.request.contextPath}/forum/LoginCtrl">請先登入</a></td>	
 </tr>
-
-</form>
 </table>
+
 </div>
 <%} %>
+<div style="display: none">
+			<div id='inline_content' style='padding:10px; background:#fff;font-size: 30px;'>
+			<form action="#" method="post">
+			<h3>文章檢舉</h3>
+			<label >類型</label>
+			<select name="rpt_type" id='rpt_type' style='font-size: 30px;' >
+				<option value="歧視">歧視</option>				
+				<option value="十八禁">十八禁</option>
+				<option value="人身攻擊">人身攻擊</option>
+				<option value="涉政治問題">涉政治問題</option>
+			</select>
+			<label >檢舉原因</label>
+			<input type="text" style='font-size: 30px;' name="rpt_ctx" id='rpt_ctx' maxlength="50">
+			<input type='button' value="送出" onclick="report('${pageContext.request.contextPath}');">
+			<input type='reset' value="重填">
+			</form>
+		</div>
+		</div>
+<div id='tips'></div>
+<script src="${pageContext.request.contextPath}/front_end/forum/js/jquery.colorbox.js"></script>
+<script type="Text/JavaScript" src="${pageContext.request.contextPath}/front_end/forum/js/ArticleDisplay.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/css/colorbox.css" />
 
 </body>
 </html>

@@ -24,6 +24,16 @@ public class ForumsSevice {
 		boolean result = dao.executeInsert(forums);
 		return result;
 	}
+	public boolean update(String forum_no, String forum_name, String forum_desc, String forum_note) {
+		Forums forums = new Forums();
+		forums.setForum_name(forum_name);
+		forums.setForum_desc(forum_desc);
+		forums.setForum_note(forum_note);
+		forums.setForum_no(forum_no);
+
+		boolean result = dao.updateByVO(forums);
+		return result;
+	}
 
 	public boolean increaseViews(String forum_no) {
 		ForumsDAO forumDAO = new ForumsDAO();
