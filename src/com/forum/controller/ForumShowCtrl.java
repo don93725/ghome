@@ -16,6 +16,7 @@ import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Art_types;
 import com.forum.domain.Articles;
+import com.forum.service.Art_typesService;
 import com.forum.service.ArticlesSevice;
 import com.forum.service.ForumsSevice;
 
@@ -48,8 +49,7 @@ public class ForumShowCtrl extends HttpServlet {
 			}else {
 				allPageCount = articlesDAO.countBySQL("select count(*) from articles where forum_no='"+forum_no+"'");
 			}
-			List<Art_types> art_types = new Art_typesDAO()
-					.getVOBySQL("select * from art_types where forum_no=" + forum_no, null);
+			List<Art_types> art_types = new Art_typesService().getArt_types(forum_no);
 			req.setAttribute("art_types", art_types);
 			allPageCount = (allPageCount-1)/pageSize+1;
 			req.setAttribute("allPageCount", allPageCount);

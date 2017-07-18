@@ -15,7 +15,7 @@
 <body>
 <h1>討論區</h1>
 
-<% List<Forums> list=(List<Forums>)request.getAttribute("forums"); %>
+
 
 <c:if test="${not empty user }">
 <div>
@@ -53,15 +53,18 @@
 <table border=1>
 <tr>
 <th>編號</th><th>論壇</th><th>介紹</th><th>點擊次數</th></tr>
-<%for(int i =0;i<list.size();i++){
-	Forums f = list.get(i);%>
-<tr>
-	<td><%=f.getForum_no()%></td>
-	<td><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=<%= f.getForum_no()%>'><%= f.getForum_name()%></a></td>
-	<td><%=f.getForum_desc()%></td>
-	<td><%=f.getForum_views()%></td>
-</tr>                 
-<% } %>
+
+
+	<c:forEach var='f' items='${ forums}'>
+	<tr>
+	<td>${f.forum_no }</td>
+	<td><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${f.forum_no }'>${f.forum_name }</a></td>
+	<td>${f.forum_desc }</td>
+	<td>${f.forum_views }</td>
+	</tr>
+	</c:forEach>
+                 
+
 </table>	
 </div>
 </body>

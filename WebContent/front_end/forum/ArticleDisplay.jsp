@@ -54,10 +54,13 @@
 	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br><a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=<%=comments.getMem_no()%>'>名稱</a><br>身份</td>
 	
 </tr>
-<tr><td width='600' height='100' valign="top"><%=comments.getArt_cmt_ctx() %></td></tr>
-<tr><td width='600' height='20' align="left">
-	<c:if test="${(articles.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
-	<a href="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}&art_cmt_no=<%=comments.getArt_cmt_no()%>" onclick="return confirm('確定要刪除留言?')">刪除</a>
+<tr>
+	<td width='600' height='100' valign="top"><%=comments.getArt_cmt_ctx() %></td>
+</tr>
+<tr>
+<td width='600' height='20' align="left">
+<c:if test="${(articles.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
+<a href="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}&art_cmt_no=<%=comments.getArt_cmt_no()%>" onclick="return confirm('確定要刪除留言?')">刪除</a>
 	</c:if>
 	</td></tr>
 </table>

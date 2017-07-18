@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -14,8 +15,21 @@
 <form action="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=${(empty forums)?'createApply':'update&forum_no=' }${(empty forums)?'':forums.forum_no }" method="post">
 	<table>
 		<tr>
-			<td><label >版塊名字</label></td><td><input type="text" name='forum_name' value='${forums.forum_name }'> </td>			
+			<td><label >版塊名字</label></td><td><input type="text" name='forum_name' value='${forums.forum_name }' ${(empty forums)?'':'disabled' }> </td>			
 		</tr>
+		<tr >
+			<td valign="top"><label>文章類型</label></td>
+			<c:set var="size" value="${fn:length(art_types)}" />
+			<td>
+			<c:forEach begin="0" end="4" varStatus="loop">		
+			<input type="text" name='art_type_name' style="display: none;" ${(loop.index>size-1)? "":"value='" }${(loop.index>size-1)? "":art_types[loop.index+1].art_type_name }${(loop.index>size-1)? "":"'" }>
+			<input type="button" class='xbtn' value='X' style="display: none;">
+			</c:forEach>			
+			<input type="button" id='btn' value='+'>
+			</td>
+			
+		</tr>
+		
 		<tr>
 			<td><label >版塊敘述</label></td><td><textarea rows="5" cols="20" name='forum_desc'>${forums.forum_desc }</textarea></td>			
 		</tr>

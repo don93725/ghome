@@ -84,6 +84,44 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 		boolean updateResult = new SQLHelper().executeUpdate(SQL, param);
 		return updateResult;
 	}
+	// 建置修改
+	
+	public boolean updateByVO(Forums forums,String[] art_type_name) {
+		SQLHelper helper =	new SQLHelper();
+		Connection con = null;
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		boolean result = false;	
+		
+		con=helper.getConnection();
+		try {
+			con.setAutoCommit(false);
+			String sql = "update forums set forum_desc=?,forum_note=? where forum_no=?";
+			pstmt = con.prepareStatement(sql);
+			Object[] param = { forums.getForum_desc(), forums.getForum_note(),forums.getForum_no()  };
+			String tip = helper.executeUpdate(sql, param, null, con);
+			System.out.println("tip"+tip);
+			if(tip!=null){						
+				Art_typesDAO art_typesDAO = new Art_typesDAO();
+				result = art_typesDAO.updateByVO(art_type_name,forums.getForum_no(),con);
+				if(result){
+					con.commit();
+				}
+			}			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			helper.close(con,pstmt);
+		}
+		return result;
+	}
 	// 建置新增
 
 	public boolean executeInsert(Forums forums) {
@@ -111,7 +149,63 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 			Art_types art_types = new Art_types();
 			art_types.setArt_type_name("其他");
 			art_types.setForum_no(forum_no);
-			result = art_typesDAO.executeInsert(art_types,con);			
+			result = art_typesDAO.executeInsert(art_types,con);	
+			if(result){
+				con.commit();
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			helper.close(con, pstmt);
+		}
+		return result;
+	}
+	//新增
+	public boolean executeInsert(Forums forums,String[] art_type_name) {
+		SQLHelper helper =	new SQLHelper();
+		Connection con = null;
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		boolean result = false;		
+		try {
+			con = helper.getConnection();
+			con.setAutoCommit(false);			
+			String SQL = "insert into forums values(forums_pk_seq.nextval,?,?,?,?,default,default,default,default)";
+			String[] keys = {"forum_no"};
+			pstmt = con.prepareStatement(SQL,keys);
+			Object[] param = { forums.getMem_no(), forums.getForum_name(), forums.getForum_desc(),
+					forums.getForum_note() };
+			for(int i =0 ; i<param.length; i++){
+				pstmt.setObject(i+1, param[i]);				
+			}
+			pstmt.executeUpdate();
+			rs =pstmt.getGeneratedKeys();
+			rs.next();
+			String forum_no = rs.getString(1);
+			List<Art_types> list = new ArrayList<Art_types>();
+			for(String type_name:art_type_name ){
+				if(type_name.length()!=0){
+					Art_types art_types = new Art_types();
+					art_types.setArt_type_name(type_name);
+					art_types.setForum_no(forum_no);
+					list.add(art_types);								
+				}
+			}
+			Art_types art_types = new Art_types();
+			art_types.setArt_type_name("其他");
+			art_types.setForum_no(forum_no);
+			list.add(art_types);
+			Art_typesDAO art_typesDAO = new Art_typesDAO();
+			result = art_typesDAO.executeInsert(list,con);			
 			
 			
 			

@@ -2,7 +2,16 @@ package com.forum.domain;
 
 public class Art_types {
 	String art_type_no,forum_no,art_type_name;
+	Integer art_type_stat;
 	
+	public Integer getArt_type_stat() {
+		return art_type_stat;
+	}
+
+	public void setArt_type_stat(Integer art_type_stat) {
+		this.art_type_stat = art_type_stat;
+	}
+
 	public String getArt_type_no() {
 		return art_type_no;
 	}
