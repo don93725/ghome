@@ -62,8 +62,11 @@ function report(pj){
 		  if (xhr.readyState==4 && xhr.status==200){
 			  $(".inline").colorbox.close()
 			  $('#tips').css("background","url(/BA102G4/front_end/forum/css/images/tick.png) no-repeat center center"); 		
+			  $('#tips').css("display","block");
 			  $('#tips').animate({opacity:'1'},"slow",function(){
-				  $(this).animate({opacity:'0'},"slow");
+				  $(this).animate({opacity:'0'},"slow",function(){
+					  $('#tips').css("display","none");					  
+				  });
 			  });
 		  }else	if(xhr.status==404||xhr.status==500){
 			  $(".inline").colorbox.close()

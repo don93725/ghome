@@ -1,6 +1,10 @@
 package com.forum.dao;
 
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -83,11 +87,44 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 	// 建置新增
 
 	public boolean executeInsert(Forums forums) {
-		String SQL = "insert into forums values(forums_pk_seq.nextval,?,?,?,?,default,default,default,default)";
-		Object[] param = { forums.getMem_no(), forums.getForum_name(), forums.getForum_desc(),
-				forums.getForum_note() };
-		boolean insertResult = new SQLHelper().executeUpdate(SQL, param);
-		return insertResult;
+		SQLHelper helper =	new SQLHelper();
+		Connection con = null;
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		boolean result = false;		
+		try {
+			con = helper.getConnection();
+			con.setAutoCommit(false);			
+			String SQL = "insert into forums values(forums_pk_seq.nextval,?,?,?,?,default,default,default,default)";
+			String[] keys = {"forum_no"};
+			pstmt = con.prepareStatement(SQL,keys);
+			Object[] param = { forums.getMem_no(), forums.getForum_name(), forums.getForum_desc(),
+					forums.getForum_note() };
+			for(int i =0 ; i<param.length; i++){
+				pstmt.setObject(i+1, param[i]);				
+			}
+			pstmt.executeUpdate();
+			rs =pstmt.getGeneratedKeys();
+			rs.next();
+			String forum_no = rs.getString(1);
+			Art_typesDAO art_typesDAO = new Art_typesDAO();
+			Art_types art_types = new Art_types();
+			art_types.setArt_type_name("其他");
+			art_types.setForum_no(forum_no);
+			result = art_typesDAO.executeInsert(art_types,con);			
+			
+			
+			
+		} catch (SQLException e) {
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}
+		return result;
 	}
 	// 建置刪除
 

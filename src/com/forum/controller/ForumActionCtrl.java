@@ -34,6 +34,7 @@ public class ForumActionCtrl extends HttpServlet {
 				String forum_note = req.getParameter("forum_note");
 				ForumsSevice forumsSevice = new ForumsSevice();
 				forumsSevice.add(mem_no, forum_name, forum_desc, forum_note);
+				res.sendRedirect(req.getContextPath()+"/forum/ForumCtrl");
 			} else if ("goUpdate".equals(action)) {
 				String forum_no = req.getParameter("forum_no");
 				ForumsSevice forumsSevice = new ForumsSevice();

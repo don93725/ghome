@@ -1,5 +1,9 @@
 package com.forum.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +72,37 @@ public class Art_typesDAO extends BasicDAO implements DAOInterface<Art_types>{
 	boolean insertResult = new SQLHelper().executeUpdate(SQL,param);
 	return insertResult;
 	}
+	//建置新增2
+	public boolean executeInsert(Art_types art_types,Connection conn){
+		SQLHelper helper =	new SQLHelper();
+		Connection con = conn;
+		PreparedStatement pstmt =null;
+		ResultSet rs = null;
+		boolean result = false;
+		try {
+			String SQL="insert into art_types values(art_types_seq.nextval,?,?)";
+			pstmt = con.prepareStatement(SQL);
+			Object[] param ={art_types.getForum_no(),art_types.getArt_type_name()};
+			pstmt.setObject(1, param[0]);
+			pstmt.setObject(2, param[1]);
+			pstmt.executeUpdate();
+			con.commit();
+			result = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}finally{
+				helper.close(con, pstmt);
+			}
+			e.printStackTrace();
+		}
+		
+		return result;
+		}
 	//建置刪除
 
 	public boolean executeDelete(String art_type_no){

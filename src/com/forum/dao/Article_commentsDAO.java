@@ -41,8 +41,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	}
 	if(obj[3]!=null){
 	article_comments.setArt_cmt_ctx((String)obj[3]);
-	}
-	
+	}	
 	if(obj[5]!=null){
 	article_comments.setArt_cmt_time((Date)obj[5]);
 	}
