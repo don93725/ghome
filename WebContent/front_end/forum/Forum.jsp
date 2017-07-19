@@ -37,7 +37,7 @@
 	<tr>		
 		<td>${art.art_type}</td>
 		<td><a href="${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=${param.forum_no }&art_no=${art.art_no}">${art.art_name}</a></td>
-		<td>${art.mem_no}</td>		
+		<td>${art.mem_no.mem_nickname}</td>		
 		<td><fmt:setLocale value="en_US"/><fmt:formatDate value="${art.art_add_date}" pattern="yyyy-MM-d HH:mm"/></td>
 		<td align="right">${art.art_views}</td>
 	</tr>

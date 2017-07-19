@@ -22,62 +22,64 @@ import com.forum.inteface.DAOInterface;
 import com.forum.service.Article_commentsSevice;
 import com.forum.util.TransData;
 
-
-
 @WebServlet("/forum/ArtCmtActionCtrl")
-@MultipartConfig(fileSizeThreshold=100,maxFileSize=10*1024*1024,maxRequestSize=10*1024*1024)
+@MultipartConfig(fileSizeThreshold = 100, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 10 * 1024 * 1024)
 public class ArtCmtActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
 		req.setCharacterEncoding("utf-8");
 		HttpSession session = req.getSession();
-		User user = ((User)session.getAttribute("user"));
+		User user = ((User) session.getAttribute("user"));
 		String art_no = req.getParameter("art_no");
 		String action = req.getParameter("action");
-		
-		if(user==null){
-			String URL = this.getServletContext().getContextPath()+"/forum/LoginCtrl";
+
+		if (user == null) {
+			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
 			res.sendRedirect(URL);
-		}else if(art_no!=null){
-			if("create".equals(action)){
-				Part part = req.getPart("file");				
-				String mem_no = user.getMem_no();				
+			return;
+		}
+		if (art_no != null) {
+			if ("create".equals(action)) {
+				Part part = req.getPart("file");
+				String mem_no = user.getMem_no();
 				String art_cmt_ctx = req.getParameter("art_cmt_ctx");
 				Article_commentsSevice article_commentsSevice = new Article_commentsSevice();
-				boolean result = article_commentsSevice.add(art_no, mem_no, part, art_cmt_ctx,req.getContextPath());
-				if(result){
-					String forum_no=req.getParameter("forum_no");
-					String URL=getServletContext().getContextPath()+"/forum/ArticleShowCtrl?forum_no="+forum_no	+"&art_no="+art_no;
+				boolean result = article_commentsSevice.add(art_no, mem_no, part, art_cmt_ctx, req.getContextPath());
+				if (result) {
+					String forum_no = req.getParameter("forum_no");
+					String URL = getServletContext().getContextPath() + "/forum/ArticleShowCtrl?forum_no=" + forum_no
+							+ "&art_no=" + art_no;
 					res.sendRedirect(URL);
-				}else{
+				} else {
 					req.setAttribute("msg", "fail create comment");
 					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
-			}else if(action.equals("delete")){
+			} else if (action.equals("delete")) {
 				Article_commentsDAO article_commentsDAO = new Article_commentsDAO();
 				String art_cmt_no = req.getParameter("art_cmt_no");
 				boolean result = article_commentsDAO.executeDelete(art_cmt_no);
-				if(result){
-					String forum_no=req.getParameter("forum_no");
-					String URL=getServletContext().getContextPath()+"/forum/ArticleShowCtrl?forum_no="+forum_no	+"&art_no="+art_no;
+				if (result) {
+					String forum_no = req.getParameter("forum_no");
+					String URL = getServletContext().getContextPath() + "/forum/ArticleShowCtrl?forum_no=" + forum_no
+							+ "&art_no=" + art_no;
 					res.sendRedirect(URL);
-				}else{
+				} else {
 					req.setAttribute("msg", "fail delete comment");
 					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
-			}else {
+			} else {
 				req.setAttribute("msg", "from cmt els");
 				req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 			}
-			
-			
-		}else{
+
+		} else {
 			req.setAttribute("msg", "from cmtMaker");
 			req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 		}
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		doGet(request, response);
 	}
 

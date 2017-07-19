@@ -26,10 +26,11 @@ public class ForumCtrl extends HttpServlet {
 		List<Forums> list = forumsDAO.getAll();
 		List<Forums> rankList = forumsDAO.pageAndRank(1, 5, "forum_mviews desc", "forum_stat=1" );
 		List<Articles> articlesRankList = new ArticlesDAO().pageAndRank(1, 5, "art_mviews desc", null );
-
+		List<Articles> newestRankList = new ArticlesDAO().pageAndRank(1, 5, "art_add_date desc", null );
 		req.setAttribute("forums", list);
 		req.setAttribute("rankList", rankList);
 		req.setAttribute("articlesRankList", articlesRankList);
+		req.setAttribute("newestRankList", newestRankList);
 		req.getRequestDispatcher("/front_end/forum/ForumMain.jsp").forward(req, res);
 		
 	}

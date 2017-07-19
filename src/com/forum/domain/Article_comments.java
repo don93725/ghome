@@ -4,7 +4,8 @@ import java.sql.Blob;
 import java.util.Date;
 
 public class Article_comments {
-	String art_cmt_no,art_no,mem_no,art_cmt_ctx;
+	String art_cmt_no,art_no,art_cmt_ctx;
+	Members mem_no;
 	byte[] art_cmt_img;
 	Date art_cmt_time;
 	
@@ -19,11 +20,11 @@ public class Article_comments {
 	}
 	public void setArt_no(String art_no) {
 		this.art_no = art_no;
-	}
-	public String getMem_no() {
+	}	
+	public Members getMem_no() {
 		return mem_no;
 	}
-	public void setMem_no(String mem_no) {
+	public void setMem_no(Members mem_no) {
 		this.mem_no = mem_no;
 	}
 	public String getArt_cmt_ctx() {

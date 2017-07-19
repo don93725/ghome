@@ -17,7 +17,7 @@ import com.forum.domain.User;
 public class Login extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession();
-		session.setAttribute("user",new User("admin","神東",3));
+		session.setAttribute("user",new User("1","神東",3));
 		res.setContentType("text/html; charset=utf-8");
 		res.getWriter().println("login");
 		System.out.println(((User)session.getAttribute("user")).getMem_name()+"登入了");

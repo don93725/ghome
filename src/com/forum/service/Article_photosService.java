@@ -17,9 +17,6 @@ public List<Article_photos> setArticle_photos(Collection<Part> parts){
 		List<Article_photos> list = new ArrayList<Article_photos>();				
 		int i = 0;
 		for(Part part : parts){
-			for(String s : part.getHeaderNames()){
-				System.out.println(part.getHeaders(s));				
-			}
 			if("file".equals(part.getName())){
 				Article_photos article_photos = new Article_photos();
 				article_photos.setArt_pt_idx(String.valueOf(i++));

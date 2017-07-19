@@ -1,7 +1,6 @@
 var count=0;
     $(function(){
     	count=$('input:[name=art_type_name]:[value]').length;
-    	alert($('input:[name=art_type_name]:[value]').length);
     	for(var i = 0 ; i<count ; i++){
     		$('input[name=art_type_name]:eq('+i+")").css("display","");
     		$('input[name=art_type_name]:eq('+i+")").attr("readonly","");

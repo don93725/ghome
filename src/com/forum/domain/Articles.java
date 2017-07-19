@@ -5,8 +5,9 @@ import java.util.Date;
 public class Articles {	
 	Integer art_views,art_mviews;
 	
-	String art_no,mem_no,forum_no,art_type,art_name,art_ctx;
+	String art_no,forum_no,art_type,art_name,art_ctx;
 	Date art_add_date,art_upd_date;
+	Members mem_no;
 	
 	public Integer getArt_views() {
 		return art_views;
@@ -26,10 +27,11 @@ public class Articles {
 	public void setArt_no(String art_no) {
 		this.art_no = art_no;
 	}
-	public String getMem_no() {
+	
+	public Members getMem_no() {
 		return mem_no;
 	}
-	public void setMem_no(String mem_no) {
+	public void setMem_no(Members mem_no) {
 		this.mem_no = mem_no;
 	}
 	public String getForum_no() {

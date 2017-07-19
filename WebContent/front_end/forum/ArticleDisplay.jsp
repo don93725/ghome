@@ -10,10 +10,7 @@
 <meta content="Catch-Control" content="no-cache">
 <meta content="Pragma" content="no-cache">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<%Articles articles=(Articles)request.getAttribute("articles");
-	List<Article_comments> article_comments = (List<Article_comments>)request.getAttribute("article_comments");
-	int allPageCount=Integer.parseInt( request.getAttribute("allPageCount").toString());
-	int thisPage = Integer.parseInt(request.getAttribute("thisPage").toString());%>
+
 
 
 <script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -29,7 +26,8 @@
 <table border='1'>
 <tr>	
 	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br>
-	<a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${articles.mem_no}'>名稱</a><br>身份</td>
+	<a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${articles.mem_no.mem_no}'>${articles.mem_no.mem_nickname}</a><br>
+	<c:if test="${articles.mem_no.mem_rank=='0'}">健身者</c:if><c:if test="${articles.mem_no.mem_rank=='1'}">教練</c:if><c:if test="${articles.mem_no.mem_rank=='2'}">健身房</c:if></td>
 	<td colspan='2'>${articles.art_name}</td>
 </tr>
 <tr><td width='600' height='100' valign="top" colspan='3'>${articles.art_ctx}</td></tr>
@@ -44,30 +42,29 @@
 </table>
 </div>
 </c:if>
-<%for(int i = 0 ; i < article_comments.size() ; i++){
-	Article_comments comments=article_comments.get(i);%>
-	
+<c:forEach var='comments' items='${article_comments }'>
 <div>
 <table border='1'>
-<tr>
-	
-	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br><a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=<%=comments.getMem_no()%>'>名稱</a><br>身份</td>
-	
+<tr>	
+	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br><a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${comments.mem_no.mem_no}'>${comments.mem_no.mem_nickname}</a><br>
+<c:if test="${comments.mem_no.mem_rank=='0'}">健身者</c:if><c:if test="${comments.mem_no.mem_rank=='1'}">教練</c:if><c:if test="${comments.mem_no.mem_rank=='2'}">健身房</c:if></td>
 </tr>
 <tr>
-	<td width='600' height='100' valign="top"><%=comments.getArt_cmt_ctx() %></td>
+	<td width='600' height='100' valign="top">${comments.art_cmt_ctx }</td>
 </tr>
 <tr>
 <td width='600' height='20' align="left">
 <c:if test="${(articles.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
-<a href="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}&art_cmt_no=<%=comments.getArt_cmt_no()%>" onclick="return confirm('確定要刪除留言?')">刪除</a>
+<a href="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}&art_cmt_no=${comments.art_cmt_no}" onclick="return confirm('確定要刪除留言?')">刪除</a>
 	</c:if>
 	</td></tr>
 </table>
 </div>
-<%} %>
+</c:forEach>
+
+
 <jsp:include page="/front_end/forum/ChangePage.jsp"/>
-<%if(session.getAttribute("user")!=null){ %>
+<c:if test="${! empty user }">
 <div>
 <table border='1'>
 <form action="${pageContext.request.contextPath}/forum/ArtCmtActionCtrl?forum_no=${param.forum_no}&art_no=${articles.art_no}&action=create" method="post" enctype='multipart/form-data' onsubmit='return getContent()'>
@@ -86,7 +83,8 @@
 </form>
 </table>
 </div>
-<%}else{ %>
+</c:if>
+<c:if test="${ empty user }">
 <div>
 <table border='1'>
 <tr>
@@ -96,7 +94,7 @@
 </table>
 
 </div>
-<%} %>
+</c:if>
 <div style="display: none">
 			<div id='inline_content' style='padding:10px; background:#fff;font-size: 30px;'>
 			<form action="#" method="post">

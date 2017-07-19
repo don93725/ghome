@@ -13,6 +13,7 @@ import java.util.List;
 
 import com.forum.domain.Art_types;
 import com.forum.domain.Article_comments;
+import com.forum.domain.Members;
 import com.forum.inteface.DAOInterface;
 import com.forum.util.BasicDAO;
 import com.forum.util.SQLHelper;
@@ -37,7 +38,11 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	article_comments.setArt_no((String)obj[1]);
 	}
 	if(obj[2]!=null){
-	article_comments.setMem_no((String)obj[2]);
+		Members members = new Members();
+		members.setMem_no((String) obj[2]);
+		members.setMem_nickname((String) obj[6]);
+		members.setMem_rank((String) obj[7]);
+		article_comments.setMem_no(members);
 	}
 	if(obj[3]!=null){
 	article_comments.setArt_cmt_ctx((String)obj[3]);
@@ -52,7 +57,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	//建置查詢單筆
 
 	public Article_comments getVOByPK(String art_cmt_no){
-	String SQL ="Select * from article_comments where art_cmt_no=?";
+	String SQL ="Select * from article_comments a join (select mem_nickname,mem_no from members) b on a.mem_no=b.mem_no where art_cmt_no=?";
 	Object[] param ={art_cmt_no};
 	List<Article_comments> list=getVOBySQL(SQL,param);
 	Article_comments article_comments=list.get(0);
@@ -61,7 +66,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	//建置查詢全部
 
 	public List<Article_comments> getAll(){
-	String SQL="select * from article_comments";
+	String SQL="select * from article_comments a join (select mem_nickname,mem_no from members) b on a.mem_no=b.mem_no";
 	List<Article_comments> list=getVOBySQL(SQL,null);
 	return list;
 	}
@@ -96,7 +101,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 		String SQL="insert into article_comments values(article_comments_pk_seq.nextval,?,?,?,?,sysdate)";
 		String[] keys = {"art_cmt_no"};
 		pstmt = con.prepareStatement(SQL, keys);
-		Object[] param ={article_comments.getArt_no(),article_comments.getMem_no(),article_comments.getArt_cmt_ctx(),article_comments.getArt_cmt_img()};
+		Object[] param ={article_comments.getArt_no(),article_comments.getMem_no().getMem_no(),article_comments.getArt_cmt_ctx(),article_comments.getArt_cmt_img()};
 		for(int i = 0 ; i < param.length ; i++){
 			pstmt.setObject(i+1, param[i]);
 		}
@@ -180,7 +185,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	if(page==1){
 		firstPage = 1;		
 	}
-	String SQL="select art_cmt_no,art_no,mem_no,art_cmt_ctx,art_cmt_img,art_cmt_time from (select art_cmt_no,art_no,mem_no,art_cmt_ctx,art_cmt_img,art_cmt_time, rownum rn from (select * from article_comments";
+	String SQL="select art_cmt_no,art_no,mem_no,art_cmt_ctx,art_cmt_img,art_cmt_time,mem_nickname,mem_rank from (select art_cmt_no,art_no,mem_no,art_cmt_ctx,art_cmt_img,art_cmt_time,mem_nickname,mem_rank, rownum rn from (select art_cmt_no,art_no,a.mem_no,art_cmt_ctx,art_cmt_img,art_cmt_time,mem_nickname,mem_rank from article_comments a join (select mem_nickname,mem_rank,mem_no from members) b on a.mem_no=b.mem_no";
 	if(where!=null){
 	SQL = SQL +" where " + where;
 	}

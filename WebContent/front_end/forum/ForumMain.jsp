@@ -2,6 +2,7 @@
     pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -35,7 +36,7 @@
 </c:forEach>
 </table>
 </div>
-<div >
+<div class='rank'>
 <table border='1'>
 <tr><td>名次</td><td>文章名稱</td><td>月點擊/總點擊</td></tr>
 
@@ -44,6 +45,20 @@
 <td><c:out value="${loop2.count}"/></td>
 <td><a href='${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=<c:out value="${rankArticles.forum_no}"/>&art_no=<c:out value="${rankArticles.art_no}"/>'><c:out value="${rankArticles.art_name }"/></a></td>
 <td><c:out value="${rankArticles.art_views }"/>/<c:out value="${rankArticles.art_mviews }"/></td>
+</tr>
+</c:forEach>
+</table>
+</div>
+</div>
+<div >
+<table border='1'>
+<tr><td>名次</td><td>最新文章</td><td>發表時間</td></tr>
+
+<c:forEach var="newestRankList" items="${newestRankList}" varStatus="loop3">
+<tr>
+<td><c:out value="${loop3.count}"/></td>
+<td><a href='${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=<c:out value="${newestRankList.forum_no}"/>&art_no=<c:out value="${newestRankList.art_no}"/>'><c:out value="${newestRankList.art_name }"/></a></td>
+<td><fmt:setLocale value="en_US"/><fmt:formatDate value="${newestRankList.art_add_date}" pattern="yyyy-MM-d HH:mm"/></td>
 </tr>
 </c:forEach>
 </table>

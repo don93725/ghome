@@ -81,7 +81,6 @@ public class Art_typesDAO extends BasicDAO implements DAOInterface<Art_types> {
 			String sql = "select art_type_name from art_types where forum_no=? and art_type_name not in (";
 			for (int i = 0; i < art_type_name.length; i++) {
 				String type_name = art_type_name[i];
-				System.out.println("type_name="+type_name);
 				if(type_name.length()!=0){
 					sql = sql + "'" + type_name + "',";					
 				}

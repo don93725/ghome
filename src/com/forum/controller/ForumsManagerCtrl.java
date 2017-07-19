@@ -21,7 +21,12 @@ public class ForumsManagerCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
-		User user = (User) req.getSession().getAttribute("user");				
+		User user = (User) req.getSession().getAttribute("user");
+		if(user==null){
+			//登入管理者葉面
+			String URL = this.getServletContext().getContextPath()+"/forum/LoginCtrl";
+			res.sendRedirect(URL);
+		}
 		if (user.getMem_rank() == 3) {			
 			ForumsSevice forumsSevice = new ForumsSevice();
 			if ("confirm".equals(action)) {					
@@ -34,10 +39,6 @@ public class ForumsManagerCtrl extends HttpServlet {
 			List<Forums> forums = forumsSevice.getApplyForums(Integer.parseInt(page), pageSize);
 			req.setAttribute("forums", forums);			
 			//導向哪頁面還沒寫
-		}else{
-			//登入管理者葉面
-			String URL = this.getServletContext().getContextPath()+"/forum/LoginCtrl";
-			res.sendRedirect(URL);
 		}
 	
 	}

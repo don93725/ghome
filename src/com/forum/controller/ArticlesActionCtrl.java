@@ -27,7 +27,7 @@ import com.forum.service.ArticlesSevice;
  * Servlet implementation class ArticlesMakerCtrl
  */
 @WebServlet("/forum/ArticlesActionCtrl")
-@MultipartConfig(fileSizeThreshold=100,maxFileSize=10*1024*1024,maxRequestSize=10*1024*1024)
+@MultipartConfig(fileSizeThreshold = 100, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 10 * 1024 * 1024)
 public class ArticlesActionCtrl extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -39,7 +39,9 @@ public class ArticlesActionCtrl extends HttpServlet {
 		if (user == null) {
 			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
 			res.sendRedirect(URL);
-		} else if ((action.equals("goCreatePage") || action.equals("goUpdatePage")) && forum_no != null) {
+			return;
+		}
+		if ((action.equals("goCreatePage") || action.equals("goUpdatePage")) && forum_no != null) {
 			List<Art_types> art_types = new Art_typesDAO()
 					.getVOBySQL("select * from art_types where forum_no=" + forum_no, null);
 			req.setAttribute("art_types", art_types);
@@ -63,11 +65,11 @@ public class ArticlesActionCtrl extends HttpServlet {
 				List<Article_photos> list = article_photosService.setArticle_photos(parts);
 				ArticlesSevice articlesSevice = new ArticlesSevice();
 				boolean createResult = false;
-				if(list.size()==0){
+				if (list.size() == 0) {
 					createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
-				}else{
-					createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx,list);
-				}				
+				} else {
+					createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx, list);
+				}
 				if (createResult) {
 					String URL = this.getServletContext().getContextPath() + "/forum/ForumShowCtrl?forum_no="
 							+ forum_no;
@@ -85,15 +87,16 @@ public class ArticlesActionCtrl extends HttpServlet {
 				String order = req.getParameter("order");
 				String updateInfo = req.getParameter("updateInfo");
 				String deleteInfo = req.getParameter("deleteInfo");
-				System.out.println("order="+order+",updateInfo="+updateInfo+",deleteInfo="+deleteInfo);
+				System.out.println("order=" + order + ",updateInfo=" + updateInfo + ",deleteInfo=" + deleteInfo);
 				Article_photosService article_photosService = new Article_photosService();
-				Collection<Part> parts = req.getParts();					
-				List<Article_photos> list = article_photosService.setArticle_photos(parts,order,updateInfo);					
+				Collection<Part> parts = req.getParts();
+				List<Article_photos> list = article_photosService.setArticle_photos(parts, order, updateInfo);
 				ArticlesSevice articlesSevice = new ArticlesSevice();
 				boolean createResult = false;
-				System.out.println(parts.size()+"list"+list.size());				
-				createResult = articlesSevice.update(art_type_name, art_name, art_ctx,art_no,list,updateInfo,deleteInfo);
-				
+				System.out.println(parts.size() + "list" + list.size());
+				createResult = articlesSevice.update(art_type_name, art_name, art_ctx, art_no, list, updateInfo,
+						deleteInfo);
+
 				if (createResult) {
 					String URL = this.getServletContext().getContextPath() + "/forum/ArticleShowCtrl?forum_no="
 							+ forum_no + "&art_no=" + art_no;

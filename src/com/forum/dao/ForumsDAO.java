@@ -100,7 +100,6 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 			pstmt = con.prepareStatement(sql);
 			Object[] param = { forums.getForum_desc(), forums.getForum_note(),forums.getForum_no()  };
 			String tip = helper.executeUpdate(sql, param, null, con);
-			System.out.println("tip"+tip);
 			if(tip!=null){						
 				Art_typesDAO art_typesDAO = new Art_typesDAO();
 				result = art_typesDAO.updateByVO(art_type_name,forums.getForum_no(),con);
@@ -200,10 +199,12 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 					list.add(art_types);								
 				}
 			}
-			Art_types art_types = new Art_types();
-			art_types.setArt_type_name("其他");
-			art_types.setForum_no(forum_no);
-			list.add(art_types);
+			if(list.size()==0){
+				Art_types art_types = new Art_types();
+				art_types.setArt_type_name("其他");
+				art_types.setForum_no(forum_no);
+				list.add(art_types);				
+			}
 			Art_typesDAO art_typesDAO = new Art_typesDAO();
 			result = art_typesDAO.executeInsert(list,con);			
 			

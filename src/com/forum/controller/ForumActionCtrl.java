@@ -25,49 +25,48 @@ public class ForumActionCtrl extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
 		User user = (User) req.getSession().getAttribute("user");
+		if (user == null) {
+			// 請先登入
+			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
+			res.sendRedirect(URL);
+			return;
 
-		if (user != null) {
-			if ("wantCreate".equals(action)) {
-				req.getRequestDispatcher("/front_end/forum/ForumApply.jsp").forward(req, res);
-			} else if ("createApply".equals(action)) {
-				String mem_no = user.getMem_no();
-				String forum_name = req.getParameter("forum_name");
-				String forum_desc = req.getParameter("forum_desc");
-				String forum_note = req.getParameter("forum_note");
-				String[] art_type_name = req.getParameterValues("art_type_name");		
+		}
+		if ("wantCreate".equals(action)) {
+			req.getRequestDispatcher("/front_end/forum/ForumApply.jsp").forward(req, res);
+		} else if ("createApply".equals(action)) {
+			String mem_no = user.getMem_no();
+			String forum_name = req.getParameter("forum_name");
+			String forum_desc = req.getParameter("forum_desc");
+			String forum_note = req.getParameter("forum_note");
+			String[] art_type_name = req.getParameterValues("art_type_name");
 
-				ForumsSevice forumsSevice = new ForumsSevice();				
-				forumsSevice.add(mem_no, forum_name, forum_desc, forum_note,art_type_name);
-				res.sendRedirect(req.getContextPath()+"/forum/ForumCtrl");
-			} else if ("goUpdate".equals(action)) {
-				String forum_no = req.getParameter("forum_no");
-				ForumsSevice forumsSevice = new ForumsSevice();
-				Forums forums = forumsSevice.findByPK(forum_no);
-				List<Art_types> art_types = new Art_typesService().getArt_types(forum_no);
-				req.setAttribute("forums", forums);
-				req.setAttribute("art_types", art_types);
-				req.getRequestDispatcher("/front_end/forum/ForumApply.jsp").forward(req, res);				
-			} else if ("update".equals(action)) {
-				String forum_no = req.getParameter("forum_no");				
-				String forum_desc = req.getParameter("forum_desc");
-				String forum_note = req.getParameter("forum_note");
-				String[] art_type_name = req.getParameterValues("art_type_name");
-				ForumsSevice forumsSevice = new ForumsSevice();
-				boolean result = forumsSevice.update(forum_no, forum_desc, forum_note, art_type_name);
-				if(result){
-					res.sendRedirect(req.getContextPath()+"/forum/ForumShowCtrl?forum_no="+forum_no);
-				}else{
-					req.setAttribute("msg","fail to update forum");
-					req.getRequestDispatcher("front_end/forum/ok.jsp").forward(req, res);
-				}
-			} else{
-				
-				//請先登入
-				String URL = this.getServletContext().getContextPath()+"/forum/LoginCtrl";
-				res.sendRedirect(URL);
-
+			ForumsSevice forumsSevice = new ForumsSevice();
+			forumsSevice.add(mem_no, forum_name, forum_desc, forum_note, art_type_name);
+			res.sendRedirect(req.getContextPath() + "/forum/ForumCtrl");
+		} else if ("goUpdate".equals(action)) {
+			String forum_no = req.getParameter("forum_no");
+			ForumsSevice forumsSevice = new ForumsSevice();
+			Forums forums = forumsSevice.findByPK(forum_no);
+			List<Art_types> art_types = new Art_typesService().getArt_types(forum_no);
+			req.setAttribute("forums", forums);
+			req.setAttribute("art_types", art_types);
+			req.getRequestDispatcher("/front_end/forum/ForumApply.jsp").forward(req, res);
+		} else if ("update".equals(action)) {
+			String forum_no = req.getParameter("forum_no");
+			String forum_desc = req.getParameter("forum_desc");
+			String forum_note = req.getParameter("forum_note");
+			String[] art_type_name = req.getParameterValues("art_type_name");
+			ForumsSevice forumsSevice = new ForumsSevice();
+			boolean result = forumsSevice.update(forum_no, forum_desc, forum_note, art_type_name);
+			if (result) {
+				res.sendRedirect(req.getContextPath() + "/forum/ForumShowCtrl?forum_no=" + forum_no);
+			} else {
+				req.setAttribute("msg", "fail to update forum");
+				req.getRequestDispatcher("front_end/forum/ok.jsp").forward(req, res);
 			}
 		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
