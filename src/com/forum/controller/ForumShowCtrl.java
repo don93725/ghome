@@ -41,7 +41,9 @@ public class ForumShowCtrl extends HttpServlet {
 			int allPageCount=0;
 			String art_type_name = null;
 			String where = forum_no;
+			String queryStr ="ForumShowCtrl?forum_no="+forum_no;
 			if(art_type_no!=null) {
+				queryStr = queryStr +"&art_type_no="+art_type_no;
 				Object[] param = {art_type_no};
 				art_type_name = (String)new Art_typesDAO().getCol("art_type_name", param)[0];
 				where = where +" and art_type='"+art_type_name+"'";
@@ -53,7 +55,7 @@ public class ForumShowCtrl extends HttpServlet {
 			req.setAttribute("art_types", art_types);
 			allPageCount = (allPageCount-1)/pageSize+1;
 			req.setAttribute("allPageCount", allPageCount);
-			String queryStr ="ForumShowCtrl?forum_no="+forum_no;
+			
 			req.setAttribute("queryStr", queryStr);				
 			req.setAttribute("thisPage", thisPage);	
 			ForumsSevice forumsSevice = new ForumsSevice();
@@ -61,6 +63,7 @@ public class ForumShowCtrl extends HttpServlet {
 			String mem_no = forumsSevice.getMem(forum_no);
 			req.setAttribute("mem_no", mem_no);
 			List<Articles> articles=new ArticlesSevice().getPageData(Integer.parseInt(thisPage), pageSize, where);
+			System.out.println(articles.size());
 			req.setAttribute("articles", articles);
 			req.getRequestDispatcher("/front_end/forum/Forum.jsp").forward(req, res);
 		}else{

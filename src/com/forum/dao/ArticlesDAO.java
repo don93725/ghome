@@ -252,6 +252,7 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 			SQL = SQL + " where " + where;
 		}
 		SQL = SQL + " order by " + order + ")) where rn between " + firstPage + " and " + lastPage;
+		System.out.println(SQL);
 		List<Articles> list = getVOBySQL(SQL, null);
 		return list;
 	}

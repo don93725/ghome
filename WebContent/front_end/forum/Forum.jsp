@@ -18,7 +18,10 @@
 <c:if test="${! empty user }">
 <a href='${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goCreatePage&forum_no=${param.forum_no }'>新增文章</a>
 </c:if>
-<c:if test="${mem_no==user.mem_no&&!empty user.mem_no }"><a href="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=goUpdate&forum_no=${param.forum_no}">編輯論壇</a></c:if>
+<c:if test="${mem_no==user.mem_no&&!empty user.mem_no }">
+<a href="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=goUpdate&forum_no=${param.forum_no}">編輯論壇</a>
+<a href="${pageContext.request.contextPath}/forum/ArticlesReportActionCtrl?action=select&forum_no=${param.forum_no}">管理檢舉</a>
+</c:if>
 <div>
 <table border='1'>
 <tr>
@@ -37,7 +40,7 @@
 	<tr>		
 		<td>${art.art_type}</td>
 		<td><a href="${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=${param.forum_no }&art_no=${art.art_no}">${art.art_name}</a></td>
-		<td>${art.mem_no.mem_nickname}</td>		
+		<td><a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${art.mem_no.mem_no}'>${art.mem_no.mem_nickname}</a></td>		
 		<td><fmt:setLocale value="en_US"/><fmt:formatDate value="${art.art_add_date}" pattern="yyyy-MM-d HH:mm"/></td>
 		<td align="right">${art.art_views}</td>
 	</tr>

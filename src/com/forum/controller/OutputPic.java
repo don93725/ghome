@@ -39,14 +39,16 @@ public class OutputPic extends HttpServlet {
 			if(bytes!=null){			
 				out.write(bytes);				
 			}else{
-				 InputStream in =getServletContext().getResourceAsStream("/forum/images/tomcat.gif");              
-				 bytes = new byte[in.available()];			     		    
+				 System.out.println("!?");
+				 InputStream in =getServletContext().getResourceAsStream("/front_end/forum/images/tomcat.gif");              
+				 bytes = new byte[in.available()];	
+				 in.read(bytes);
 			     out.write(bytes);
 			     in.close();
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			 InputStream in =getServletContext().getResourceAsStream("/forum/images/tomcat.gif");              
+			 InputStream in =getServletContext().getResourceAsStream("/front_end/forum/images/tomcat.gif");              
 			 bytes = new byte[in.available()];
 		     in.read(bytes);
 		     out.write(bytes);

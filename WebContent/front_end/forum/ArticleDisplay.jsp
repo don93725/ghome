@@ -25,18 +25,18 @@
 <c:if test="${thisPage==1}">
 <table border='1'>
 <tr>	
-	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br>
+	<td rowspan='3' width='100' style='text-align: center' valign="top"><img width=80 src='${pageContext.request.contextPath}/forum/OutputPic?mem_no=${articles.mem_no.mem_no}&mem_rank=${articles.mem_no.mem_rank}'><br>
 	<a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${articles.mem_no.mem_no}'>${articles.mem_no.mem_nickname}</a><br>
 	<c:if test="${articles.mem_no.mem_rank=='0'}">健身者</c:if><c:if test="${articles.mem_no.mem_rank=='1'}">教練</c:if><c:if test="${articles.mem_no.mem_rank=='2'}">健身房</c:if></td>
 	<td colspan='2'>${articles.art_name}</td>
 </tr>
 <tr><td width='600' height='100' valign="top" colspan='3'>${articles.art_ctx}</td></tr>
 <tr><td width='600' height='20' align="left">
-	<c:if test="${(articles.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
+	<c:if test="${(articles.mem_no.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
 	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goUpdatePage&forum_no=${param.forum_no }&art_no=${articles.art_no}">修改</a>&nbsp
 	<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}" onclick="return confirm('確定要刪除文章?')">刪除</a>&nbsp
 	</c:if>
-	<c:if test="${articles.mem_no!=user.mem_no&&! empty user}">
+	<c:if test="${articles.mem_no.mem_no==user.mem_no&&! empty user}">
 	<a class='inline' href="#inline_content">檢舉</a>	</c:if>
 	</td></tr>	
 </table>
@@ -46,7 +46,7 @@
 <div>
 <table border='1'>
 <tr>	
-	<td rowspan='3' width='100' style='text-align: center' valign="top">圖片<br><a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${comments.mem_no.mem_no}'>${comments.mem_no.mem_nickname}</a><br>
+	<td rowspan='3' width='100' style='text-align: center' valign="top"><img width=80 src='${pageContext.request.contextPath}/forum/OutputPic?mem_no=${comments.mem_no.mem_no}&mem_rank=${comments.mem_no.mem_rank}'><br><a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${comments.mem_no.mem_no}'>${comments.mem_no.mem_nickname}</a><br>
 <c:if test="${comments.mem_no.mem_rank=='0'}">健身者</c:if><c:if test="${comments.mem_no.mem_rank=='1'}">教練</c:if><c:if test="${comments.mem_no.mem_rank=='2'}">健身房</c:if></td>
 </tr>
 <tr>
@@ -101,14 +101,17 @@
 			<h3>文章檢舉</h3>
 			<label >類型</label>
 			<select name="rpt_type" id='rpt_type' style='font-size: 30px;' >
-				<option value="歧視">歧視</option>				
-				<option value="十八禁">十八禁</option>
-				<option value="人身攻擊">人身攻擊</option>
-				<option value="涉政治問題">涉政治問題</option>
+				<option value="0">涉及歧視</option>				
+				<option value="1">含十八禁</option>
+				<option value="2">人身攻擊</option>
+				<option value="3">政治問題</option>
+				<option value="4">其他</option>
 			</select>
 			<label >檢舉原因</label>
 			<input type="text" style='font-size: 30px;' name="rpt_ctx" id='rpt_ctx' maxlength="50">
-			<input type='button' value="送出" onclick="report('${pageContext.request.contextPath}');">
+
+			
+			<input type='button' value="送出" onclick="report('${pageContext.request.contextPath}',${param.art_no });">
 			<input type='reset' value="重填">
 			</form>
 		</div>

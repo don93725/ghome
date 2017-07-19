@@ -54,35 +54,52 @@ KindEditor.ready(function(K) {
 })(jQuery);
 	
 
-function report(pj){
+function report(pj,art_no){
 	var xhr = createXHR();
 	if(xhr!=null){
 		xhr.onreadystatechange=function()
 		{
-		  if (xhr.readyState==4 && xhr.status==200){
+
+		  if (xhr.readyState==4 && xhr.status==200){			  
 			  $(".inline").colorbox.close()
-			  $('#tips').css("background","url(/BA102G4/front_end/forum/css/images/tick.png) no-repeat center center"); 		
+			  if(xhr.responseText.length!=0){					  
+					  $('#tips').css("background","url("+pj+"/front_end/forum/css/images/tick.png) no-repeat center center"); 		
+					  $('#tips').css("display","block");
+					  $('#tips').animate({opacity:'1'},"slow",function(){
+						  $(this).animate({opacity:'0'},"slow",function(){
+							  $('#tips').css("display","none");					  
+						  });
+					  });
+			  } else{
+				  $('#tips').css("background","url("+pj+"/front_end/forum/css/images/cross.png) no-repeat center center"); 		
+				  $('#tips').css("display","block");
+				  $('#tips').animate({opacity:'1'},"slow",function(){
+			  			$(this).animate({opacity:'0'},"slow",function(){
+							  $('#tips').css("display","none");					  
+						  });
+			  				
+				  });
+			  }
+			 
+			 
+		  }else	if(xhr.status==404||xhr.status==500){
+			  $('#tips').css("background","url("+pj+"/front_end/forum/css/images/cross.png) no-repeat center center"); 		
 			  $('#tips').css("display","block");
 			  $('#tips').animate({opacity:'1'},"slow",function(){
-				  $(this).animate({opacity:'0'},"slow",function(){
-					  $('#tips').css("display","none");					  
-				  });
-			  });
-		  }else	if(xhr.status==404||xhr.status==500){
-			  $(".inline").colorbox.close()
-			  $('#tips').css("background","url(/BA102G4/front_end/forum/css/images/cross.png) no-repeat center center"); 		
-			  $('#tips').animate({opacity:'1'},"slow",function(){
-		  			$(this).animate({opacity:'0'},"slow");	
-			  });
+		  			$(this).animate({opacity:'0'},"slow",function(){
+						  $('#tips').css("display","none");					  
+					  });
+		  				
+			  }); 
 		  		
 		  }
 	  	}
 	}		
 	if(xhr!=null){
-		var URL = pj+"/forum/ArticlesReportCtrl";
+		var URL = pj+"/forum/ArticlesReportActionCtrl";
 		xhr.open("post",URL,true);
 		xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-		xhr.send("rpt_type="+$('#rpt_type').val()+"&rpt_ctx="+$('#rpt_ctx').val());		
+		xhr.send("rpt_type="+$('#rpt_type').val()+"&rpt_ctx="+$('#rpt_ctx').val()+"&art_no="+art_no+"&action=insert");		
 	}
 }
 function createXHR(){
