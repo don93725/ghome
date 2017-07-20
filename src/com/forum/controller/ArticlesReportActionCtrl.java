@@ -10,10 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_report;
 import com.forum.domain.Members;
-import com.forum.service.Article_reportServiece;
+import com.forum.service.Article_reportService;
+import com.forum.service.ArticlesService;
 
 /**
  * Servlet implementation class ArticlesReportCtrl
@@ -36,7 +38,7 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 			String rpt_ctx = req.getParameter("rpt_ctx");
 			String art_no = req.getParameter("art_no");
 			String mem_no = req.getParameter("mem_no");
-			Article_reportServiece article_reportServiece = new Article_reportServiece();
+			Article_reportService article_reportServiece = new Article_reportService();
 			System.out.println(rpt_type+rpt_ctx+art_no+mem_no);
 			boolean result = article_reportServiece.add(art_no, user.getMem_no(), rpt_type, rpt_ctx);
 			if(result){
@@ -46,7 +48,7 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 		}
 		
 		if("update".equals(action)){
-			Article_reportServiece article_reportServiece = new Article_reportServiece();
+			Article_reportService article_reportServiece = new Article_reportService();
 			String art_rpt_no = req.getParameter("art_rpt_no");
 			boolean result = article_reportServiece.updateVO(art_rpt_no);
 			if(result){
@@ -54,8 +56,18 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 			}
 			return;
 		}
+		if("delete".equals(action)){
+			ArticlesDAO articlesDAO = new ArticlesDAO();
+			String art_no = req.getParameter("art_no");			
+			boolean result = articlesDAO.executeDelete(art_no);		
+			if(result){
+				out.print("ok");
+			}
+			return;
+		}
+		
 		if("select".equals(action)){
-			Article_reportServiece article_reportServiece = new Article_reportServiece();
+			Article_reportService article_reportServiece = new Article_reportService();
 			String thisPage = (req.getParameter("thisPage")==null)? "1":req.getParameter("thisPage");
 			String rpt_type = req.getParameter("rpt_type");
 			String forum_no = req.getParameter("forum_no");

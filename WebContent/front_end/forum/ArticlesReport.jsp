@@ -9,6 +9,7 @@
 <title>Insert title here</title>
 <script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
 <script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/ArticlesReport.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/css/ArticleDisplay.css">
 </head>
 <body>
 ><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?&forum_no=${param.forum_no }">${forum_name }</a>>編輯論壇
@@ -34,10 +35,10 @@
 			<th>檢舉時間</th>
 			<th>處理</th>
 		</tr>
-		<c:forEach var="article_report" items='${article_report }'>
+		<c:forEach var="article_report" items='${article_report }' varStatus="loop">
 		<tr class="art_rpt">
-			<td>${article_report.art_no.art_name}</td>
-			<td>${article_report.rpt_mem_no}</td>
+			<td><a target="_blank" href="${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=${article_report.art_no.forum_no }&art_no=${article_report.art_no.art_no}">${article_report.art_no.art_name}</a></td>
+			<td><a target="_blank" href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${article_report.rpt_mem_no.mem_no}'>${article_report.rpt_mem_no.mem_nickname}</a></td>
 			<td>
 			<c:if test="${article_report.rpt_type==0}">涉及歧視</c:if>
 			<c:if test="${article_report.rpt_type==1}">含十八禁</c:if>
@@ -48,8 +49,8 @@
 			<td>${article_report.rpt_ctx}</td>
 			<td><fmt:setLocale value="en_US"/><fmt:formatDate value="${article_report.rpt_time}" pattern="yyyy-MM-d HH:mm"/></td>
 			<td>
-			<button class='delRpt'>刪除</button>
-			<button class='fininshRpt'>完成</button>
+			<button class='delRpt' value='${article_report.art_no.art_no }'>刪除</button>
+			<button class='fininshRpt' value='${article_report.art_rpt_no }'>完成</button>
 			</td>
 		</tr>
 		<tr style="display: none;">
@@ -59,6 +60,6 @@
 	</table>
 	</div>
 	<jsp:include page="/front_end/forum/ChangePage.jsp"/>
-
+	<div id='tips'></div>
 </body>
 </html>

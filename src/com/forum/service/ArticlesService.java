@@ -8,7 +8,7 @@ import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.forum.domain.Members;
 
-public class ArticlesSevice {
+public class ArticlesService {
 	//含相片
 	public boolean add(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx) {
 		System.out.println(mem_no);

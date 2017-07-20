@@ -45,6 +45,7 @@
 		<td align="right">${art.art_views}</td>
 	</tr>
 </c:forEach>
+	<c:if test="${empty articles}"><tr><td colspan='5'>目前尚無文章</td></tr></c:if>
 
 	</table>
 <jsp:include page="/front_end/forum/ChangePage.jsp"/>

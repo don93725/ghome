@@ -13,7 +13,7 @@ import com.forum.domain.Art_types;
 import com.forum.domain.Forums;
 import com.forum.domain.Members;
 import com.forum.service.Art_typesService;
-import com.forum.service.ForumsSevice;
+import com.forum.service.ForumsService;
 
 /**
  * Servlet implementation class ForumApplyCtrl
@@ -41,12 +41,12 @@ public class ForumActionCtrl extends HttpServlet {
 			String forum_note = req.getParameter("forum_note");
 			String[] art_type_name = req.getParameterValues("art_type_name");
 
-			ForumsSevice forumsSevice = new ForumsSevice();
+			ForumsService forumsSevice = new ForumsService();
 			forumsSevice.add(mem_no, forum_name, forum_desc, forum_note, art_type_name);
 			res.sendRedirect(req.getContextPath() + "/forum/ForumCtrl");
 		} else if ("goUpdate".equals(action)) {
 			String forum_no = req.getParameter("forum_no");
-			ForumsSevice forumsSevice = new ForumsSevice();
+			ForumsService forumsSevice = new ForumsService();
 			Forums forums = forumsSevice.findByPK(forum_no);
 			List<Art_types> art_types = new Art_typesService().getArt_types(forum_no);
 			req.setAttribute("forums", forums);
@@ -57,7 +57,7 @@ public class ForumActionCtrl extends HttpServlet {
 			String forum_desc = req.getParameter("forum_desc");
 			String forum_note = req.getParameter("forum_note");
 			String[] art_type_name = req.getParameterValues("art_type_name");
-			ForumsSevice forumsSevice = new ForumsSevice();
+			ForumsService forumsSevice = new ForumsService();
 			boolean result = forumsSevice.update(forum_no, forum_desc, forum_note, art_type_name);
 			if (result) {
 				res.sendRedirect(req.getContextPath() + "/forum/ForumShowCtrl?forum_no=" + forum_no);

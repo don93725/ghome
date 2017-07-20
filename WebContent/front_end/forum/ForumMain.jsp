@@ -47,6 +47,7 @@
 <td><c:out value="${rankArticles.art_views }"/>/<c:out value="${rankArticles.art_mviews }"/></td>
 </tr>
 </c:forEach>
+<c:if test="${empty articlesRankList}"><tr rowspan='5'><td colspan='3'>目前尚無排行</td></tr></c:if>
 </table>
 </div>
 </div>
@@ -61,19 +62,21 @@
 <td><fmt:setLocale value="en_US"/><fmt:formatDate value="${newestRankList.art_add_date}" pattern="yyyy-MM-d HH:mm"/></td>
 </tr>
 </c:forEach>
+<c:if test="${empty newestRankList}"><tr rowspan='5'><td colspan='3'>目前尚最新文章</td></tr></c:if>
 </table>
 </div>
 </div>
 <div class='rank'>
 <table border=1>
 <tr>
-<th>編號</th><th>論壇</th><th>介紹</th><th>點擊次數</th></tr>
+<th>編號</th><th>論壇</th><th>文章數</th><th>介紹</th><th>點擊次數</th></tr>
 
 
 	<c:forEach var='f' items='${ forums}'>
 	<tr>
 	<td>${f.forum_no }</td>
 	<td><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${f.forum_no }'>${f.forum_name }</a></td>
+	<td><c:out value="${countArticles[f.forum_no ] }" default="0"/></td>
 	<td>${f.forum_desc }</td>
 	<td>${f.forum_views }</td>
 	</tr>

@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.forum.domain.*;
 import com.forum.inteface.DAOInterface;
@@ -75,6 +77,29 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 	public int countAll() {
 		String SQL = "select * from forums";
 		return countBySQL(SQL);
+	}
+	// 計算文章數量
+	public Map<String,Integer> countArticle(){
+		SQLHelper helper = new SQLHelper();
+		Connection con = helper.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		HashMap<String,Integer> map = new HashMap<String,Integer>();
+		
+		try {
+			String SQL = "select forum_no,count(*) from articles group by forum_no";
+			pstmt = con.prepareStatement(SQL);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				map.put(rs.getString(1), rs.getInt(2));						
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			helper.close(con, pstmt,rs);
+		}
+		return map;
 	}
 	// 建置修改
 

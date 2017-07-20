@@ -1,11 +1,13 @@
 package com.forum.dao;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.forum.domain.Article_report;
 import com.forum.domain.Articles;
+import com.forum.domain.Members;
 import com.forum.inteface.DAOInterface;
 import com.forum.util.BasicDAO;
 import com.forum.util.SQLHelper;
@@ -32,7 +34,10 @@ public class Article_reportDAO extends BasicDAO implements DAOInterface<Article_
 		article_report.setArt_no(articles);
 		}
 		if(obj[2]!=null){
-		article_report.setRpt_mem_no((String)obj[2]);
+		Members members = new Members();
+		members.setMem_no(String.valueOf(obj[2]));
+		members.setMem_nickname(String.valueOf(obj[11]));
+		article_report.setRpt_mem_no(members);
 		}
 		if(obj[3]!=null){
 		article_report.setRpt_type((String)obj[3]);
@@ -84,24 +89,35 @@ public class Article_reportDAO extends BasicDAO implements DAOInterface<Article_
 
 		public boolean executeInsert(Article_report article_report){
 		String SQL="insert into article_report values(article_report_pk_seq.nextval,?,?,?,?,default,default)";
-		Object[] param ={article_report.getArt_no().getArt_no(),article_report.getRpt_mem_no(),article_report.getRpt_type(),article_report.getRpt_ctx()};
+		Object[] param ={article_report.getArt_no().getArt_no(),article_report.getRpt_mem_no().getMem_no(),article_report.getRpt_type(),article_report.getRpt_ctx()};
 		boolean insertResult = new SQLHelper().executeUpdate(SQL,param);
 		return insertResult;
 		}
 		//建置刪除
 
-		public boolean executeDelete(String art_rpt_no){
-		String SQL="delete from article_report where art_rpt_no=?";
-		Object[] param={art_rpt_no};
+		public boolean executeDelete(String art_no){
+		String SQL="delete from article_report where art_no=?";
+		Object[] param={art_no};
 		boolean deleteResult = new SQLHelper().executeUpdate(SQL,param);
 		return deleteResult;
+		}
+		public boolean executeDelete(String art_no, Connection conn){
+			String SQL="delete from article_report where art_no=?";
+			Object[] param={art_no};
+			String deleteResult = new SQLHelper().executeUpdate(SQL, param, null, conn);
+			if(deleteResult==null){
+				return false;
+			}else{
+				return true;
+			}
+			
 		}
 		//建置分頁(彈性排序可設條件)
 
 		public List<Article_report> pageAndRank(int page,int pageSize,String order,String where){
 		int firstPage=(page-1)*pageSize+1;
 		int lastPage = page*pageSize;
-		String SQL="select art_rpt_no,art_no,rpt_mem_no,rpt_type,rpt_ctx,rpt_time,rpt_stat,forum_no,art_type,art_name,art_ctx from (select art_rpt_no,art_no,rpt_mem_no,rpt_type,rpt_ctx,rpt_time,rpt_stat,forum_no,art_type,art_name,art_ctx, rownum rn from (select art_rpt_no,a.art_no,rpt_mem_no,rpt_type,rpt_ctx,rpt_time,rpt_stat,forum_no,art_type,art_name,art_ctx from article_report a join (select forum_no,art_type,art_name,art_ctx,art_no from articles) b on a.art_no=b.art_no";
+		String SQL="select art_rpt_no,art_no,rpt_mem_no,rpt_type,rpt_ctx,rpt_time,rpt_stat,forum_no,art_type,art_name,art_ctx,mem_nickname from (select art_rpt_no,art_no,rpt_mem_no,rpt_type,rpt_ctx,rpt_time,rpt_stat,forum_no,art_type,art_name,art_ctx,mem_nickname, rownum rn from (select art_rpt_no,a.art_no,rpt_mem_no,rpt_type,rpt_ctx,rpt_time,rpt_stat,forum_no,art_type,art_name,art_ctx,mem_nickname from (article_report a join (select forum_no,art_type,art_name,art_ctx,art_no from articles) b on a.art_no=b.art_no) join (select mem_nickname, mem_no from members) c on a.rpt_mem_no=c.mem_no";
 		if(where!=null){
 		SQL = SQL +" where " + where;
 		}

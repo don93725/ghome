@@ -3,8 +3,9 @@ package com.forum.domain;
 import java.util.Date;
 
 public class Article_report {
-	String art_rpt_no,rpt_mem_no,rpt_type,rpt_ctx,rpt_stat;
+	String art_rpt_no,rpt_type,rpt_ctx,rpt_stat;
 	Articles art_no;
+	Members rpt_mem_no;
 	Date rpt_time;
 	public String getArt_rpt_no() {
 		return art_rpt_no;
@@ -19,10 +20,11 @@ public class Article_report {
 	public void setArt_no(Articles art_no) {
 		this.art_no = art_no;
 	}
-	public String getRpt_mem_no() {
+	
+	public Members getRpt_mem_no() {
 		return rpt_mem_no;
 	}
-	public void setRpt_mem_no(String rpt_mem_no) {
+	public void setRpt_mem_no(Members rpt_mem_no) {
 		this.rpt_mem_no = rpt_mem_no;
 	}
 	public String getRpt_type() {

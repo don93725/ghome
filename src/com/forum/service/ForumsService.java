@@ -7,11 +7,11 @@ import com.forum.domain.Art_types;
 import com.forum.domain.Forums;
 import com.forum.inteface.DAOInterface;
 
-public class ForumsSevice {
+public class ForumsService {
 	// 封裝新增物件
 	DAOInterface<Forums> dao;
 
-	public ForumsSevice() {
+	public ForumsService() {
 		dao = new ForumsDAO();
 	}
 	public boolean add(String mem_no, String forum_name, String forum_desc, String forum_note) {

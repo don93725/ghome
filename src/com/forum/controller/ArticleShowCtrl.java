@@ -17,9 +17,9 @@ import com.forum.domain.Art_types;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Articles;
 import com.forum.inteface.DAOInterface;
-import com.forum.service.Article_commentsSevice;
-import com.forum.service.ArticlesSevice;
-import com.forum.service.ForumsSevice;
+import com.forum.service.Article_commentsService;
+import com.forum.service.ArticlesService;
+import com.forum.service.ForumsService;
 
 /**
  * Servlet implementation class ArticleShowCtrl
@@ -43,7 +43,7 @@ public class ArticleShowCtrl extends HttpServlet {
 			}else{
 				allPageCount=1;
 			}
-			List<Article_comments> article_comments = new Article_commentsSevice().getPageData(Integer.parseInt(thisPage), pageSize, art_no);
+			List<Article_comments> article_comments = new Article_commentsService().getPageData(Integer.parseInt(thisPage), pageSize, art_no);
 			Object[] param = {forum_no};
 			String forum_name= (String)new ForumsDAO().getCol("forum_name",param )[0];			
 			req.setAttribute("forum_name", forum_name);
@@ -53,7 +53,7 @@ public class ArticleShowCtrl extends HttpServlet {
 			req.setAttribute("articles", articles);
 			req.setAttribute("article_comments", article_comments);
 			req.setAttribute("queryStr", queryStr);	
-			new ArticlesSevice().increaseViews(art_no);
+			new ArticlesService().increaseViews(art_no);
 			req.getRequestDispatcher("/front_end/forum/ArticleDisplay.jsp").forward(req, res);
 		}else{
 			req.setAttribute("msg", "from ArticleShowCtrl");

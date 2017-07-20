@@ -11,7 +11,7 @@ import com.forum.domain.Articles;
 import com.forum.domain.Members;
 import com.forum.util.TransData;
 
-public class Article_commentsSevice {
+public class Article_commentsService {
 	public boolean add(String art_no, String mem_no, Part part  , String art_cmt_ctx,String path){
 		Article_comments article_comments = new Article_comments();
 		article_comments.setArt_no(art_no);

@@ -17,8 +17,8 @@ import com.forum.dao.ForumsDAO;
 import com.forum.domain.Art_types;
 import com.forum.domain.Articles;
 import com.forum.service.Art_typesService;
-import com.forum.service.ArticlesSevice;
-import com.forum.service.ForumsSevice;
+import com.forum.service.ArticlesService;
+import com.forum.service.ForumsService;
 
 /**
  * Servlet implementation class ForumShowCtrl
@@ -60,12 +60,11 @@ public class ForumShowCtrl extends HttpServlet {
 			req.setAttribute("forum_name", forum_name);
 			req.setAttribute("queryStr", queryStr);				
 			req.setAttribute("thisPage", thisPage);	
-			ForumsSevice forumsSevice = new ForumsSevice();
+			ForumsService forumsSevice = new ForumsService();
 			forumsSevice.increaseViews(forum_no);
 			String mem_no = forumsSevice.getMem(forum_no);
 			req.setAttribute("mem_no", mem_no);
-			List<Articles> articles=new ArticlesSevice().getPageData(Integer.parseInt(thisPage), pageSize, where);
-			System.out.println(articles.size());
+			List<Articles> articles=new ArticlesService().getPageData(Integer.parseInt(thisPage), pageSize, where);
 			req.setAttribute("articles", articles);
 			req.getRequestDispatcher("/front_end/forum/Forum.jsp").forward(req, res);
 		}else{

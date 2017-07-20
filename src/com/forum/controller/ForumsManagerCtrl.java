@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.forum.domain.Forums;
 import com.forum.domain.Members;
-import com.forum.service.ForumsSevice;
+import com.forum.service.ForumsService;
 
 /**
  * Servlet implementation class ForumsManagerCtrl
@@ -28,7 +28,7 @@ public class ForumsManagerCtrl extends HttpServlet {
 			res.sendRedirect(URL);
 		}
 		if ("3".equals(user.getMem_rank())) {			
-			ForumsSevice forumsSevice = new ForumsSevice();
+			ForumsService forumsSevice = new ForumsService();
 			if ("confirm".equals(action)) {					
 				String forum_no = req.getParameter("forum_no");
 				String forum_stat = req.getParameter("forum_stat");

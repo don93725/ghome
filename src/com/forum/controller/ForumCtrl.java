@@ -3,6 +3,7 @@ package com.forum.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -27,9 +28,12 @@ public class ForumCtrl extends HttpServlet {
 		List<Forums> rankList = forumsDAO.pageAndRank(1, 5, "forum_mviews desc", "forum_stat=1" );
 		List<Articles> articlesRankList = new ArticlesDAO().pageAndRank(1, 5, "art_mviews desc", null );
 		List<Articles> newestRankList = new ArticlesDAO().pageAndRank(1, 5, "art_add_date desc", null );
+		Map<String,Integer> countArticles= forumsDAO.countArticle();
+		System.out.println(countArticles.size());
 		req.setAttribute("forums", list);
 		req.setAttribute("rankList", rankList);
 		req.setAttribute("articlesRankList", articlesRankList);
+		req.setAttribute("countArticles", countArticles);
 		req.setAttribute("newestRankList", newestRankList);
 		req.getRequestDispatcher("/front_end/forum/ForumMain.jsp").forward(req, res);
 		

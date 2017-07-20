@@ -6,7 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.forum.domain.Article_comments;
 import com.forum.domain.Article_photos;
@@ -90,6 +92,7 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 		String SQL = "select * from articles ";
 		return countBySQL(SQL);
 	}
+
 	// 建置修改
 
 	public boolean updateByVO(Articles articles) {
@@ -216,17 +219,22 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 		boolean result = false;
 		try {
 			con.setAutoCommit(false);
-			Article_photosDAO article_photosDAO = new Article_photosDAO();
-			article_photosDAO.executeDelete(art_no, con);
-			Article_commentsDAO article_commentsDAO = new Article_commentsDAO();
-			article_commentsDAO.executeDelete(art_no, con);
-			String SQL = "delete from articles where art_no=?";
-			Object[] param = { art_no };
-			pstmt = con.prepareStatement(SQL);
-			pstmt.setObject(1, param[0]);
-			pstmt.executeUpdate();
-			con.commit();
-			result = true;
+			Article_reportDAO article_reportDAO = new Article_reportDAO();
+			result = article_reportDAO.executeDelete(art_no,con);
+			if(result){
+				Article_photosDAO article_photosDAO = new Article_photosDAO();
+				article_photosDAO.executeDelete(art_no, con);
+				Article_commentsDAO article_commentsDAO = new Article_commentsDAO();
+				article_commentsDAO.executeDelete(art_no, con);
+				String SQL = "delete from articles where art_no=?";
+				Object[] param = { art_no };
+				pstmt = con.prepareStatement(SQL);
+				pstmt.setObject(1, param[0]);
+				pstmt.executeUpdate();
+				con.commit();
+				result = true;
+			}
+			
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -252,7 +260,6 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 			SQL = SQL + " where " + where;
 		}
 		SQL = SQL + " order by " + order + ")) where rn between " + firstPage + " and " + lastPage;
-		System.out.println(SQL);
 		List<Articles> list = getVOBySQL(SQL, null);
 		return list;
 	}

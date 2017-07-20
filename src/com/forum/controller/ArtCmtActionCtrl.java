@@ -19,7 +19,7 @@ import com.forum.dao.Article_commentsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Members;
 import com.forum.inteface.DAOInterface;
-import com.forum.service.Article_commentsSevice;
+import com.forum.service.Article_commentsService;
 import com.forum.util.TransData;
 
 @WebServlet("/forum/ArtCmtActionCtrl")
@@ -41,9 +41,12 @@ public class ArtCmtActionCtrl extends HttpServlet {
 		if (art_no != null) {
 			if ("create".equals(action)) {
 				Part part = req.getPart("file");
+				for(String s : part.getHeaderNames()){
+					System.out.println(part.getHeader(s));
+				}
 				String mem_no = user.getMem_no();
 				String art_cmt_ctx = req.getParameter("art_cmt_ctx");
-				Article_commentsSevice article_commentsSevice = new Article_commentsSevice();
+				Article_commentsService article_commentsSevice = new Article_commentsService();
 				boolean result = article_commentsSevice.add(art_no, mem_no, part, art_cmt_ctx, req.getContextPath());
 				if (result) {
 					String forum_no = req.getParameter("forum_no");

@@ -21,7 +21,7 @@ import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.forum.domain.Members;
 import com.forum.service.Article_photosService;
-import com.forum.service.ArticlesSevice;
+import com.forum.service.ArticlesService;
 
 /**
  * Servlet implementation class ArticlesMakerCtrl
@@ -63,7 +63,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 				Article_photosService article_photosService = new Article_photosService();
 				Collection<Part> parts = req.getParts();
 				List<Article_photos> list = article_photosService.setArticle_photos(parts);
-				ArticlesSevice articlesSevice = new ArticlesSevice();
+				ArticlesService articlesSevice = new ArticlesService();
 				boolean createResult = false;
 				if (list.size() == 0) {
 					createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
@@ -91,7 +91,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 				Article_photosService article_photosService = new Article_photosService();
 				Collection<Part> parts = req.getParts();
 				List<Article_photos> list = article_photosService.setArticle_photos(parts, order, updateInfo);
-				ArticlesSevice articlesSevice = new ArticlesSevice();
+				ArticlesService articlesSevice = new ArticlesService();
 				boolean createResult = false;
 				System.out.println(parts.size() + "list" + list.size());
 				createResult = articlesSevice.update(art_type_name, art_name, art_ctx, art_no, list, updateInfo,

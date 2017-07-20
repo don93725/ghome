@@ -13,7 +13,7 @@ import com.forum.domain.Members;
 /**
  * Servlet implementation class Login
  */
-@WebServlet("/forum/Login")
+@WebServlet("/forum/Login2")
 public class Login2 extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession();
