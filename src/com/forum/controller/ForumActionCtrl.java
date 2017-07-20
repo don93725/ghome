@@ -32,15 +32,12 @@ public class ForumActionCtrl extends HttpServlet {
 			return;
 
 		}
-		if ("wantCreate".equals(action)) {
-			req.getRequestDispatcher("/front_end/forum/ForumApply.jsp").forward(req, res);
-		} else if ("createApply".equals(action)) {
+		if ("createApply".equals(action)) {
 			String mem_no = user.getMem_no();
 			String forum_name = req.getParameter("forum_name");
 			String forum_desc = req.getParameter("forum_desc");
 			String forum_note = req.getParameter("forum_note");
 			String[] art_type_name = req.getParameterValues("art_type_name");
-
 			ForumsService forumsSevice = new ForumsService();
 			forumsSevice.add(mem_no, forum_name, forum_desc, forum_note, art_type_name);
 			res.sendRedirect(req.getContextPath() + "/forum/ForumCtrl");

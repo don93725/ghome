@@ -23,38 +23,13 @@
 		                type:"POST",
 		                dataType:'text',
 
-		                success: function(msg){
-		                    if(msg.legth!=0){
-		                    	$('#tips').css("background","url(/BA102G4/front_end/forum/css/images/tick.png) no-repeat center center"); 		
-		  					  	$('#tips').css("display","block");
-		  					  	$('#tips').animate({opacity:'1'},"slow",function(){
-		  						$(this).animate({opacity:'0'},"slow",function(){
-		  							  $('#tips').css("display","none");					  
-		  						  });
-		  					  	});
-		  					  	result = true;
+		                success: function(msg){		                  
 		  					  
-		                    }else{
-		                    	$('#tips').css("background","url(/BA102G4//front_end/forum/css/images/cross.png) no-repeat center center"); 		
-		      				  	$('#tips').css("display","block");
-		      				  	$('#tips').animate({opacity:'1'},"slow",function(){
-		      				  		$(this).animate({opacity:'0'},"slow",function(){
-		      							  $('#tips').css("display","none");					  
-		      						});
-		      			  				
-		      				  	});
-		                    }
+		                
 		                },
 
 		                 error:function(xhr, ajaxOptions, thrownError){ 
-		                	 $('#tips').css("background","url(/BA102G4/front_end/forum/css/images/cross.png) no-repeat center center"); 		
-		      				  	$('#tips').css("display","block");
-		      				  	$('#tips').animate({opacity:'1'},"slow",function(){
-		      				  		$(this).animate({opacity:'0'},"slow",function(){
-		      							  $('#tips').css("display","none");					  
-		      						});
-		      			  				
-		      				  	});
+		                	 
 		                 }
 		            });
 				 if(result){

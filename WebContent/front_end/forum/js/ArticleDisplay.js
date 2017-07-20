@@ -61,7 +61,7 @@ function report(pj,art_no){
 		{
 
 		  if (xhr.readyState==4 && xhr.status==200){			  
-			  $(".inline").colorbox.close()
+			  $(".inline").colorbox.close();
 			  if(xhr.responseText.length!=0){					  
 					  $('#tips').css("background","url("+pj+"/front_end/forum/css/images/tick.png) no-repeat center center"); 		
 					  $('#tips').css("display","block");
