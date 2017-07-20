@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.forum.domain.Forums;
-import com.forum.domain.User;
+import com.forum.domain.Members;
 import com.forum.service.ForumsSevice;
 
 /**
@@ -21,13 +21,13 @@ public class ForumsManagerCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
-		User user = (User) req.getSession().getAttribute("user");
+		Members user = (Members) req.getSession().getAttribute("user");
 		if(user==null){
 			//登入管理者葉面
 			String URL = this.getServletContext().getContextPath()+"/forum/LoginCtrl";
 			res.sendRedirect(URL);
 		}
-		if (user.getMem_rank() == 3) {			
+		if ("3".equals(user.getMem_rank())) {			
 			ForumsSevice forumsSevice = new ForumsSevice();
 			if ("confirm".equals(action)) {					
 				String forum_no = req.getParameter("forum_no");

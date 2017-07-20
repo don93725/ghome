@@ -14,13 +14,13 @@ import com.forum.domain.Members;
  * Servlet implementation class Login
  */
 @WebServlet("/forum/Login")
-public class Login extends HttpServlet {
+public class Login2 extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		Members members = new Members();
-		members.setMem_no("1");
-		members.setMem_nickname("神東");
-		members.setMem_rank("3");
+		members.setMem_no("2");
+		members.setMem_nickname("壞東");
+		members.setMem_rank("2");
 		session.setAttribute("user",members);
 		res.setContentType("text/html; charset=utf-8");
 		res.getWriter().println("login");

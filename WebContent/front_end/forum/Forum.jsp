@@ -14,7 +14,7 @@
 </head>
 
 <body>
-><a href="${pageContext.request.contextPath}/forum/ForumCtrl">討論大廳</a><br>
+><a href="${pageContext.request.contextPath}/forum/ForumCtrl">討論大廳</a>>${forum_name }<br>
 <c:if test="${! empty user }">
 <a href='${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goCreatePage&forum_no=${param.forum_no }'>新增文章</a>
 </c:if>

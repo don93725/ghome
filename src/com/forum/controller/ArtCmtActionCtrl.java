@@ -17,7 +17,7 @@ import javax.servlet.http.Part;
 
 import com.forum.dao.Article_commentsDAO;
 import com.forum.domain.Article_comments;
-import com.forum.domain.User;
+import com.forum.domain.Members;
 import com.forum.inteface.DAOInterface;
 import com.forum.service.Article_commentsSevice;
 import com.forum.util.TransData;
@@ -29,7 +29,7 @@ public class ArtCmtActionCtrl extends HttpServlet {
 
 		req.setCharacterEncoding("utf-8");
 		HttpSession session = req.getSession();
-		User user = ((User) session.getAttribute("user"));
+		Members user = ((Members) session.getAttribute("user"));
 		String art_no = req.getParameter("art_no");
 		String action = req.getParameter("action");
 

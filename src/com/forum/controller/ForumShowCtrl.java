@@ -55,7 +55,9 @@ public class ForumShowCtrl extends HttpServlet {
 			req.setAttribute("art_types", art_types);
 			allPageCount = (allPageCount-1)/pageSize+1;
 			req.setAttribute("allPageCount", allPageCount);
-			
+			Object[] param = {forum_no};
+			String forum_name= (String)new ForumsDAO().getCol("forum_name",param )[0];			
+			req.setAttribute("forum_name", forum_name);
 			req.setAttribute("queryStr", queryStr);				
 			req.setAttribute("thisPage", thisPage);	
 			ForumsSevice forumsSevice = new ForumsSevice();

@@ -46,9 +46,9 @@ public class ArticleShowCtrl extends HttpServlet {
 			List<Article_comments> article_comments = new Article_commentsSevice().getPageData(Integer.parseInt(thisPage), pageSize, art_no);
 			Object[] param = {forum_no};
 			String forum_name= (String)new ForumsDAO().getCol("forum_name",param )[0];			
+			req.setAttribute("forum_name", forum_name);
 			String queryStr = "ArticleShowCtrl?forum_no="+forum_no+"&art_no="+art_no;
 			req.setAttribute("thisPage", thisPage);
-			req.setAttribute("forum_name", forum_name);
 			req.setAttribute("allPageCount", allPageCount);
 			req.setAttribute("articles", articles);
 			req.setAttribute("article_comments", article_comments);

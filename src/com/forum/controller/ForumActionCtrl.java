@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.forum.domain.Art_types;
 import com.forum.domain.Forums;
-import com.forum.domain.User;
+import com.forum.domain.Members;
 import com.forum.service.Art_typesService;
 import com.forum.service.ForumsSevice;
 
@@ -24,7 +24,7 @@ public class ForumActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
-		User user = (User) req.getSession().getAttribute("user");
+		Members user = (Members) req.getSession().getAttribute("user");
 		if (user == null) {
 			// 請先登入
 			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";

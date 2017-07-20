@@ -19,7 +19,7 @@ import com.forum.dao.ArticlesDAO;
 import com.forum.domain.Art_types;
 import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
-import com.forum.domain.User;
+import com.forum.domain.Members;
 import com.forum.service.Article_photosService;
 import com.forum.service.ArticlesSevice;
 
@@ -35,7 +35,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 		String action = req.getParameter("action");
 		String forum_no = req.getParameter("forum_no");
 		HttpSession session = req.getSession();
-		User user = ((User) session.getAttribute("user"));
+		Members user = ((Members) session.getAttribute("user"));
 		if (user == null) {
 			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
 			res.sendRedirect(URL);

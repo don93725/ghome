@@ -7,7 +7,6 @@ import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.forum.domain.Members;
-import com.forum.domain.User;
 
 public class ArticlesSevice {
 	//含相片

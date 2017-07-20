@@ -7,9 +7,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=BIG5">
 <title>Insert title here</title>
+<script type="Text/JavaScript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
+<script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/ArticlesReport.js"></script>
 </head>
 <body>
-
+><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?&forum_no=${param.forum_no }">${forum_name }</a>>編輯論壇
 <div>
 <table border='1'>
 <tr>
@@ -30,9 +32,10 @@
 			<th>檢舉類型</th>
 			<th>檢舉原因</th>
 			<th>檢舉時間</th>
+			<th>處理</th>
 		</tr>
 		<c:forEach var="article_report" items='${article_report }'>
-		<tr>
+		<tr class="art_rpt">
 			<td>${article_report.art_no.art_name}</td>
 			<td>${article_report.rpt_mem_no}</td>
 			<td>
@@ -44,10 +47,18 @@
 			</td>
 			<td>${article_report.rpt_ctx}</td>
 			<td><fmt:setLocale value="en_US"/><fmt:formatDate value="${article_report.rpt_time}" pattern="yyyy-MM-d HH:mm"/></td>
+			<td>
+			<button class='delRpt'>刪除</button>
+			<button class='fininshRpt'>完成</button>
+			</td>
+		</tr>
+		<tr style="display: none;">
+			<td colspan="6" >${article_report.art_no.art_ctx}</td>			
 		</tr>
 		</c:forEach>
 	</table>
 	</div>
 	<jsp:include page="/front_end/forum/ChangePage.jsp"/>
+
 </body>
 </html>

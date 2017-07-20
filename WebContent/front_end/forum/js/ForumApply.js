@@ -1,13 +1,17 @@
 var count=0;
     $(function(){
     	count=$('input:[name=art_type_name]:[value]').length;
+
+    	if(count>3){
+			$('#btn').css("display","none");
+			}
     	for(var i = 0 ; i<count ; i++){
     		$('input[name=art_type_name]:eq('+i+")").css("display","");
     		$('input[name=art_type_name]:eq('+i+")").attr("readonly","");
     		$('.xbtn:eq('+i+')').css("display","none");
     		$('.xbtn:eq('+i+')').after('<br>');
     		$('.xbtn:eq('+(i)+')').click(function(){
-    			if(count>4){
+    			if(count==4){
     			$('#btn').css("display","");
     			}
     			$(this).next().remove();
@@ -27,11 +31,11 @@ var count=0;
     		$('.xbtn:eq('+(count)+')').css("display","");	
     		$('.xbtn:eq('+(count++)+')').after('<br>');
     		$('input[name=art_type_name]:eq('+(count)+")").css("display","");
-    		if(count>4){
+    		if(count>3){
     			$(this).css("display","none");
     		}
     		$('.xbtn:eq('+(count-1)+')').click(function(){
-    			if(count>4){
+    			if(count==4){
     			$('#btn').css("display","");
     			}
     			$(this).next().remove();

@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_report;
-import com.forum.domain.User;
+import com.forum.domain.Members;
 import com.forum.service.Article_reportServiece;
 
 /**
@@ -21,7 +22,7 @@ import com.forum.service.Article_reportServiece;
 public class ArticlesReportActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
-		User user = (User)req.getSession().getAttribute("user");
+		Members user = (Members)req.getSession().getAttribute("user");
 		String action = req.getParameter("action");
 		res.setContentType("text/html ; charset=utf-8");
 		PrintWriter out = res.getWriter();
@@ -65,8 +66,9 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 				queryStr = queryStr +"&rpt_type="+rpt_type;
 			}
 			int allPageCount = article_reportServiece.countAllPage(forum_no,pageSize);
-			
-			System.out.println(allPageCount);
+			Object[] param = {forum_no};
+			String forum_name= (String)new ForumsDAO().getCol("forum_name",param )[0];			
+			req.setAttribute("forum_name", forum_name);
 			req.setAttribute("queryStr", queryStr);
 			req.setAttribute("thisPage", thisPage);
 			req.setAttribute("article_report", article_report);
