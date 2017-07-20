@@ -14,9 +14,10 @@
 <title>Insert title here</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/front_end/forum/css/forum.css">
+
 <script type="Text/JavaScript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-	<script type="text/javascript"
+<script type="text/javascript"
 	src='${pageContext.request.contextPath}/front_end/forum/js/ForumApply.js'></script>
 </head>
 <body>
@@ -91,9 +92,8 @@
 					<td><a
 						href='${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=<c:out value="${newestRankList.forum_no}"/>&art_no=<c:out value="${newestRankList.art_no}"/>'><c:out
 								value="${newestRankList.art_name }" /></a></td>
-					<td><fmt:setLocale value="en_US" />
-						<fmt:formatDate value="${newestRankList.art_add_date}"
-							pattern="yyyy-MM-d HH:mm" /></td>
+					<td><fmt:setLocale value="en_US" /> <fmt:formatDate
+							value="${newestRankList.art_add_date}" pattern="yyyy-MM-d HH:mm" /></td>
 				</tr>
 			</c:forEach>
 			<c:if test="${empty newestRankList}">
@@ -133,12 +133,12 @@
 				style='padding: 10px; background: #fff; font-size: 30px;'>
 				<h1>版塊申請</h1>
 				<form
-					action="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=createApply"
+					action="#"
 					method="post">
 					<table>
 						<tr>
 							<td><label>版塊名字</label></td>
-							<td><input type="text" name='forum_name'></td>
+							<td><input type="text" id='forum_name' name='forum_name'></td>
 						</tr>
 						<tr>
 							<td valign="top"><label>文章類型</label></td>
@@ -152,15 +152,18 @@
 
 						<tr>
 							<td><label>版塊敘述</label></td>
-							<td><textarea rows="5" cols="20" name='forum_desc'></textarea></td>
+							<td><textarea rows="5" cols="20" id='forum_desc'
+									name='forum_desc'></textarea></td>
 						</tr>
 						<tr>
 							<td><label>申請原因</label></td>
-							<td><textarea rows="5" cols="20" name='forum_note'></textarea>
-							</td>
+							<td><textarea rows="5" cols="20" id='forum_note'
+									name='forum_note'></textarea></td>
 						</tr>
 						<tr align='center'>
-							<td colspan="2"><input type="button" name="" value="送出">
+							<td colspan="2"><input id='test' type="button" name=""
+								value="送出"
+								onclick="create('${pageContext.request.contextPath}','${user.mem_no }');">
 								<input type="reset" name="" value="重填"></td>
 						</tr>
 					</table>
@@ -175,5 +178,4 @@
 			href="${pageContext.request.contextPath}/front_end/forum/css/colorbox.css" />
 	</div>
 </body>
-
 </html>

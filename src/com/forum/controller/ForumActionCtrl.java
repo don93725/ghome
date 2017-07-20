@@ -1,6 +1,7 @@
 package com.forum.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -25,6 +26,7 @@ public class ForumActionCtrl extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
 		Members user = (Members) req.getSession().getAttribute("user");
+		PrintWriter out = res.getWriter();
 		if (user == null) {
 			// 請先登入
 			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
@@ -32,15 +34,23 @@ public class ForumActionCtrl extends HttpServlet {
 			return;
 
 		}
-		if ("createApply".equals(action)) {
+		if ("insert".equals(action)) {
 			String mem_no = user.getMem_no();
 			String forum_name = req.getParameter("forum_name");
 			String forum_desc = req.getParameter("forum_desc");
 			String forum_note = req.getParameter("forum_note");
 			String[] art_type_name = req.getParameterValues("art_type_name");
 			ForumsService forumsSevice = new ForumsService();
-			forumsSevice.add(mem_no, forum_name, forum_desc, forum_note, art_type_name);
-			res.sendRedirect(req.getContextPath() + "/forum/ForumCtrl");
+			System.out.println(mem_no+forum_name+forum_desc+forum_note);				
+			for(String s: art_type_name){
+				System.out.println(s);				
+			}
+			boolean result = forumsSevice.add(mem_no, forum_name, forum_desc, forum_note, art_type_name);
+			if(result){
+				out.print("ok");
+			}
+			return;
+
 		} else if ("goUpdate".equals(action)) {
 			String forum_no = req.getParameter("forum_no");
 			ForumsService forumsSevice = new ForumsService();
