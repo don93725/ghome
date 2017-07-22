@@ -15,6 +15,7 @@ import com.forum.domain.Forums;
 import com.forum.domain.Members;
 import com.forum.service.Art_typesService;
 import com.forum.service.ForumsService;
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class ForumApplyCtrl
@@ -26,6 +27,7 @@ public class ForumActionCtrl extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
 		Members user = (Members) req.getSession().getAttribute("user");
+		res.setContentType("text/html ; charset=utf-8 ");
 		PrintWriter out = res.getWriter();
 		if (user == null) {
 			// 請先登入
@@ -54,11 +56,16 @@ public class ForumActionCtrl extends HttpServlet {
 		} else if ("goUpdate".equals(action)) {
 			String forum_no = req.getParameter("forum_no");
 			ForumsService forumsSevice = new ForumsService();
+			Gson gson = new Gson();
 			Forums forums = forumsSevice.findByPK(forum_no);
-			List<Art_types> art_types = new Art_typesService().getArt_types(forum_no);
+			List<Art_types> art_types = new Art_typesService().getArt_types(forum_no);			
+			String jsonStr = gson.toJson(forums);
+			String jsonStr2 = gson.toJson(art_types);
+			System.out.println(jsonStr);
+			System.out.println(jsonStr2);
+			out.print(jsonStr+"|"+jsonStr2);
 			req.setAttribute("forums", forums);
 			req.setAttribute("art_types", art_types);
-			req.getRequestDispatcher("/front_end/forum/ForumApply.jsp").forward(req, res);
 		} else if ("update".equals(action)) {
 			String forum_no = req.getParameter("forum_no");
 			String forum_desc = req.getParameter("forum_desc");

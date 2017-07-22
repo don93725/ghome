@@ -1,9 +1,7 @@
 var count = 0;
 function create(pj,mem_no) {
 	
-	alert('in');
-	
-	 var result = false;
+	var result = false;
 	var art_type_name = "";
 		 for(var i = 0 ; i< $('input[name=art_type_name]').length ; i++){
    		  art_type_name= art_type_name+"art_type_name="+$('input[name=art_type_name]:eq('+i+')').val()+"&"

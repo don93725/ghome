@@ -14,6 +14,8 @@
 <title>Insert title here</title>
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/front_end/forum/css/forum.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/front_end/forum/css/ArticleDisplay.css">
 
 <script type="Text/JavaScript"
 	src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
@@ -128,6 +130,7 @@
 
 
 		</table>
+		</div>
 		<div id='inline' style="display: none">
 			<div id='inline_content'
 				style='padding: 10px; background: #fff; font-size: 30px;'>
@@ -171,11 +174,11 @@
 
 			</div>
 		</div>
-
+		<div id='tips'></div>
 		<script
 			src="${pageContext.request.contextPath}/front_end/forum/js/jquery.colorbox2.js"></script>
 		<link rel="stylesheet"
 			href="${pageContext.request.contextPath}/front_end/forum/css/colorbox.css" />
-	</div>
+
 </body>
 </html>
