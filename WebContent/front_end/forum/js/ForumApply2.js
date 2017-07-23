@@ -7,12 +7,16 @@ function editForum(pj,forum_no){
 
             success: function(msg){		                  
             	var text = msg.split('|');
-            	alert(text[0]);
             	var obj1 = JSON.parse(text[0]);
             	var obj2 = JSON.parse(text[1]);
-            	alert(obj1.forum_name);
+            	$('#forum_name').val(obj1.forum_name);
+            	$('#forum_desc').html(obj1.forum_desc);      
+            	for(i in obj2){            		
+            		$('input[name=art_type_name]:eq('+i+')').val(obj2[i].art_type_name);
+            	}
+            	init();
             	
-            
+            	$(".inline").trigger('click');
             },
 
             error:function(xhr, ajaxOptions, thrownError){           	  						  				
@@ -26,10 +30,11 @@ $(function() {
 	$(".inline").colorbox({
 		inline : true,
 		width : "50%"
-	});
+	});	
+})
 
+function init(){
 	count = $('input:[name=art_type_name]:[value]').length;
-
 	if (count > 3) {
 		$('#btn').css("display", "none");
 	}
@@ -93,11 +98,10 @@ $(function() {
 								});
 
 			});
-
-})
+}
 
 var count = 0;
-function create(pj,mem_no) {
+function update(pj,forum_no) {
 	
 	var result = false;
 	var art_type_name = "";
@@ -106,9 +110,9 @@ function create(pj,mem_no) {
    	  }
 		 $.ajax({
                 url: pj+"/forum/ForumActionCtrl",
-                data: "action=insert&mem_no="+mem_no+
-                	  "&forum_name="+$('#forum_name').val()+"&forum_desc="+$('#forum_desc').val()+
-                	  "&forum_note="+$('#forum_note').val()+"&"+art_type_name.substring(0,art_type_name.length-1),	                	  
+                data: "action=update&forum_no="+forum_no+
+                	  "&forum_desc="+$('#forum_desc').val()+
+                	  "&"+art_type_name.substring(0,art_type_name.length-1),	                	  
                 type:"POST",
                 dataType:'text',
 

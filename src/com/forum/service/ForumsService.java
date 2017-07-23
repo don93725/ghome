@@ -41,10 +41,9 @@ public class ForumsService {
 		boolean result = dao.updateByVO(forums);
 		return result;
 	}
-	public boolean update(String forum_no, String forum_desc, String forum_note,String[] art_type_name) {
+	public boolean update(String forum_no, String forum_desc,String[] art_type_name) {
 		Forums forums = new Forums();
 		forums.setForum_desc(forum_desc);
-		forums.setForum_note(forum_note);
 		forums.setForum_no(forum_no);
 		ForumsDAO forumDAO = new ForumsDAO();
 		boolean result = forumDAO.updateByVO(forums,art_type_name);

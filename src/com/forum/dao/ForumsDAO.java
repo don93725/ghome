@@ -121,9 +121,9 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 		con=helper.getConnection();
 		try {
 			con.setAutoCommit(false);
-			String sql = "update forums set forum_desc=?,forum_note=? where forum_no=?";
+			String sql = "update forums set forum_desc=? where forum_no=?";
 			pstmt = con.prepareStatement(sql);
-			Object[] param = { forums.getForum_desc(), forums.getForum_note(),forums.getForum_no()  };
+			Object[] param = { forums.getForum_desc(),forums.getForum_no()  };
 			String tip = helper.executeUpdate(sql, param, null, con);
 			if(tip!=null){						
 				Art_typesDAO art_typesDAO = new Art_typesDAO();

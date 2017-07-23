@@ -31,10 +31,7 @@
 	<c:if test="${mem_no==user.mem_no&&!empty user.mem_no }">
 		<a id='trig' href="#" onclick="editForum('${pageContext.request.contextPath}','${param.forum_no }')">編輯論壇</a>
 		<a class='inline' href="#inline_content" style='display:none;'></a>
-<--<a
-			href="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=goUpdate&forum_no=${param.forum_no}">編輯論壇</a>-->
-<a
-			href="${pageContext.request.contextPath}/forum/ArticlesReportActionCtrl?action=select&forum_no=${param.forum_no}">管理檢舉</a>
+		<a href="${pageContext.request.contextPath}/forum/ArticlesReportActionCtrl?action=select&forum_no=${param.forum_no}">管理檢舉</a>
 	</c:if>
 	<div>
 		<table border='1'>
@@ -86,20 +83,19 @@
 				style='padding: 10px; background: #fff; font-size: 30px;'>
 				<h1>版塊申請</h1>
 				<form
-					action="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=${(empty forums)?'createApply':'update&forum_no=' }${(empty forums)?'':forums.forum_no }"
+					action="${pageContext.request.contextPath}/forum/ForumActionCtrl?action=update&forum_no=${param.forum_no }"
 					method="post">
 					<table>
 						<tr>
 							<td><label>版塊名字</label></td>
-							<td><input type="text" name='forum_name' value='${forums.forum_name }' ${(empty forums)?'':'disabled' }>
+							<td><input type="text" id='forum_name' name='forum_name' disabled >
 							</td>
 						</tr>
 						<tr>
 							<td valign="top"><label>文章類型</label></td>
 							
 							<td><c:forEach begin="0" end="4" varStatus="loop">
-									<input type="text" name='art_type_name' style="display: none;" ${(loop.index>size-1)? "":"value='" }${(loop.index>size-1)? "":art_types[loop.index+1].art_type_name }
-										${(loop.index>size-1)? "":"'" }>
+									<input type="text" name='art_type_name' style="display: none;" 	>
 									<input type="button" class='xbtn' value='X' style="display: none;">
 								</c:forEach> <input type="button" id='btn' value='+'></td>
 
@@ -107,15 +103,10 @@
 
 						<tr>
 							<td><label>版塊敘述</label></td>
-							<td><textarea rows="5" cols="20" name='forum_desc'>${forums.forum_desc }</textarea></td>
-						</tr>
-						<tr>
-							<td><label>申請原因</label></td>
-							<td><textarea rows="5" cols="20" name='forum_note'>${forums.forum_note }</textarea>
-							</td>
+							<td><textarea rows="5" cols="20" id='forum_desc' name='forum_desc'></textarea></td>
 						</tr>
 						<tr align='center'>
-							<td colspan="2"><input type="submit" name="" value="送出"><input
+							<td colspan="2"><input type="submit"  value="送出"><input
 								type="reset" name="" value="重填"></td>
 						</tr>
 					</table>

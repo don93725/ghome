@@ -26,8 +26,8 @@
 	<td>標題</td>
 	<td>
 		<select name='art_type_name'>		
-		<c:forEach begin="0" end="${fn:length(art_types)-1 }" varStatus="loop2">
-		<option value='${art_types[loop2.count-1].art_type_name}'>${art_types[loop2.count-1].art_type_name}</option>		
+		<c:forEach var='art_types' items="${art_types}" varStatus="loop2">
+		<option value='${art_typesart_type_name}'>${art_types.art_type_name}</option>		
 		</c:forEach>		
 		</select></td>
 	<td><input type='text' name='art_name'  ><input type='hidden' name='forum_no' value='${param.forum_no }'><input type='hidden' name='action' value='create'></td>

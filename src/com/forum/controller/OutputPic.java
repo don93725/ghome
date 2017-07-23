@@ -39,7 +39,6 @@ public class OutputPic extends HttpServlet {
 			if(bytes!=null){			
 				out.write(bytes);				
 			}else{
-				 System.out.println("!?");
 				 InputStream in =getServletContext().getResourceAsStream("/front_end/forum/images/tomcat.gif");              
 				 bytes = new byte[in.available()];	
 				 in.read(bytes);

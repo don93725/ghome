@@ -43,10 +43,6 @@ public class ForumActionCtrl extends HttpServlet {
 			String forum_note = req.getParameter("forum_note");
 			String[] art_type_name = req.getParameterValues("art_type_name");
 			ForumsService forumsSevice = new ForumsService();
-			System.out.println(mem_no+forum_name+forum_desc+forum_note);				
-			for(String s: art_type_name){
-				System.out.println(s);				
-			}
 			boolean result = forumsSevice.add(mem_no, forum_name, forum_desc, forum_note, art_type_name);
 			if(result){
 				out.print("ok");
@@ -60,19 +56,16 @@ public class ForumActionCtrl extends HttpServlet {
 			Forums forums = forumsSevice.findByPK(forum_no);
 			List<Art_types> art_types = new Art_typesService().getArt_types(forum_no);			
 			String jsonStr = gson.toJson(forums);
-			String jsonStr2 = gson.toJson(art_types);
 			System.out.println(jsonStr);
-			System.out.println(jsonStr2);
+			String jsonStr2 = gson.toJson(art_types);
 			out.print(jsonStr+"|"+jsonStr2);
-			req.setAttribute("forums", forums);
-			req.setAttribute("art_types", art_types);
+
 		} else if ("update".equals(action)) {
 			String forum_no = req.getParameter("forum_no");
 			String forum_desc = req.getParameter("forum_desc");
-			String forum_note = req.getParameter("forum_note");
 			String[] art_type_name = req.getParameterValues("art_type_name");
 			ForumsService forumsSevice = new ForumsService();
-			boolean result = forumsSevice.update(forum_no, forum_desc, forum_note, art_type_name);
+			boolean result = forumsSevice.update(forum_no, forum_desc,art_type_name);
 			if (result) {
 				res.sendRedirect(req.getContextPath() + "/forum/ForumShowCtrl?forum_no=" + forum_no);
 			} else {
