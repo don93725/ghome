@@ -3,6 +3,8 @@ package com.forum.domain;
 import java.sql.Blob;
 import java.util.Date;
 
+import com.members.model.Members;
+
 public class Article_comments {
 	String art_cmt_no,art_no,art_cmt_ctx;
 	Members mem_no;

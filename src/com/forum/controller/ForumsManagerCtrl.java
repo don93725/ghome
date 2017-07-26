@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.forum.domain.Forums;
-import com.forum.domain.Members;
 import com.forum.service.ForumsService;
+import com.members.model.Members;
 
 /**
  * Servlet implementation class ForumsManagerCtrl

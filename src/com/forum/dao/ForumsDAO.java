@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.don.inteface.DAOInterface;
+import com.don.util.BasicDAO;
+import com.don.util.SQLHelper;
 import com.forum.domain.*;
-import com.forum.inteface.DAOInterface;
-import com.forum.util.BasicDAO;
-import com.forum.util.SQLHelper;
 
 public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 	// 建置查詢

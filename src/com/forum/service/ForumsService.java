@@ -2,10 +2,10 @@ package com.forum.service;
 
 import java.util.List;
 
+import com.don.inteface.DAOInterface;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Art_types;
 import com.forum.domain.Forums;
-import com.forum.inteface.DAOInterface;
 
 public class ForumsService {
 	// 封裝新增物件

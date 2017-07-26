@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.forum.domain.Members;
+import com.members.model.Members;
 
 /**
  * Servlet implementation class Login

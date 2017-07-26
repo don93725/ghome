@@ -7,10 +7,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.don.inteface.DAOInterface;
+import com.don.util.BasicDAO;
+import com.don.util.SQLHelper;
 import com.forum.domain.Art_types;
-import com.forum.inteface.DAOInterface;
-import com.forum.util.BasicDAO;
-import com.forum.util.SQLHelper;
 
 public class Art_typesDAO extends BasicDAO implements DAOInterface<Art_types> {
 	// 建置查詢

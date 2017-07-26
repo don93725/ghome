@@ -1,4 +1,4 @@
-package com.forum.util;
+package com.don.util;
 
 import java.io.InputStream;
 import java.sql.Connection;
@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 
 public class SQLHelper {
 
-	public byte[] getPic(String sql, Object[] params) {
+	public byte[] getPic(String sql, Object[] param) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -25,9 +25,9 @@ public class SQLHelper {
 		byte[] b = null;
 		try {
 			pstmt = con.prepareStatement(sql);
-			if (params != null) {
-				for (int i = 0; i < params.length; i++) {
-					pstmt.setObject(i + 1, params[i]);
+			if (param != null) {
+				for (int i = 0; i < param.length; i++) {
+					pstmt.setObject(i + 1, param[i]);
 				}
 			}
 			rs = pstmt.executeQuery();
@@ -47,7 +47,7 @@ public class SQLHelper {
 	}
 
 	// 查詢
-	public ArrayList executeQuery(String sql, Object[] params) {
+	public ArrayList executeQuery(String sql, Object[] param) {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -56,10 +56,10 @@ public class SQLHelper {
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(sql);
-			if (params != null) {
-				for (int i = 0; i < params.length; i++) {
-					if (params[i] != null) {
-						pstmt.setObject(i + 1, params[i]);
+			if (param != null) {
+				for (int i = 0; i < param.length; i++) {
+					if (param[i] != null) {
+						pstmt.setObject(i + 1, param[i]);
 					}
 				}
 			}
@@ -83,7 +83,7 @@ public class SQLHelper {
 	}
 
 	// 執行更新
-	public boolean executeUpdate(String SQL, Object[] params) {
+	public boolean executeUpdate(String sql, Object[] param) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -91,10 +91,10 @@ public class SQLHelper {
 		try {
 			con = getConnection();
 			con.setAutoCommit(false);
-			pstmt = con.prepareStatement(SQL);
-			if (params != null) {
-				for (int i = 0; i < params.length; i++) {
-					pstmt.setObject(i + 1, params[i]);
+			pstmt = con.prepareStatement(sql);
+			if (param != null) {
+				for (int i = 0; i < param.length; i++) {
+					pstmt.setObject(i + 1, param[i]);
 				}
 			}
 			pstmt.executeUpdate();
@@ -115,7 +115,7 @@ public class SQLHelper {
 	}
 
 	// 處理多重交易專用
-	public String executeUpdate(String SQL, Object[] params, String key, Connection conn) {
+	public String executeUpdate(String sql, Object[] param, String key, Connection conn) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -127,15 +127,15 @@ public class SQLHelper {
 			con.setAutoCommit(false);
 			if (key != null) {
 				String[] keys = {key};
-				pstmt = con.prepareStatement(SQL,keys);
+				pstmt = con.prepareStatement(sql,keys);
 				
 			} else {
-				pstmt = con.prepareStatement(SQL);
+				pstmt = con.prepareStatement(sql);
 				
 			}
-			if (params != null) {
-				for (int i = 0; i < params.length; i++) {
-					pstmt.setObject(i + 1, params[i]);
+			if (param != null) {
+				for (int i = 0; i < param.length; i++) {
+					pstmt.setObject(i + 1, param[i]);
 				}
 			}
 			pstmt.executeUpdate();
@@ -163,7 +163,7 @@ public class SQLHelper {
 	}
 
 	// 執行更新
-	public boolean executeUpdate(String[] SQL, Object[][] params) {
+	public boolean executeUpdate(String[] sql, Object[][] param) {
 
 		Connection con = null;
 		PreparedStatement pstmt = null;
@@ -171,11 +171,11 @@ public class SQLHelper {
 		try {
 			con = getConnection();
 			con.setAutoCommit(false);
-			for (int j = 0; j < SQL.length; j++) {
-				pstmt = con.prepareStatement(SQL[j]);
-				if (params[j] != null) {
-					for (int i = 0; i < params[j].length; i++) {
-						pstmt.setObject(i + 1, params[j][i]);
+			for (int j = 0; j < sql.length; j++) {
+				pstmt = con.prepareStatement(sql[j]);
+				if (param[j] != null) {
+					for (int i = 0; i < param[j].length; i++) {
+						pstmt.setObject(i + 1, param[j][i]);
 					}
 				}
 				pstmt.executeUpdate();

@@ -3,11 +3,11 @@ package com.forum.service;
 import java.util.Date;
 import java.util.List;
 
+import com.don.inteface.DAOInterface;
 import com.forum.dao.Article_reportDAO;
 import com.forum.domain.Article_report;
 import com.forum.domain.Articles;
-import com.forum.domain.Members;
-import com.forum.inteface.DAOInterface;
+import com.members.model.Members;
 
 public class Article_reportService {
 	//封裝新增物件

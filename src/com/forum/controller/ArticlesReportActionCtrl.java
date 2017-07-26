@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_report;
-import com.forum.domain.Members;
 import com.forum.service.Article_reportService;
 import com.forum.service.ArticlesService;
+import com.members.model.Members;
 
 /**
  * Servlet implementation class ArticlesReportCtrl

@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.servlet.http.Part;
 
+import com.don.util.TransData;
 import com.forum.dao.Article_commentsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Articles;
-import com.forum.domain.Members;
-import com.forum.util.TransData;
+import com.members.model.Members;
 
 public class Article_commentsService {
 	public boolean add(String art_no, String mem_no, Part part  , String art_cmt_ctx,String path){

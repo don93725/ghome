@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.don.inteface.DAOInterface;
 import com.forum.dao.Art_typesDAO;
 import com.forum.dao.Article_commentsDAO;
 import com.forum.dao.ArticlesDAO;
@@ -16,7 +17,6 @@ import com.forum.dao.ForumsDAO;
 import com.forum.domain.Art_types;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Articles;
-import com.forum.inteface.DAOInterface;
 import com.forum.service.Article_commentsService;
 import com.forum.service.ArticlesService;
 import com.forum.service.ForumsService;

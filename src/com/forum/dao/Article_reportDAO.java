@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.don.inteface.DAOInterface;
+import com.don.util.BasicDAO;
+import com.don.util.SQLHelper;
 import com.forum.domain.Article_report;
 import com.forum.domain.Articles;
-import com.forum.domain.Members;
-import com.forum.inteface.DAOInterface;
-import com.forum.util.BasicDAO;
-import com.forum.util.SQLHelper;
+import com.members.model.Members;
 
 public class Article_reportDAO extends BasicDAO implements DAOInterface<Article_report>{
 		//建置查詢

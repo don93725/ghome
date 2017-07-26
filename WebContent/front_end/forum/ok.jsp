@@ -9,6 +9,6 @@
 <body>
 <h1><%=request.getAttribute("msg")%></h1>
 
-<a href="/Forum/forum/ForumCtrl">返回討論區大廳</a>
+<a href="${pageContext.request.contextPath}/forum/ForumCtrl">返回討論區大廳</a>
 </body>
 </html>

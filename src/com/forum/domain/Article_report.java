@@ -2,6 +2,8 @@ package com.forum.domain;
 
 import java.util.Date;
 
+import com.members.model.Members;
+
 public class Article_report {
 	String art_rpt_no,rpt_type,rpt_ctx,rpt_stat;
 	Articles art_no;

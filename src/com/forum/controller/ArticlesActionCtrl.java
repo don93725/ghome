@@ -19,9 +19,9 @@ import com.forum.dao.ArticlesDAO;
 import com.forum.domain.Art_types;
 import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
-import com.forum.domain.Members;
 import com.forum.service.Article_photosService;
 import com.forum.service.ArticlesService;
+import com.members.model.Members;
 
 /**
  * Servlet implementation class ArticlesMakerCtrl

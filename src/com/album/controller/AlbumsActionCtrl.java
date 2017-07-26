@@ -1,4 +1,4 @@
-package com.forum.controller;
+package com.album.controller;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -7,10 +7,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-@WebServlet("/forCopy")
-public class AAforCopy extends HttpServlet {
-	
+/**
+ * Servlet implementation class AlbumActionCtrl
+ */
+@WebServlet("/album/AlbumsActionCtrl")
+public class AlbumsActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
 	}

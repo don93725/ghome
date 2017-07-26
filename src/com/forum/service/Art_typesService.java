@@ -7,9 +7,9 @@ import java.util.List;
 
 import javax.servlet.http.Part;
 
+import com.don.util.TransData;
 import com.forum.dao.Art_typesDAO;
 import com.forum.domain.Art_types;
-import com.forum.util.TransData;
 
 public class Art_typesService {
 	public List<Art_types> getArt_types(String forum_no) {

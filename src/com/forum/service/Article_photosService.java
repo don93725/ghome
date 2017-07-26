@@ -7,8 +7,8 @@ import java.util.List;
 
 import javax.servlet.http.Part;
 
+import com.don.util.TransData;
 import com.forum.domain.Article_photos;
-import com.forum.util.TransData;
 
 public class Article_photosService {
 	

@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.don.inteface.DAOInterface;
+import com.don.util.BasicDAO;
+import com.don.util.SQLHelper;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
-import com.forum.domain.Members;
-import com.forum.inteface.DAOInterface;
-import com.forum.util.BasicDAO;
-import com.forum.util.SQLHelper;
+import com.members.model.Members;
 
 public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 
@@ -169,7 +169,6 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 			String[] keyName = { "art_no" };
 			pstmt = con.prepareStatement(SQL, keyName);
 			for (int i = 0; i < param.length; i++) {
-				System.out.println(param[i]);
 				pstmt.setObject(i + 1, param[i]);
 			}
 			pstmt.executeUpdate();

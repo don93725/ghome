@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.forum.domain.Art_types;
 import com.forum.domain.Forums;
-import com.forum.domain.Members;
 import com.forum.service.Art_typesService;
 import com.forum.service.ForumsService;
 import com.google.gson.Gson;
+import com.members.model.Members;
 
 /**
  * Servlet implementation class ForumApplyCtrl

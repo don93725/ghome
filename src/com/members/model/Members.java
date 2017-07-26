@@ -1,4 +1,4 @@
-package com.forum.domain;
+package com.members.model;
 
 public class Members {
 	String mem_no,mem_acc,mem_rank,mem_nickname;

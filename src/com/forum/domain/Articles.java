@@ -2,6 +2,8 @@ package com.forum.domain;
 
 import java.util.Date;
 
+import com.members.model.Members;
+
 public class Articles {	
 	Integer art_views,art_mviews;
 	
