@@ -16,7 +16,7 @@ KindEditor.ready(function(K) {
  						text = text + "<img src='"+temp.src+"' border='0'>";
  					}else{
  						text = text + "<img width=100 src='$ProjectRealPath$/"+
-		 				"forum/OutputPic?art_cmt_no=$ArtCmtPrimaryKey$'>";
+		 				"util/OutputPic?art_cmt_no=$ArtCmtPrimaryKey$'>";
  					}
  					
 	 			}else{

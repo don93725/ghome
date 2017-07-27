@@ -31,7 +31,7 @@ public class ForumActionCtrl extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		if (user == null) {
 			// 請先登入
-			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
+			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
 			res.sendRedirect(URL);
 			return;
 

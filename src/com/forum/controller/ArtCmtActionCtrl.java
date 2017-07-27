@@ -34,7 +34,7 @@ public class ArtCmtActionCtrl extends HttpServlet {
 		String action = req.getParameter("action");
 
 		if (user == null) {
-			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
+			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
 			res.sendRedirect(URL);
 			return;
 		}

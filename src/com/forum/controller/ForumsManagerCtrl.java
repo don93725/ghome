@@ -24,7 +24,7 @@ public class ForumsManagerCtrl extends HttpServlet {
 		Members user = (Members) req.getSession().getAttribute("user");
 		if(user==null){
 			//登入管理者葉面
-			String URL = this.getServletContext().getContextPath()+"/forum/LoginCtrl";
+			String URL = this.getServletContext().getContextPath()+"/LoginCtrl";
 			res.sendRedirect(URL);
 		}
 		if ("3".equals(user.getMem_rank())) {			

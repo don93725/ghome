@@ -24,9 +24,6 @@
 </head>
 <body>
 	<h1>討論區</h1>
-
-
-
 	<c:if test="${not empty user }">
 		<div>
 			<a class='inline' href="#inline_content">申請板塊</a>

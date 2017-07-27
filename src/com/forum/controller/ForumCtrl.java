@@ -25,16 +25,15 @@ public class ForumCtrl extends HttpServlet {
 		
 		ForumsDAO forumsDAO = new ForumsDAO();		
 		List<Forums> list = forumsDAO.getAll();
-		List<Forums> rankList = forumsDAO.pageAndRank(1, 5, "forum_mviews desc", "forum_stat=1" );
-		List<Articles> articlesRankList = new ArticlesDAO().pageAndRank(1, 5, "art_mviews desc", null );
-		List<Articles> newestRankList = new ArticlesDAO().pageAndRank(1, 5, "art_add_date desc", null );
-		Map<String,Integer> countArticles= forumsDAO.countArticle();
-		System.out.println(countArticles.size());
 		req.setAttribute("forums", list);
+		List<Forums> rankList = forumsDAO.pageAndRank(1, 5, "forum_mviews desc", "forum_stat=1" );
 		req.setAttribute("rankList", rankList);
+		List<Articles> articlesRankList = new ArticlesDAO().pageAndRank(1, 5, "art_mviews desc", null );
 		req.setAttribute("articlesRankList", articlesRankList);
-		req.setAttribute("countArticles", countArticles);
+		List<Articles> newestRankList = new ArticlesDAO().pageAndRank(1, 5, "art_add_date desc", null );
 		req.setAttribute("newestRankList", newestRankList);
+		Map<String,Integer> countArticles= forumsDAO.countArticle();
+		req.setAttribute("countArticles", countArticles);
 		req.getRequestDispatcher("/front_end/forum/ForumMain.jsp").forward(req, res);
 		
 	}

@@ -29,7 +29,7 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 		res.setContentType("text/html ; charset=utf-8");
 		PrintWriter out = res.getWriter();
 		if (user == null) {
-			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
+			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
 			res.sendRedirect(URL);
 			return;
 		}		

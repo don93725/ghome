@@ -138,12 +138,12 @@ public class SQLHelper {
 					pstmt.setObject(i + 1, param[i]);
 				}
 			}
-			pstmt.executeUpdate();
+			int num =pstmt.executeUpdate();
 			if(key!=null){
 				rs = pstmt.getGeneratedKeys();
 				rs.next();
 				result = rs.getString(1);
-			}else{
+			}else {
 				result = "ok";
 			}
 			

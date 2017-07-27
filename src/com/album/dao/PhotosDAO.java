@@ -1,5 +1,8 @@
 package com.album.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,10 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 			}
 			if (obj[1] != null) {
 				photos.setAlbum_no((String) obj[1]);
-			}			
+			}
+			if (obj[2] != null) {
+				photos.setPhoto_desc((String) obj[2]);
+			}
 			tempList.add(photos);
 		}
 		return tempList;
@@ -52,16 +58,18 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	// 建置修改
 
 	public boolean updateByVO(Photos photos) {
-		String sql = "update photos set album_no=?,photo=? where photo_no=?";
-		Object[] param = { photos.getPhoto_no(), photos.getAlbum_no(), photos.getPhoto() };
+		String sql = "update photos set album_no=?,photo_desc=?,photo=?,sphoto=? where photo_no=?";
+		Object[] param = { photos.getPhoto_no(), photos.getAlbum_no(), photos.getPhoto_desc(), photos.getPhoto(),
+				photos.getSphoto() };
 		boolean updateResult = new SQLHelper().executeUpdate(sql, param);
 		return updateResult;
 	}
 	// 建置新增
 
 	public boolean executeInsert(Photos photos) {
-		String sql = "insert into photos values(?,?,?,?)";
-		Object[] param = { photos.getPhoto_no(), photos.getAlbum_no(), photos.getPhoto(), photos.getSphoto()};
+		String sql = "insert into photos values(?,?,?,?,?)";
+		Object[] param = { photos.getPhoto_no(), photos.getAlbum_no(), photos.getPhoto_desc(), photos.getPhoto(),
+				photos.getSphoto() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 		return insertResult;
 	}
@@ -73,12 +81,29 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 		boolean deleteResult = new SQLHelper().executeUpdate(sql, param);
 		return deleteResult;
 	}
+	// 建置多重交易刪除
+	
+	public boolean executeDelete(String[] al_no, Connection conn) {
+		SQLHelper helper =	new SQLHelper();
+		Connection con = conn;
+		boolean result = true;
+		
+		for(String s :al_no){
+			String sql = "delete from photos where photo_no=?";
+			Object[] param = { s };
+			String res = helper.executeUpdate(sql, param, null, conn);
+			if(res==null){
+				result = false;
+			}		}
+		
+		return result;
+	}
 	// 建置分頁(彈性排序可設條件)
 
 	public List<Photos> pageAndRank(int page, int pageSize, String order, String where) {
 		int firstPage = (page - 1) * pageSize + 1;
 		int lastPage = page * pageSize;
-		String sql = "select photo_no,album_no,photo from (select photo_no,album_no,photo, rownum rn from (select * from photos";
+		String sql = "select photo_no,album_no,photo_desc,photo,sphoto from (select photo_no,album_no,photo_desc,photo,sphoto, rownum rn from (select * from photos";
 		if (where != null) {
 			sql = sql + " where " + where;
 		}
@@ -101,9 +126,9 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	// 取得圖片集合
 
 	public byte[] getPic(String where) {
-		String sql = "select photo from photos where " + where;
-		byte[] list = new SQLHelper().getPic(sql, null);
-		return list;
+		String sql = "select photosphoto from photos where " + where;
+		byte[] b = new SQLHelper().getPic(sql, null);
+		return b;
 	}
 	// 建置取得欄位資料
 

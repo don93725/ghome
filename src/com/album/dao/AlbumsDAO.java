@@ -1,5 +1,9 @@
 package com.album.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,28 +69,74 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 	// 建置修改
 
 	public boolean updateByVO(Albums albums) {
-		String sql = "update albums set mem_no=?,al_date=?,al_name=?,al_views=?,al_prvt=? where al_no=?";
-		Object[] param = { albums.getAl_no(), albums.getMem_no(), albums.getAl_date(), albums.getAl_name(),
-				albums.getAl_views(), albums.getAl_prvt() };
+		String sql = "update albums set al_name=?,al_prvt=? where al_no=?";
+		Object[] param = { albums.getAl_name(),albums.getAl_prvt(),albums.getAl_no()};
 		boolean updateResult = new SQLHelper().executeUpdate(sql, param);
 		return updateResult;
 	}
 	// 建置新增
 
 	public boolean executeInsert(Albums albums) {
-		String sql = "insert into albums values(?,?,?,?,?,?)";
-		Object[] param = { albums.getAl_no(), albums.getMem_no(), albums.getAl_date(), albums.getAl_name(),
-				albums.getAl_views(), albums.getAl_prvt() };
+		String sql = "insert into albums values(albums_pk_seq.nextval,?,default,?,default,?)";
+		Object[] param = {albums.getMem_no(), albums.getAl_name(), albums.getAl_prvt() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 		return insertResult;
 	}
+	// 無使用刪除
+	@Override
+	public boolean executeDelete(String no) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	// 建置刪除
 
-	public boolean executeDelete(String al_no) {
-		String sql = "delete from albums where al_no=?";
-		Object[] param = { al_no };
-		boolean deleteResult = new SQLHelper().executeUpdate(sql, param);
-		return deleteResult;
+	public boolean executeDelete(String[] al_no) {
+		SQLHelper helper =	new SQLHelper();
+		Connection con = helper.getConnection();
+		PreparedStatement pstmt =null;
+		boolean result = false;
+		try {
+			con.setAutoCommit(false);
+			PhotosDAO photosDAO = new PhotosDAO(); 
+			boolean innerResult = photosDAO.executeDelete(al_no,con);
+			boolean innerResult2 = false;
+			if(innerResult){
+				innerResult2 = true;
+				String sql = null;
+				for(String s: al_no){
+					sql = "delete from albums where al_no=?";
+					Object[] param = {s};
+					String res = helper.executeUpdate(sql, param, null, con);
+					if(res==null){
+						innerResult2=false;
+					}
+				}
+				
+			}
+			
+			if(innerResult2){
+				con.rollback();
+				
+			}else{
+				con.commit();
+				result = true;
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		}finally{
+			helper.close(con, pstmt);
+		}
+		return result;
+		
 	}
 	// 建置分頁(彈性排序可設條件)
 
@@ -122,5 +172,15 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 		return colData;
 
 	}
+	// 建置修改
+
+	public boolean updateAlbumViews(String al_no) {
+			
+			String sql = "update albums set al_views=al_views+1 from album where al_no=?";
+			Object[] param = { al_no };
+			boolean updateResult = new SQLHelper().executeUpdate(sql, param);
+			return updateResult;
+	}
+
 
 }

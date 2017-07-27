@@ -42,7 +42,7 @@ KindEditor.ready(function(K) {
  						} 						
  						order = order + id + ",";
  						text = text + "<img width=100 id='pic"+id+"' src='$ProjectRealPath$/"+
-		 				"forum/OutputPic?art_no=$ArticlesPrimaryKey$&art_pt_idx="+id+"'>";
+		 				"util/OutputPic?art_no=$ArticlesPrimaryKey$&art_pt_idx="+id+"'>";
 		 				
  					}
  					

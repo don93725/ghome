@@ -37,7 +37,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 		HttpSession session = req.getSession();
 		Members user = ((Members) session.getAttribute("user"));
 		if (user == null) {
-			String URL = this.getServletContext().getContextPath() + "/forum/LoginCtrl";
+			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
 			res.sendRedirect(URL);
 			return;
 		}
