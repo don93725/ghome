@@ -11,6 +11,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-<jsp:forward page="/forum/ForumCtrl"></jsp:forward>
+<a href="${pageContext.request.contextPath }/forum/Login">登入</a><br>
+<a href="${pageContext.request.contextPath }/forum/ForumCtrl">討論區</a><br>
+<a href="${pageContext.request.contextPath }/album/AlbumsShowCtrl?mem_no=1">相簿</a><br>
+
+
 </body>
 </html>

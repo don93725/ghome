@@ -113,13 +113,11 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 				}
 				
 			}
-			
 			if(innerResult2){
-				con.rollback();
-				
-			}else{
 				con.commit();
-				result = true;
+				result = true;				
+			}else{
+				con.rollback();
 			}
 			
 			

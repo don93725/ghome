@@ -7,6 +7,9 @@
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+		<meta content="Expires" content="-1">
+		<meta content="Catch-Control" content="no-cache">
+		<meta content="Pragma" content="no-cache">
 		<title>Title Page</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 		<!--[if lt IE 9]>
@@ -36,7 +39,7 @@
 					<input type="button" class="btn btn-default btn-lg" id='chooseAlbum' value="選取">
 					<input type="button" class="btn btn-primary btn-lg" id='createAlbum'  data-toggle="modal" data-target="#myModal"  value="新增相簿">
 					<input type="button" id='editAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="editAlbum()" value="編輯相簿" >
-					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="return deleteAlbum('${pageContext.request.contextPath}')" value="刪除相簿" >
+					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="return deleteAlbum('${pageContext.request.contextPath}','${param.mem_no }')" value="刪除相簿" >
 				</span>
 
 					
@@ -100,7 +103,7 @@
 					<label for="al_name">相簿名稱：</label>
 					<input type="text" id='al_name' name="al_name">
 				</div>
-						<input type='text' id='action' value='insert' style='display:none;'>
+						<input type='text' id='action' value='insert' >
 				<label for="inlineRadioOptions">開放狀態：
 				
 					<label class="radio-inline">
@@ -116,7 +119,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">離開</button>
-        <button type="button" class="btn btn-primary" onclick='updateData('${pageContext.request.contextPath}');'>建立相簿</button>
+        <button type="button" class="btn btn-primary" onclick="updateData('${pageContext.request.contextPath}','${param.mem_no }');">建立相簿</button>
       </div>
       </form>
     </div>
@@ -172,26 +175,28 @@
 						
 						var txt =$('input[name=al_no]:checked').parent().text().trim();
 						$('#al_name').val(txt);	
-						var eq =$('input[name=al_no]:checked').next('input[name=al_private]').val();
+						var eq =$('input[name=al_no]:checked').next().next().val();
+						alert(eq);
 						$('input[name=al_prvt]:eq('+eq+')').attr('checked','');
 						$('#createAlbum').trigger('click',['stop']);	
 						$('#action').val("update");
 						
 					}
 				}
-				function updateData(path){
+				function updateData(path,mem_no){
+
+						alert("action="+$('#action').val()+"&al_name="+$('#al_name').val()+"&al_prvt="+
+								$('input[name=al_prvt]:checked').val()+"mem_no="+mem_no);
 					  $.ajax({
-			                url: path+"/album/AlbumsActionCtrl" ,
-			                data: {
-			                	al_name : $('#al_name').val(),
-			                	al_prvt : $('input[name=al_prvt]:checked').val(),
-			                	action : $('#action').val() },
+			                url: path+"/album/AlbumsActionCtrl",
+			                data: "action="+$('#action').val()+"&al_no="+$('input[name=al_no]:checked').val()+"&al_name="+$('#al_name').val()+"&al_prvt="+
+									$('input[name=al_prvt]:checked').val()+"&mem_no="+mem_no ,
 			                type:"POST",
 			                dataType:'text',
 
 			                success: function(msg){
 			                    if(msg.length!=0){
-			                    	location.href =path + "/album/AlbumsActionCtrl";
+			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no;
 			                    }else{
 			                    	//報錯啊
 			                    }
@@ -203,26 +208,25 @@
 			                 }
 			            });
 				}
-				function deleteAlbum(path){
+				function deleteAlbum(path,mem_no){
 					alert(path+"/album/AlbumsActionCtrl");
-					var queryStr = "" ;
-				  	
+					var queryStr = "" ;				  	
 				  	var al = $('input[name=al_no]:checked');
 				  	alert(al.length);
-				  	for(count in al ){
-				  		queryStr = queryStr +"al_no="+ al[count].value +",";
-				  	alert(al[count].value);
+				  	for(var i =0 ;i<al.length  ;i++ ){
+				  		queryStr = queryStr +"al_no="+ al[i].value +",";
+
 				  	}
+				  	queryStr = "?action=delete&mem_no="+mem_no+"&"+queryStr.substring(0,queryStr.length-1);
 					  $.ajax({		              						  	
 						  	
-						  	url: path+"/album/AlbumsActionCtrl",
-			                data: "action=delete&"+queryStr.substring(0,queryStr.length-1) ,
+						  	url: path+"/album/AlbumsActionCtrl"+queryStr,			                
 			                type:"POST",
 			                dataType:'text',
 
 			                success: function(msg){
 			                    if(msg.length!=0){
-			                    	location.href =path + "/album/AlbumsActionCtrl";
+			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no;
 			                    }else{
 			                    	//報錯啊
 			                    }
