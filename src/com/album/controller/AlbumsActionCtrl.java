@@ -22,6 +22,7 @@ public class AlbumsActionCtrl extends HttpServlet {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
 		String mem_no = req.getParameter("mem_no");
+		System.out.println(mem_no);
 		Members user = (Members) req.getSession().getAttribute("user");
 		System.out.println(mem_no);
 		if (mem_no == null) {

@@ -159,15 +159,15 @@ div.addAlbum {
 	</div>
 	</div>
 	<p>
-		<a class="group3" href=""
+		<a class="group3" href="http://www.penghu-nsa.gov.tw/FileDownload/Album/Big/20161013100659323787725.JPG"
 			title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a>
 	</p>
 	<p>
-		<a class="group3" href="" title="On the Ohoopee as a child">Grouped
+		<a class="group3" href="http://www.penghu-nsa.gov.tw/FileDownload/Album/Big/20161013100659323787725.JPG" title="On the Ohoopee as a child">Grouped
 			Photo 2</a>
 	</p>
 	<p>
-		<a class="group3" href="" title="On the Ohoopee as an adult">Grouped
+		<a class="group3" href="http://www.penghu-nsa.gov.tw/FileDownload/Album/Big/20161013100659323787725.JPG" title="On the Ohoopee as an adult">Grouped
 			Photo 3</a>
 	</p>
 
@@ -175,11 +175,10 @@ div.addAlbum {
 
 
 
-
-	<link rel="stylesheet" href="colorbox-master/example3/colorbox.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/album/css/colorbox.css" />
 
 	<script src="https://code.jquery.com/jquery.js"></script>
-	<script src="colorbox-master/jquery.colorbox.js"></script>
+<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.colorbox-min.js"></script>
 	<script type="text/javascript">
 				
 		</script>
@@ -293,29 +292,26 @@ div.addAlbum {
 						reader.onload = function(){
 							ph.src = reader.result;
 							ph.onload = function(){
-								rate =150/ph.height;
-								if(this.height>this.width)
-									width = this.width * rate;
-								var pic="<div class='col-xs-12 col-sm-3 pic'>"+
-								"<div class='list-group'><div class='list-group-item imgDiv'>"+
-								"		<img src='cross1.png' id='"+(count++)+"' class='delete' onclick='Preview.removePic.call(this);'/>"+
-								"<div align='center'><img alumb='true' height=150 width="+width+"  src='"+ph.src+"'>"+"</div></div><div class='list-group-item'><div class='input-group col-lg-20' style='padding-right: 0px;' >"+	
-								"<span class='input-group-addon' style='paddin:0px;margin-left: 0px;' >描述"+
-								"</span><input type='text' class='form-control' name='photo_desc' >"+
-								"</div ></div></div>";
+							var pic="<div class='col-xs-12 col-sm-3 pic'>"+
+							"<div class='list-group'><div class='list-group-item imgDiv'>"+
+							"		<img src='/BA102G4/front_end/album/images/cross1.png' id='"+(count++)+"' class='delete' onclick='Preview.removePic.call(this);'/>"+
+							"<div align='center'><img alumb='true' style='width:100%;' height=100  src='"+ph.src+"'>"+"</div></div><div class='list-group-item'><div class='input-group col-lg-20' style='padding-right: 0px;' >"+	
+							"<span class='input-group-addon' style='paddin:0px;margin-left: 0px;' >描述"+
+							"</span><input type='text' class='form-control' name='photo_desc' >"+
+							"</div ></div></div>";
 
-	   	
-								root.find(".addAlbum").append(pic);
-								$(".imgDiv").mouseenter(function () {
-	            			 	$(this).find(".delete").show();
+   	
+							root.find(".addAlbum").append(pic);
+							$(".imgDiv").mouseenter(function () {
+            			 	$(this).find(".delete").show();
 
-			        				});   
-			            
-		        				$(".imgDiv").mouseleave(function () {
-		            				$(this).find(".delete").hide();	            				
-		        				});		
+		        				});   
+		            
+	        				$(".imgDiv").mouseleave(function () {
+	            				$(this).find(".delete").hide();	            				
+	        				});		
 
-							}
+						}
 							
 							}
 							if(file){

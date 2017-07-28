@@ -2,6 +2,7 @@ package com.album.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Base64;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -32,7 +33,8 @@ public class PhotosActionCtrl extends HttpServlet {
 		System.out.println(b.length);
 		res.setContentType("image/JPEG");		
 		ServletOutputStream out = res.getOutputStream();
-			
+		Base64.Decoder decoder = Base64.getDecoder();
+		byte[] buffer2 = decoder.decode("base64");	
 		out.write(b);				
 
 	}

@@ -36,7 +36,7 @@
 					<input type="button" class="btn btn-default btn-lg" id='chooseAlbum' value="選取">
 					<input type="button" class="btn btn-primary btn-lg" id='createAlbum'  data-toggle="modal" data-target="#myModal"  value="新增相簿">
 					<input type="button" id='editAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="editAlbum()" value="編輯相簿" >
-					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="return deleteAlbum()" value="刪除相簿" >
+					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="return deleteAlbum('${pageContext.request.contextPath}')" value="刪除相簿" >
 				</span>
 
 					
@@ -116,7 +116,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">離開</button>
-        <button type="button" class="btn btn-primary" onclick='updateData()'>建立相簿</button>
+        <button type="button" class="btn btn-primary" onclick='updateData('${pageContext.request.contextPath}');'>建立相簿</button>
       </div>
       </form>
     </div>
@@ -204,11 +204,14 @@
 			            });
 				}
 				function deleteAlbum(path){
+					alert(path+"/album/AlbumsActionCtrl");
 					var queryStr = "" ;
 				  	
 				  	var al = $('input[name=al_no]:checked');
+				  	alert(al.length);
 				  	for(count in al ){
-				  		queryStr = queryStr +"al_no="+ al[count] +",";
+				  		queryStr = queryStr +"al_no="+ al[count].value +",";
+				  	alert(al[count].value);
 				  	}
 					  $.ajax({		              						  	
 						  	
