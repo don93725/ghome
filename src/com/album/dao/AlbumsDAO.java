@@ -40,6 +40,9 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 			if (obj[5] != null) {
 				albums.setAl_prvt((String) obj[5]);
 			}
+			if (obj[6] != null) {
+				albums.setAl_board((String) obj[6]);
+			}
 			tempList.add(albums);
 		}
 		return tempList;
@@ -77,7 +80,7 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 	// 建置新增
 
 	public boolean executeInsert(Albums albums) {
-		String sql = "insert into albums values(albums_pk_seq.nextval,?,default,?,default,?)";
+		String sql = "insert into albums values(albums_pk_seq.nextval,?,default,?,default,?,default)";
 		Object[] param = {albums.getMem_no(), albums.getAl_name(), albums.getAl_prvt() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 		return insertResult;
@@ -141,7 +144,7 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 	public List<Albums> pageAndRank(int page, int pageSize, String order, String where) {
 		int firstPage = (page - 1) * pageSize + 1;
 		int lastPage = page * pageSize;
-		String sql = "select al_no,mem_no,al_date,al_name,al_views,al_prvt from (select al_no,mem_no,al_date,al_name,al_views,al_prvt, rownum rn from (select * from albums";
+		String sql = "select al_no,mem_no,al_date,al_name,al_views,al_prvt,al_board from (select al_no,mem_no,al_date,al_name,al_views,al_prvt,al_board, rownum rn from (select * from albums";
 		if (where != null) {
 			sql = sql + " where " + where;
 		}

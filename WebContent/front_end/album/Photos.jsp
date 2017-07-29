@@ -24,6 +24,7 @@ div.album img {
 
 div.addAlbum {
 	background-color: gray;
+	height: 340px;
 }
 
 .test {
@@ -38,141 +39,126 @@ div.addAlbum {
 	height: 50px;
 	display: none;
 }
+
+
 </style>
 
 </head>
 
 <body>
 	<div class="container">
-		<div class="row">
+			<div class="row">
 			<div class="panel panel-default">
-				<div class="panel-heading">
-					<span class="text-left" align='left' style="margin-left: 30px;">
-						<input type="button" class="btn btn-default btn-lg" id='allCheck'
-						value="全選"> <input type="button"
-						class="btn btn-default btn-lg" id='choosePic' value="選取">
-						<button type="button" class="btn btn-primary btn-lg"
-							data-toggle="modal" data-target="#myModal">新增照片</button> <input
-						type="button" id='editPic' style="display: none;"
-						class="btn btn-primary btn-lg" onclick="editPic()" value="編輯相簿">
-						<input type="button" id='deletePic' style="display: none;"
-						class="btn btn-primary btn-lg" onclick="return deletePic();"
-						value="刪除照片">
-					</span>
-				</div>
-				<div class="panel-body">
+				  <div class="panel-heading">
+				  <span class="text-left" align='left' style="margin-left: 30px;">
+					<input type="button" class="btn btn-default btn-lg" id='allCheck' value="全選">
+					<input type="button" class="btn btn-default btn-lg" id='choosePic' value="選取">
+					<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+					  新增照片
+					</button>
+					<input type="button" id='editPic' style="display: none;" class="btn btn-primary btn-lg" onclick="editPic()" value="編輯相簿" >
+					<input type="button" id='deletePic' style="display: none;" class="btn btn-primary btn-lg" onclick="return deletePic();" value="刪除照片" >
+				</span>
+				  </div>
+				  	<div class="panel-body">				    
+				  
+				<div class="col-xs-12 col-sm-2 album">
+				<div class="row">
 
-					<div class="col-xs-12 col-sm-2 album">
+				
+				<div class="list-group">
+					<a href="#"  onclick="showPic.call(this);">
+					<div class="list-group-item">
+
+						
 						<div class="row">
-
-
-							<div class="list-group">
-								<a href="#" onclick="showPic.call(this);">
-									<div class="list-group-item">
-
-
-										<div class="row">
-
-											<img
-												src="https://api.fnkr.net/testimg/350x200/00CED1/FFF/?text=img+placeholder">
-
-										</div>
-
-									</div>
-								</a>
-
-
-								<div class="list-group-item text-center"
-									style="padding-left: 0px;">
-
-
-									<div>
-										<input type="checkbox" name="photo_no" value='*' hidden><span>照片描述</span>
-									</div>
-									<div style='display: none;'>
-										<div class='col-lg-8' style='padding-right: 0px;'>
-											<input type='text' class='form-control' name='photo_desc'>
-										</div>
-										<span class='input-group-btn' style='margin-left: 0px;'>
-											<input type='button' class='btn btn-group-btn'
-											onclick='update_photo_desc()' value='確認'>
-										</span>
-									</div>
-
-								</div>
-
-							</div>
-
+						
+							<img src="https://api.fnkr.net/testimg/350x200/00CED1/FFF/?text=img+placeholder">	
+								
 						</div>
+						
 					</div>
-
-
-
-					<!-- Button trigger modal -->
+					</a>
+					
+					
+					<div class="list-group-item text-center" style="padding-left: 0px;">						
+						
+						
+						<div><input type="checkbox" name="photo_no" value='*' hidden><span>照片描述</span></div>						
+						<div style='display:none;'>
+							<div class='col-lg-8' style='padding-right: 0px;' >			
+								<input type='text' class='form-control' name='photo_desc' >
+							</div >
+								<span class='input-group-btn' style='margin-left: 0px;' >
+									<input type='button' class='btn btn-group-btn' onclick='update_photo_desc()' value='確認'>
+									</span>
+						</div>
+						
+					</div>
+					
+				</div>
+				
 				</div>
 			</div>
+							
+		
 
-			<!-- Modal -->
-			<div class="modal fade bs-example-modal-lg" id="myModal"
-				tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-				<div class="modal-dialog modal-lg" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal"
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-
-							<h4 class="modal-title" id="myModalLabel">新增照片</h4>
-							<div class="col-xs-12 col-sm-2 col-sm-push-10"></div>
-						</div>
-						<div class="modal-body">
-							<div class="inline">
-								<div class="inline_content">
-									<form action="" method="get" class="album_form">
-										<input type="file" class="photo" id='photo'
-											style="display: none;" name="photo" multiple>
-										<div class="col-xs-12 col-sm-12 addAlbum"></div>
-										<div class="text-center">
-											<input type='button' class="btn btn-primary btn-lg"
-												id='upload' value="上傳照片">
-											<button type="reset" class="btn btn-default btn-lg"
-												id='picReset'>清除所有</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default"
-								data-dismiss="modal">關閉</button>
-							<button type="button" class="btn btn-primary">送出</button>
-						</div>
-
+				<!-- Button trigger modal -->
 					</div>
 				</div>
-			</div>
+
+<!-- Modal -->
+<div class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content ">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        
+		<h4 class="modal-title" id="myModalLabel">新增照片</h4>
+        <div class="col-xs-12 col-sm-2 col-sm-push-10">
+        
+         
+        </div>
+      </div>
+      <div class="modal-body">
+        	<div class="inline">
+					<div class="inline_content " >
+						<form action="" method="get" class="album_form" >
+						<input type="file" class="photo" id='photo' accept='image/*' style="display: none;" name="photo" multiple>
+						<div class="col-xs-12 col-sm-12 pre-scrollable addAlbum" ondragover="javascript: dragHandler(event);" ondrop="javascript: drop_image(event);" id="drop_image" >
+						</div>
+			
+						
+						
+
+						<div class="text-center">
+						<input type='button' class="btn btn-primary btn-lg" id='upload' value="上傳照片">
+							<button type="reset" class="btn btn-default btn-lg" id='picReset'>清除所有</button>
+						</div>
+					</form>
+					</div>
+				</div>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
+        <button type="button" onclick="uploadPhotos('${pageContext.request.contextPath}','${param.al_no }');" class="btn btn-primary">送出</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+			
+			
+			
+				
 		</div>
-
-
-
-
-
-
-	</div>
-	</div>
-	<p>
-		<a class="group3" href="http://www.penghu-nsa.gov.tw/FileDownload/Album/Big/20161013100659323787725.JPG"
-			title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a>
-	</p>
-	<p>
-		<a class="group3" href="http://www.penghu-nsa.gov.tw/FileDownload/Album/Big/20161013100659323787725.JPG" title="On the Ohoopee as a child">Grouped
-			Photo 2</a>
-	</p>
-	<p>
-		<a class="group3" href="http://www.penghu-nsa.gov.tw/FileDownload/Album/Big/20161013100659323787725.JPG" title="On the Ohoopee as an adult">Grouped
-			Photo 3</a>
-	</p>
+		</div>
+		<p><a class="group3" href="http://user-image.logdown.io/user/6631/blog/6602/post/313821/s4ZHc7RSX6DajfTQS8nA_%E6%8B%96%E6%9B%B3%E5%9C%96%E6%AA%94.png" title="Me and my grandfather on the Ohoopee.">Grouped Photo 1</a></p>
+		<p><a class="group3" href="http://user-image.logdown.io/user/6631/blog/6602/post/313821/s4ZHc7RSX6DajfTQS8nA_%E6%8B%96%E6%9B%B3%E5%9C%96%E6%AA%94.png" title="On the Ohoopee as a child">Grouped Photo 2</a></p>
+		<p><a class="group3" href="http://user-image.logdown.io/user/6631/blog/6602/post/313821/s4ZHc7RSX6DajfTQS8nA_%E6%8B%96%E6%9B%B3%E5%9C%96%E6%AA%94.png" title="On the Ohoopee as an adult">Grouped Photo 3</a></p>
 
 
 
@@ -185,10 +171,144 @@ div.addAlbum {
 	<script type="text/javascript">
 				
 		</script>
+	<script src='${pageContext.request.contextPath}/front_end/album/js/jquery.ajax-progress.js'></script>	
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-			$(function (){	
+	function uploadPhotos(path,al_no){
+		
+		var num=0;
+		var picList=[];
+		var data = new FormData();
+		$.each($('.pics'),function(){
+			picList[num++] = {"src":$(this).attr('src'),"photo_desc":$(this).parent().parent().next().find('input').val()};
+			data.append("image_data", $(this).attr('src'),"photo_desc".split(",")[1]);
+			data.append("photo_desc",$(this).parent().parent().next().find('input').val())
+			alert($(this).attr('src'),"photo_desc".split(",")[1]);
+		
+		});
+		var jStr = JSON.stringify(picList);
+		
+		xhr = new XMLHttpRequest();
+        xhr.upload.onprogress = function(e) {
+           // it will never come inside here
+           alert('ha');
+           if(e.lengthComputable) {
+               //calculate the percentage loaded
+               var pct = (e.loaded / e.total) * 100;
+
+               //log percentage loaded
+               console.log(pct);
+           }
+           //this usually happens when Content-Length isn't set
+           else {
+               console.warn('Content Length not reported!');
+           }
+        }
+        xhr.open("POST", path+"/album/PhotosActionCtrl?al_no="+al_no , true);
+        xhr.send(data);
+
+        xhr.onreadystatechange = function(){
+            if(xhr.readyState === 4 && xhr.status === 200){
+                console.log(xhr.responseText);              
+            }
+        }		
+		
+		
+// 		$.ajax({
+//             type: "POST",
+//             url: path+"/album/PhotosActionCtrl?al_no="+al_no,
+//             dataType:'text',
+//             contentType:'application/json',
+//             processData: false, //不做任何處理，只上傳原始資料
+//             data: jStr,
+//             success: function(msg){
+//             	alert('success')
+// //                 if(msg.length!=0){
+// //                 	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;
+// //                 }else{
+// //                 	//報錯啊
+// //                 }
+//             },
+
+//              error:function(xhr, ajaxOptions, thrownError){ 
+//                 alert(xhr.status); 
+//                 alert(thrownError); 
+//             },
+//             progress: function(e) {
+//                 //make sure we can compute the length
+//                 alert('ha');
+//                 if(e.lengthComputable) {
+//                     //calculate the percentage loaded
+//                     var pct = (e.loaded / e.total) * 100;
+
+//                     //log percentage loaded
+//                     console.log(pct);
+//                 }
+//                 //this usually happens when Content-Length isn't set
+//                 else {
+//                     console.warn('Content Length not reported!');
+//                 }
+//             }
+//         });
+
+		
+	}
+	function dragHandler(e){
+	    e.preventDefault() ; //防止瀏覽器執行預設動作
+
+	}
+	function drop_image(e){
+	    e.preventDefault() ; //防止瀏覽器執行預設動作
+
+	    var files  = e.dataTransfer.files ; //擷取拖曳的檔案
+	    for(var i =0 ; i < files.length ; i++){
+	    	$.each(files, function(index,file){
+	    		if (!file.type.match('image')){
+	    			alert('這又不是圖片..');
+	    			return;
+	    		}
+				var reader  = new FileReader();
+				
+				//var src = URL.createObjectURL(file);
+				var ph = new Image();
+				var rate ;
+				var width =0; 
+				reader.onload = function(){
+					ph.src = reader.result;
+					
+					ph.onload = function(){
+					var pic="<div class='col-xs-12 col-sm-3 pic'>"+
+					"<div class='list-group'><div class='list-group-item imgDiv'>"+
+					"		<img src='/BA102G4/front_end/album/images/cross1.png' id='"+count+"' class='delete' onclick='Preview.removePic.call(this);'/>"+
+					"<div align='center'><img alumb='true' class='pics' id='"+count+"' style='width:100%;' height=100  src='"+ph.src+"'>"+"</div></div><div class='list-group-item'><div class='input-group col-lg-20' style='padding-right: 0px;' >"+	
+					"<span class='input-group-addon' style='paddin:0px;margin-left: 0px;' >描述"+
+					"</span><input type='text' class='form-control' name='photo_desc' >"+
+					"</div ></div></div>";
+
+
+					root.find(".addAlbum").append(pic);
+					$(".imgDiv").mouseenter(function () {
+    			 	$(this).find(".delete").show();
+
+        				});   
+            
+    				$(".imgDiv").mouseleave(function () {
+        				$(this).find(".delete").hide();	            				
+    				});		
+
+					}
+					
+				}
+				if(file){
+					reader.readAsDataURL(file);
+				}
+					
+
+					});
+				}
+	    }		
+	$(function (){	
 										
 				//Examples of how to assign the Colorbox event to elements
 						$(".group3").colorbox({rel:'group3', transition:"none", width:"75%", height:"75%"});
@@ -261,10 +381,10 @@ div.addAlbum {
 
 
 			var Preview = new function(){
-				var root = $('.album_form');
-				var count = 0;
+				root = $('.album_form');
+				count = 0;
 				var picReset = $('#picReset');
-				var picList = [];
+				picList = [];
 				this.change_file = function(){
 
 					root.on('change',".photo", function(){
@@ -279,13 +399,15 @@ div.addAlbum {
 				}
 				this.removePic = function (){
 					var id = $(this).attr('id');
-					alert(id);
-					alert($(this).val());
-					$('div.pic:eq('+id+')').remove();
+					$(this).parent().parent().parent().remove();
 				}
 
 				var each_img = function(files){
 					$.each(files, function(index,file){
+						if (!file.type.match('image')){
+			    			alert('這又不是圖片..');
+			    			return;
+			    		}
 						var reader  = new FileReader();
 						
 						//var src = URL.createObjectURL(file);
@@ -298,12 +420,12 @@ div.addAlbum {
 							var pic="<div class='col-xs-12 col-sm-3 pic'>"+
 							"<div class='list-group'><div class='list-group-item imgDiv'>"+
 							"		<img src='/BA102G4/front_end/album/images/cross1.png' id='"+(count++)+"' class='delete' onclick='Preview.removePic.call(this);'/>"+
-							"<div align='center'><img alumb='true' style='width:100%;' height=100  src='"+ph.src+"'>"+"</div></div><div class='list-group-item'><div class='input-group col-lg-20' style='padding-right: 0px;' >"+	
+							"<div align='center'><img alumb='true' class='pics' id='"+count+"' style='width:100%;' height=100  src='"+ph.src+"'>"+"</div></div><div class='list-group-item'><div class='input-group col-lg-20' style='padding-right: 0px;' >"+	
 							"<span class='input-group-addon' style='paddin:0px;margin-left: 0px;' >描述"+
 							"</span><input type='text' class='form-control' name='photo_desc' >"+
 							"</div ></div></div>";
 
-   	
+   							
 							root.find(".addAlbum").append(pic);
 							$(".imgDiv").mouseenter(function () {
             			 	$(this).find(".delete").show();
@@ -345,6 +467,9 @@ div.addAlbum {
 				})
 				Preview.change_file();
 			})
+			var root;
+			var count;
+
 			
 		</script>
 </body>

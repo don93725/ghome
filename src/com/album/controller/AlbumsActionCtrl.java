@@ -26,7 +26,6 @@ public class AlbumsActionCtrl extends HttpServlet {
 		String action = req.getParameter("action");
 		String mem_no = req.getParameter("mem_no");
 		Members user = (Members) req.getSession().getAttribute("user");
-		System.out.println(action+mem_no);
 
 		if (!mem_no.equals(user.getMem_no())) {
 			//非會員想做其他操作
@@ -42,10 +41,10 @@ public class AlbumsActionCtrl extends HttpServlet {
 			boolean result = albumsService.add(user.getMem_no(), al_name, al_prvt);
 			if (result) {
 				req.getSession().removeAttribute("errorMsg");
+				out.print("ok");
 			} else {
 				req.getSession().setAttribute("errorMsg", "Oops");
 			}
-			req.getRequestDispatcher("/album/AlbumsShowCtrl?mem_no="+mem_no);
 			return;
 		}
 		if ("update".equals(action)) {
@@ -53,8 +52,7 @@ public class AlbumsActionCtrl extends HttpServlet {
 			String al_no = req.getParameter("al_no");
 			String al_name = req.getParameter("al_name");
 			String al_prvt = req.getParameter("al_prvt");
-			String thisPage = req.getParameter("thisPage");
-			System.out.println(al_no+","+al_name+","+al_prvt+","+thisPage);
+			System.out.println(al_no+","+al_name+","+al_prvt);
 			AlbumsService albumsService = new AlbumsService();
 			boolean result = albumsService.update(al_no, al_name, al_prvt);
 			if (result) {
@@ -63,7 +61,6 @@ public class AlbumsActionCtrl extends HttpServlet {
 			} else {
 				req.getSession().setAttribute("errorMsg", "Oops");
 			}
-			req.getRequestDispatcher( "/album/AlbumsShowCtrl?mem_no=" + mem_no + "&thisPage=" + thisPage);
 			return;
 		}
 		if ("delete".equals(action)) {
@@ -77,8 +74,6 @@ public class AlbumsActionCtrl extends HttpServlet {
 			} else {
 				req.getSession().setAttribute("errorMsg", "Oops");
 			}
-			
-
 			return;
 		}
 

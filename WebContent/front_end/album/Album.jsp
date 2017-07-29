@@ -39,7 +39,7 @@
 					<input type="button" class="btn btn-default btn-lg" id='chooseAlbum' value="選取">
 					<input type="button" class="btn btn-primary btn-lg" id='createAlbum'  data-toggle="modal" data-target="#myModal"  value="新增相簿">
 					<input type="button" id='editAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="editAlbum()" value="編輯相簿" >
-					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="return deleteAlbum('${pageContext.request.contextPath}','${param.mem_no }')" value="刪除相簿" >
+					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="return deleteAlbum('${pageContext.request.contextPath}','${param.mem_no }','${thisPage }')" value="刪除相簿" >
 				</span>
 
 					
@@ -119,7 +119,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">離開</button>
-        <button type="button" class="btn btn-primary" onclick="updateData('${pageContext.request.contextPath}','${param.mem_no }');">建立相簿</button>
+        <button type="button" id='updateBtn' class="btn btn-primary" onclick="updateData('${pageContext.request.contextPath}','${param.mem_no  }','${thisPage }');">完成建立</button>
       </div>
       </form>
     </div>
@@ -154,6 +154,8 @@
 								$('#al_name').val('');
 								$('input[name=al_prvt]:eq(0)').attr('checked','');
 								$('#action').val("insert");
+								$('#myModalLabel').text('建立相簿');
+								$('#updateBtn').text('完成建立')
 							}
 							});
 
@@ -176,17 +178,16 @@
 						var txt =$('input[name=al_no]:checked').parent().text().trim();
 						$('#al_name').val(txt);	
 						var eq =$('input[name=al_no]:checked').next().next().val();
-						alert(eq);
 						$('input[name=al_prvt]:eq('+eq+')').attr('checked','');
 						$('#createAlbum').trigger('click',['stop']);	
 						$('#action').val("update");
+						$('#myModalLabel').text('編輯相簿');
+						$('#updateBtn').text('完成編輯')
 						
 					}
 				}
-				function updateData(path,mem_no){
-
-						alert("action="+$('#action').val()+"&al_name="+$('#al_name').val()+"&al_prvt="+
-								$('input[name=al_prvt]:checked').val()+"mem_no="+mem_no);
+				function updateData(path,mem_no,thisPage){
+						alert(thisPage);
 					  $.ajax({
 			                url: path+"/album/AlbumsActionCtrl",
 			                data: "action="+$('#action').val()+"&al_no="+$('input[name=al_no]:checked').val()+"&al_name="+$('#al_name').val()+"&al_prvt="+
@@ -196,7 +197,12 @@
 
 			                success: function(msg){
 			                    if(msg.length!=0){
-			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no;
+			                    	if($('#action').val()=='insert'){
+			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage=1";			                    					                    		
+			                    	}else{
+			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;			                    		
+			                    	}
+			                    	
 			                    }else{
 			                    	//報錯啊
 			                    }
@@ -208,11 +214,13 @@
 			                 }
 			            });
 				}
-				function deleteAlbum(path,mem_no){
-					alert(path+"/album/AlbumsActionCtrl");
+				function deleteAlbum(path,mem_no,thisPage){
+					if(!confirm('確定要刪除相簿及相片!?')){
+						return;
+					}
+					
 					var queryStr = "" ;				  	
 				  	var al = $('input[name=al_no]:checked');
-				  	alert(al.length);
 				  	for(var i =0 ;i<al.length  ;i++ ){
 				  		queryStr = queryStr +"al_no="+ al[i].value +",";
 
@@ -226,7 +234,7 @@
 
 			                success: function(msg){
 			                    if(msg.length!=0){
-			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no;
+			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;
 			                    }else{
 			                    	//報錯啊
 			                    }

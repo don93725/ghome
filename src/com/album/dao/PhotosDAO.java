@@ -24,7 +24,7 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 				photos.setPhoto_no((String) obj[0]);
 			}
 			if (obj[1] != null) {
-				photos.setAlbum_no((String) obj[1]);
+				photos.setAl_no((String) obj[1]);
 			}
 			if (obj[2] != null) {
 				photos.setPhoto_desc((String) obj[2]);
@@ -59,7 +59,7 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 
 	public boolean updateByVO(Photos photos) {
 		String sql = "update photos set album_no=?,photo_desc=?,photo=?,sphoto=? where photo_no=?";
-		Object[] param = { photos.getPhoto_no(), photos.getAlbum_no(), photos.getPhoto_desc(), photos.getPhoto(),
+		Object[] param = { photos.getPhoto_no(), photos.getAl_no(), photos.getPhoto_desc(), photos.getPhoto(),
 				photos.getSphoto() };
 		boolean updateResult = new SQLHelper().executeUpdate(sql, param);
 		return updateResult;
@@ -67,10 +67,25 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	// 建置新增
 
 	public boolean executeInsert(Photos photos) {
-		String sql = "insert into photos values(?,?,?,?,?)";
-		Object[] param = { photos.getPhoto_no(), photos.getAlbum_no(), photos.getPhoto_desc(), photos.getPhoto(),
-				photos.getSphoto() };
+		String sql = "insert into photos values(photos_pk_seq.nextval,?,?,?,?)";
+		Object[] param = { photos.getAl_no(), photos.getPhoto_desc(), photos.getPhoto(), photos.getSphoto() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
+
+		return insertResult;
+	}
+	// 建置新增
+
+	public boolean executeInsert(List<Photos> photos) {
+		String sql = "insert into photos values(photos_pk_seq.nextval,?,?,?,?)";
+		boolean insertResult = true;
+		for (Photos p : photos) {
+			Object[] param = { p.getAl_no(), p.getPhoto_desc(), p.getPhoto(), p.getSphoto() };
+			System.out.println(p.getAl_no());
+			boolean res = new SQLHelper().executeUpdate(sql, param);
+			if (!res) {
+				insertResult = false;
+			}
+		}
 		return insertResult;
 	}
 	// 建置刪除
@@ -82,20 +97,21 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 		return deleteResult;
 	}
 	// 建置多重交易刪除
-	
+
 	public boolean executeDelete(String[] al_no, Connection conn) {
-		SQLHelper helper =	new SQLHelper();
+		SQLHelper helper = new SQLHelper();
 		Connection con = conn;
 		boolean result = true;
-		
-		for(String s :al_no){
+
+		for (String s : al_no) {
 			String sql = "delete from photos where photo_no=?";
 			Object[] param = { s };
 			String res = helper.executeUpdate(sql, param, null, conn);
-			if(res==null){
+			if (res == null) {
 				result = false;
-			}		}
-		
+			}
+		}
+
 		return result;
 	}
 	// 建置分頁(彈性排序可設條件)
@@ -126,7 +142,7 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	// 取得圖片集合
 
 	public byte[] getPic(String where) {
-		String sql = "select photosphoto from photos where " + where;
+		String sql = "select photo from photos where " + where;
 		byte[] b = new SQLHelper().getPic(sql, null);
 		return b;
 	}

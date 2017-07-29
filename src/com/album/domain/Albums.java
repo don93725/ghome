@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Albums {
 	Integer al_views;
-	String al_no,mem_no,al_name,al_prvt;
+	String al_no,mem_no,al_name,al_prvt,al_board;
 	Date al_date;
 	public Integer getAl_views() {
 		return al_views;
@@ -42,5 +42,12 @@ public class Albums {
 	public void setAl_date(Date al_date) {
 		this.al_date = al_date;
 	}
+	public String getAl_board() {
+		return al_board;
+	}
+	public void setAl_board(String al_board) {
+		this.al_board = al_board;
+	}
+	
 	
 }

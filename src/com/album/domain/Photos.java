@@ -2,8 +2,17 @@ package com.album.domain;
 
 public class Photos {
 
-	String photo_no, album_no, photo_desc;
+	String photo_no, al_no, photo_desc;
 	byte[] photo, sphoto;
+	String src;
+	
+	public String getSrc() {
+		return src;
+	}
+
+	public void setSrc(String src) {
+		this.src = src;
+	}
 
 	public String getPhoto_desc() {
 		return photo_desc;
@@ -21,12 +30,13 @@ public class Photos {
 		this.photo_no = photo_no;
 	}
 
-	public String getAlbum_no() {
-		return album_no;
+
+	public String getAl_no() {
+		return al_no;
 	}
 
-	public void setAlbum_no(String album_no) {
-		this.album_no = album_no;
+	public void setAl_no(String al_no) {
+		this.al_no = al_no;
 	}
 
 	public byte[] getPhoto() {

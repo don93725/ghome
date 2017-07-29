@@ -41,9 +41,6 @@ public class ArtCmtActionCtrl extends HttpServlet {
 		if (art_no != null) {
 			if ("create".equals(action)) {
 				Part part = req.getPart("file");
-				for(String s : part.getHeaderNames()){
-					System.out.println(part.getHeader(s));
-				}
 				String mem_no = user.getMem_no();
 				String art_cmt_ctx = req.getParameter("art_cmt_ctx");
 				Article_commentsService article_commentsSevice = new Article_commentsService();

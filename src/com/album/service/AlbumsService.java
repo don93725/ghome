@@ -38,7 +38,7 @@ public class AlbumsService {
 	public List<Albums> getPublicVO(int page,int pageSize,String mem_no){
 		AlbumsDAO albumsDAO = new AlbumsDAO();
 		String where = "mem_no="+mem_no;
-		String order = "al_date";
+		String order = "al_board,al_date desc";
 		Object[] param = {mem_no};
 		List<Albums> albums = albumsDAO.pageAndRank(page, pageSize, order, where);
 		return albums;
@@ -46,7 +46,7 @@ public class AlbumsService {
 	public List<Albums> getPrivateVO(int page,int pageSize,String mem_no){
 		AlbumsDAO albumsDAO = new AlbumsDAO();
 		String where = "mem_no="+mem_no+" and al_prvt=0 ";
-		String order = "al_date";
+		String order = "al_board,al_date desc";
 		Object[] param = {mem_no};
 		List<Albums> albums = albumsDAO.pageAndRank(page, pageSize, order, where);
 		return albums;
