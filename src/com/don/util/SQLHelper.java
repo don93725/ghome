@@ -33,7 +33,6 @@ public class SQLHelper {
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				b = rs.getBytes(1);
-
 			}
 
 		} catch (Exception e) {

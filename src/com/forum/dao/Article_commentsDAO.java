@@ -16,7 +16,7 @@ import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
 import com.forum.domain.Art_types;
 import com.forum.domain.Article_comments;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 import oracle.sql.BLOB;
 
@@ -38,7 +38,7 @@ public class Article_commentsDAO extends BasicDAO implements DAOInterface<Articl
 	article_comments.setArt_no((String)obj[1]);
 	}
 	if(obj[2]!=null){
-		Members members = new Members();
+		MembersVO members = new MembersVO();
 		members.setMem_no((String) obj[2]);
 		members.setMem_nickname((String) obj[6]);
 		members.setMem_rank((String) obj[7]);

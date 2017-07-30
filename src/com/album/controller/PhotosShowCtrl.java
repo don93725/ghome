@@ -10,8 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.album.domain.Photos;
+import com.album.service.AlbumsService;
 import com.album.service.PhotosService;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 /**
  * Servlet implementation class PhotosShowCtrl
@@ -19,66 +20,75 @@ import com.members.model.Members;
 @WebServlet("/album/PhotosShowCtrl")
 public class PhotosShowCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		
 		req.setCharacterEncoding("utf-8");
-		String action = req.getParameter("action");
 		String mem_no = req.getParameter("mem_no");
-		System.out.println("action=" + action + ",mem_no=" + mem_no);
-		Members user = (Members) req.getSession().getAttribute("user");
-		 if (mem_no == null) {
-		 //沒選擇相簿
-		 res.sendRedirect(req.getContextPath() + "/LoginCtrl");
-		 return;
-		 }
-		if (action == null || action.length() == 0) {
-			int thisPage = (req.getParameter("thisPage") == null) ? 1 : Integer.valueOf(req.getParameter("thisPage"));
-			System.out.println("現在頁數是?"+thisPage);
-			int pageSize = 12;
-//			if (user == null) {
-//				// 訪客
-//				PhotosService albumsService = new PhotosService();
-//				int allPageCount = albumsService.getPrivateNum(mem_no, pageSize);
-//				if(thisPage>allPageCount){
-//					thisPage=allPageCount;
-//				}
-//				List<Photos> albums = albumsService.getPrivateVO(thisPage, pageSize, mem_no);
-//				req.setAttribute("albums", albums);
-//				req.setAttribute("thisPage", thisPage);
-//				req.setAttribute("allPageCount", allPageCount);
-//				req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no);
-//				req.getRequestDispatcher("/front_end/album/Photos.jsp").forward(req, res);
-//				return;
-//			}
-//			if (mem_no.equals(user.getMem_no())) {
-//				// 自己看自己
-//				PhotosService albumsService = new PhotosService();
-//				int allPageCount = albumsService.getPublicNum(mem_no, pageSize);
-//				if(thisPage>allPageCount){
-//					thisPage=allPageCount;
-//				}
-//				List<Photos> albums = albumsService.getPublicVO(thisPage, pageSize, mem_no);
-//				req.setAttribute("albums", albums);
-//				req.setAttribute("thisPage", thisPage);
-//				req.setAttribute("allPageCount", allPageCount);
-//				req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no);
-//				req.getRequestDispatcher("/front_end/album/Photos.jsp").forward(req, res);
-//				return;
-//			} else {
-//				// 會員看
-//				PhotosService albumsService = new PhotosService();
-//				int allPageCount = albumsService.getPrivateNum(mem_no, pageSize);
-//				if(thisPage>allPageCount){
-//					thisPage=allPageCount;
-//				}
-//				List<Photos> albums = albumsService.getPrivateVO(thisPage, pageSize, mem_no);
-//				req.setAttribute("albums", albums);
-//				req.setAttribute("thisPage", thisPage);
-//				req.setAttribute("allPageCount", allPageCount);
-//				req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no);
-//				req.getRequestDispatcher("/front_end/album/Photos.jsp").forward(req, res);
-//				return;
-//			}
-
+		String al_no = req.getParameter("al_no");
+		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
+		if (mem_no == null || al_no == null) {
+			// 沒選擇相簿
+			String referer = (String) req.getSession().getAttribute("referer");
+			if(referer!=null){
+				res.sendRedirect(req.getContextPath()+referer);				
+			}else{
+				res.sendRedirect(req.getContextPath()+"/index.jsp");
+			}
+			return;
 		}
+
+		int thisPage = (req.getParameter("thisPage") == null) ? 1 : Integer.valueOf(req.getParameter("thisPage"));
+		int pageSize = 24;
+		if (user == null || !mem_no.equals(user.getMem_no())) {
+			// 會員看
+			AlbumsService albumsService = new AlbumsService();
+			if (albumsService.checkStatus(al_no)) {
+				PhotosService photosService = new PhotosService();
+				int allPageCount = photosService.getPageNum(al_no, pageSize);
+				if (thisPage > allPageCount) {
+					thisPage = allPageCount;
+				}
+				List<Photos> photos = photosService.pageAndRank(thisPage, pageSize, al_no);
+				req.setAttribute("photos", photos);
+				req.setAttribute("thisPage", thisPage);
+				req.setAttribute("allPageCount", allPageCount);
+				req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no +"al_no="+al_no);
+				req.getRequestDispatcher("/front_end/album/Photos.jsp").forward(req, res);
+				return;
+			} else {
+				// 不符合資格
+				String referer = req.getHeader("Referer");
+				if (user == null) {
+					// 非會員請去登入畫面
+					String requestURI = req.getRequestURI();
+					req.getSession().setAttribute("referer",referer);
+					req.getSession().setAttribute("requestURI", requestURI);
+					req.getRequestDispatcher("/LoginCtrl").forward(req, res);
+					return;
+				}
+				if(referer!=null){
+					req.getRequestDispatcher(referer).forward(req, res);				
+				}else{
+					res.sendRedirect(req.getContextPath()+"/index.jsp");
+				}	
+				
+				return;
+			}
+		}
+		if (mem_no.equals(user.getMem_no())) {
+			// 本人看
+			PhotosService photosService = new PhotosService();
+			int allPageCount = photosService.getPageNum(al_no, pageSize);
+			if (thisPage > allPageCount) {
+				thisPage = allPageCount;
+			}
+			List<Photos> photos = photosService.pageAndRank(thisPage, pageSize, al_no);
+			req.setAttribute("photos", photos);
+			req.setAttribute("thisPage", thisPage);
+			req.setAttribute("allPageCount", allPageCount);
+			req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no +"al_no="+al_no);
+			req.getRequestDispatcher("/front_end/album/Photos.jsp").forward(req, res);
+		}
+
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

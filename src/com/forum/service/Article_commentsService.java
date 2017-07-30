@@ -9,13 +9,13 @@ import com.don.util.TransData;
 import com.forum.dao.Article_commentsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Articles;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 public class Article_commentsService {
 	public boolean add(String art_no, String mem_no, Part part  , String art_cmt_ctx,String path){
 		Article_comments article_comments = new Article_comments();
 		article_comments.setArt_no(art_no);
-		Members members = new Members();
+		MembersVO members = new MembersVO();
 		members.setMem_no(mem_no);
 		article_comments.setMem_no(members);
 		article_comments.setArt_cmt_ctx(art_cmt_ctx.replace("$ProjectRealPath$", path));

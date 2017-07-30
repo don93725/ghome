@@ -10,7 +10,7 @@ import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
 import com.forum.domain.Article_report;
 import com.forum.domain.Articles;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 public class Article_reportDAO extends BasicDAO implements DAOInterface<Article_report>{
 		//建置查詢
@@ -34,7 +34,7 @@ public class Article_reportDAO extends BasicDAO implements DAOInterface<Article_
 		article_report.setArt_no(articles);
 		}
 		if(obj[2]!=null){
-		Members members = new Members();
+		MembersVO members = new MembersVO();
 		members.setMem_no(String.valueOf(obj[2]));
 		members.setMem_nickname(String.valueOf(obj[11]));
 		article_report.setRpt_mem_no(members);

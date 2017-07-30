@@ -4,8 +4,8 @@ import java.util.List;
 
 public class BasicDAO {
 	
-	public int countBySQL(String SQL) {
-		List list = (List) new SQLHelper().executeQuery(SQL, null);
+	public int countBySQL(String sql) {
+		List list = (List) new SQLHelper().executeQuery(sql, null);
 		Object[] obj =null;
 		if(list.size()!=0){
 			obj = (Object[]) list.get(0);
@@ -17,15 +17,15 @@ public class BasicDAO {
 		return num;
 	}
 	
-	public List<Object[]> executeQuery(String SQL,Object[] param){
-		return new SQLHelper().executeQuery(SQL, param);
+	public List<Object[]> executeQuery(String sql,Object[] param){
+		return new SQLHelper().executeQuery(sql, param);
 	}
 		
-	public boolean executeUpdate(String SQL,Object[] param){
-		return new SQLHelper().executeUpdate(SQL, param);
+	public boolean executeUpdate(String sql,Object[] param){
+		return new SQLHelper().executeUpdate(sql, param);
 	}
-	public boolean executeUpdate(String[] SQL,Object[][] param){
-		return new SQLHelper().executeUpdate(SQL, param);
+	public boolean executeUpdate(String[] sql,Object[][] param){
+		return new SQLHelper().executeUpdate(sql, param);
 	}
 	
 	

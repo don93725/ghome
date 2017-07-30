@@ -1,11 +1,22 @@
 package com.album.domain;
 
+import java.util.Date;
+
 public class Photos {
 
 	String photo_no, al_no, photo_desc;
 	byte[] photo, sphoto;
+	Date ul_Date;
 	String src;
 	
+	public Date getUl_Date() {
+		return ul_Date;
+	}
+
+	public void setUl_Date(Date ul_Date) {
+		this.ul_Date = ul_Date;
+	}
+
 	public String getSrc() {
 		return src;
 	}

@@ -1,6 +1,6 @@
 package com.members.model;
 
-public class Members {
+public class MembersVO {
 	String mem_no,mem_acc,mem_rank,mem_nickname;
 
 	public String getMem_no() {

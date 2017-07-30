@@ -15,7 +15,7 @@ import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_report;
 import com.forum.service.Article_reportService;
 import com.forum.service.ArticlesService;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 /**
  * Servlet implementation class ArticlesReportCtrl
@@ -24,7 +24,7 @@ import com.members.model.Members;
 public class ArticlesReportActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
-		Members user = (Members)req.getSession().getAttribute("user");
+		MembersVO user = (MembersVO)req.getSession().getAttribute("user");
 		String action = req.getParameter("action");
 		res.setContentType("text/html ; charset=utf-8");
 		PrintWriter out = res.getWriter();

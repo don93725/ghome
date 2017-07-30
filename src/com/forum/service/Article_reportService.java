@@ -7,7 +7,7 @@ import com.don.inteface.DAOInterface;
 import com.forum.dao.Article_reportDAO;
 import com.forum.domain.Article_report;
 import com.forum.domain.Articles;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 public class Article_reportService {
 	//封裝新增物件
@@ -17,7 +17,7 @@ public class Article_reportService {
 	Articles articles = new Articles();
 	articles.setArt_no(art_no);
 	article_report.setArt_no(articles);
-	Members members = new Members();
+	MembersVO members = new MembersVO();
 	members.setMem_no(rpt_mem_no);
 	article_report.setRpt_mem_no(members);
 	article_report.setRpt_type(rpt_type);

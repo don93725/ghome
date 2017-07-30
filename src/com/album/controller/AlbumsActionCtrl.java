@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.album.domain.Albums;
 import com.album.service.AlbumsService;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 /**
  * Servlet implementation class AlbumActionCtrl
@@ -25,12 +25,17 @@ public class AlbumsActionCtrl extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		String action = req.getParameter("action");
 		String mem_no = req.getParameter("mem_no");
-		Members user = (Members) req.getSession().getAttribute("user");
+		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 
-		if (!mem_no.equals(user.getMem_no())) {
+		if (!mem_no.equals(user.getMem_no())||action==null) {
 			//非會員想做其他操作
-			res.sendRedirect(req.getContextPath() + "/LoginCtrl");
-			return;
+			String referer = (String) req.getSession().getAttribute("referer");
+			if(referer!=null){
+				req.getRequestDispatcher(referer).forward(req, res);				
+			}else{
+				res.sendRedirect(req.getContextPath()+"/index.jsp");
+			}	
+			return;		
 		}
 
 		if ("insert".equals(action)) {

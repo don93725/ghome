@@ -21,7 +21,7 @@ import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.forum.service.Article_photosService;
 import com.forum.service.ArticlesService;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 /**
  * Servlet implementation class ArticlesMakerCtrl
@@ -35,7 +35,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 		String action = req.getParameter("action");
 		String forum_no = req.getParameter("forum_no");
 		HttpSession session = req.getSession();
-		Members user = ((Members) session.getAttribute("user"));
+		MembersVO user = ((MembersVO) session.getAttribute("user"));
 		if (user == null) {
 			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
 			res.sendRedirect(URL);

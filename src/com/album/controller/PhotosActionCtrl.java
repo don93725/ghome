@@ -1,10 +1,12 @@
 package com.album.controller;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 
@@ -25,39 +27,59 @@ import com.forum.dao.Article_commentsDAO;
 import com.forum.dao.Article_photosDAO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.members.model.MembersVO;
 
 /**
  * Servlet implementation class PhotosActionCtrl
  */
 @WebServlet("/album/PhotosActionCtrl")
+@MultipartConfig(fileSizeThreshold = 100, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 100 * 1024 * 1024)
 public class PhotosActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		
+		req.setCharacterEncoding("utf-8");
 
-		BufferedReader br = req.getReader();
-		StringBuffer jsonIn = new StringBuffer();
-		String line = null;
-		while ((line = br.readLine()) != null) {
-			jsonIn.append(line);
-			System.out.println(line);
-		}
+		String action = req.getParameter("action");
+		String mem_no = req.getParameter("mem_no");
 		String al_no = req.getParameter("al_no");
-		Gson gson = new Gson();
-		Type collectionType = new TypeToken<List<Photos>>(){}.getType();	
-		List<Photos> photos = gson.fromJson(jsonIn.toString(), collectionType);
+		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 
-		PhotosService photosService = new PhotosService();
-		boolean result = photosService.add(photos, al_no);
+		if (action == null || !user.getMem_no().equals(mem_no)) {
+			String referer = (String) req.getSession().getAttribute("referer");
+			if(referer!=null){
+				req.getRequestDispatcher(referer).forward(req, res);				
+			}else{
+				res.sendRedirect(req.getContextPath()+"/index.jsp");
+			}	
+			return;
+		}
+
+
+		if ("insert".equals(action)) {
+			// 新增
+			String[] names = req.getParameterValues("photo_desc");
+			Collection<Part> parts = req.getParts();
+			PhotosService photosService = new PhotosService();
+			boolean result = photosService.add(parts, names, al_no);
+			return;
+		}
+		if ("update".equals(action)) {
+			// 修改
+			return;
+		}
+		if ("delete".equals(action)) {
+			// 刪除
+			return;
+		}
+
+
+//		Photos photos = gson.fromJson(jsonIn.toString(),Photos.class);
+//		String al_no = req.getParameter("al_no");
+//		PhotosService photosService = new PhotosService();
+//		boolean result = photosService.add(photos, al_no);
 		
 //		byte[] bytes = TransData.transBlob(part);
 //		System.out.println(bytes.length);
-				
-//		System.out.println(b.length);
-//		res.setContentType("image/JPEG");		
-//		ServletOutputStream out = res.getOutputStream();
-//		Base64.Decoder decoder = Base64.getDecoder();
-//		byte[] buffer2 = decoder.decode("base64");	
-//		out.write(b);				
+			
 
 	}
 

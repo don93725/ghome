@@ -15,7 +15,7 @@ import com.forum.domain.Forums;
 import com.forum.service.Art_typesService;
 import com.forum.service.ForumsService;
 import com.google.gson.Gson;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 /**
  * Servlet implementation class ForumApplyCtrl
@@ -26,7 +26,7 @@ public class ForumActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
-		Members user = (Members) req.getSession().getAttribute("user");
+		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 		res.setContentType("text/html ; charset=utf-8 ");
 		PrintWriter out = res.getWriter();
 		if (user == null) {

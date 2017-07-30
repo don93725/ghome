@@ -6,14 +6,14 @@ import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 public class ArticlesService {
 	//含相片
 	public boolean add(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx) {
 		System.out.println(mem_no);
 		Articles articles=new Articles();
-		Members members = new Members();
+		MembersVO members = new MembersVO();
 		members.setMem_no(mem_no);
 		articles.setMem_no(members);
 		articles.setForum_no(forum_no);
@@ -26,7 +26,7 @@ public class ArticlesService {
 	//含相片
 	public boolean add(String mem_no, String forum_no, String art_type_name, String art_name, String art_ctx, List<Article_photos> article_photos) {
 		Articles articles=new Articles();
-		Members members = new Members();
+		MembersVO members = new MembersVO();
 		members.setMem_no(mem_no);
 		articles.setMem_no(members);
 		articles.setForum_no(forum_no);

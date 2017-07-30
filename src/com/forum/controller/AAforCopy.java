@@ -11,25 +11,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.album.domain.Albums;
 import com.album.service.AlbumsService;
-import com.members.model.Members;
-
+import com.members.model.MembersVO;
 
 @WebServlet("/forCopy")
 public class AAforCopy extends HttpServlet {
-	
+
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 
 		String action = req.getParameter("action");
-		Members user = (Members) req.getSession().getAttribute("user");
+		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 
 		if (action == null) {
-			
+
 		}
 
 		if (user == null) {
 			// 轉回登入頁面
-			res.sendRedirect(req.getContextPath() + "/LoginCtrl");
+			req.getRequestDispatcher("/LoginCtrl").forward(req, res);
 			return;
 		}
 
@@ -52,6 +51,5 @@ public class AAforCopy extends HttpServlet {
 			throws ServletException, IOException {
 		doGet(request, response);
 	}
-
 
 }

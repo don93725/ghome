@@ -16,7 +16,7 @@ import com.don.util.SQLHelper;
 import com.forum.domain.Article_comments;
 import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 
@@ -32,7 +32,7 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 				articles.setArt_no((String) obj[0]);
 			}
 			if (obj[1] != null) {
-				Members members = new Members();
+				MembersVO members = new MembersVO();
 				members.setMem_no((String) obj[1]);
 				if(obj[10] != null){
 					members.setMem_nickname((String) obj[10]);					

@@ -3,11 +3,11 @@ package com.forum.domain;
 import java.sql.Blob;
 import java.util.Date;
 
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 public class Article_comments {
 	String art_cmt_no,art_no,art_cmt_ctx;
-	Members mem_no;
+	MembersVO mem_no;
 	byte[] art_cmt_img;
 	Date art_cmt_time;
 	
@@ -23,10 +23,10 @@ public class Article_comments {
 	public void setArt_no(String art_no) {
 		this.art_no = art_no;
 	}	
-	public Members getMem_no() {
+	public MembersVO getMem_no() {
 		return mem_no;
 	}
-	public void setMem_no(Members mem_no) {
+	public void setMem_no(MembersVO mem_no) {
 		this.mem_no = mem_no;
 	}
 	public String getArt_cmt_ctx() {

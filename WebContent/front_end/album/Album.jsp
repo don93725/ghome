@@ -18,14 +18,13 @@
 		<![endif]-->
 		<style type="text/css">
 			div.album img{
+				height: 150px;
 				width: 100%;
 			}
 			div.addAlbum{
 				background-color: gray;
 			}
-			.test{
-				height: 200px;
-			}
+
 		</style>
 	</head>
 
@@ -52,17 +51,20 @@
 				<div class ="panel-body">
 				<c:forEach var="album" items="${albums }"> 
 						<div class="col-xs-12 col-sm-3 album">						
-						<a href="${pageContext.request.contextPath}/album/PhotosActionCtrl?al_no=${album.al_no }" class="thumbnail">
 						<div class="list-group">
+						<a href="${pageContext.request.contextPath}/album/PhotosShowCtrl?mem_no=${param.mem_no }&al_no=${album.al_no }" class="thumbnail">
 						<div class="list-group-item">
-						<img src="${pageContext.request.contextPath}/util/OutputPic?al_no=${album.al_no }">
+						<img src="${pageContext.request.contextPath}/util/OutputPic?al_no=${album.al_no }&num=<c:out value="${photosNum[album.al_no] }" default="0"/>">
 						</div>
 						<div class="list-group-item list-group-item-danger text-center">
 						<input type="checkbox" name="al_no" value='${album.al_no }' hidden><span>${album.al_name }</span>
 						<input type="checkbox" name="al_private" value='${album.al_prvt }' hidden>
 						</div>
+						<div class="list-group-item list-group-item-warning text-center">
+						<c:out value="${photosNum[album.al_no] }" default="0"/> 張相片
 						</div>
 						</a>						
+						</div>
 						</div>
 						</c:forEach>
 

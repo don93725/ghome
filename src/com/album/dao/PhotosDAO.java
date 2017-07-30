@@ -3,8 +3,12 @@ package com.album.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.album.domain.Photos;
 import com.don.inteface.DAOInterface;
@@ -28,6 +32,9 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 			}
 			if (obj[2] != null) {
 				photos.setPhoto_desc((String) obj[2]);
+			}
+			if (obj[5] != null) {
+				photos.setUl_Date((Date)obj[5]);
 			}
 			tempList.add(photos);
 		}
@@ -55,6 +62,32 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 		String sql = "select * from photos";
 		return countBySQL(sql);
 	}
+	public Map<String,Integer> getPhotosNum(String mem_no){
+		SQLHelper helper = new SQLHelper();
+		Connection con = helper.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		HashMap<String,Integer> map = map = new HashMap<String,Integer>();
+		try {
+			String sql = "select a.al_no,count(*) from photos a join (select al_no from albums where mem_no="+mem_no+") b on a.al_no=b.al_no group by a.al_no";
+			pstmt = con.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()){
+				map.put(rs.getString(1), rs.getInt(2));
+			}
+			
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			helper.close(con, pstmt, rs);
+		}
+		return map;
+		
+	}
 	// 建置修改
 
 	public boolean updateByVO(Photos photos) {
@@ -67,7 +100,7 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	// 建置新增
 
 	public boolean executeInsert(Photos photos) {
-		String sql = "insert into photos values(photos_pk_seq.nextval,?,?,?,?)";
+		String sql = "insert into photos values(photos_pk_seq.nextval,?,?,?,?,default)";
 		Object[] param = { photos.getAl_no(), photos.getPhoto_desc(), photos.getPhoto(), photos.getSphoto() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 
@@ -76,7 +109,7 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	// 建置新增
 
 	public boolean executeInsert(List<Photos> photos) {
-		String sql = "insert into photos values(photos_pk_seq.nextval,?,?,?,?)";
+		String sql = "insert into photos values(photos_pk_seq.nextval,?,?,?,?,default)";
 		boolean insertResult = true;
 		for (Photos p : photos) {
 			Object[] param = { p.getAl_no(), p.getPhoto_desc(), p.getPhoto(), p.getSphoto() };
@@ -119,7 +152,7 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	public List<Photos> pageAndRank(int page, int pageSize, String order, String where) {
 		int firstPage = (page - 1) * pageSize + 1;
 		int lastPage = page * pageSize;
-		String sql = "select photo_no,album_no,photo_desc,photo,sphoto from (select photo_no,album_no,photo_desc,photo,sphoto, rownum rn from (select * from photos";
+		String sql = "select photo_no,al_no,photo_desc,photo,sphoto,ul_date from (select photo_no,al_no,photo_desc,photo,sphoto,ul_date, rownum rn from (select * from photos";
 		if (where != null) {
 			sql = sql + " where " + where;
 		}
@@ -140,9 +173,18 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 		return list;
 	}
 	// 取得圖片集合
-
-	public byte[] getPic(String where) {
+	public byte[] getBigPic(String where) {
 		String sql = "select photo from photos where " + where;
+		byte[] b = new SQLHelper().getPic(sql, null);
+		return b;
+	}
+	public byte[] getPic(String where) {
+		String sql = "select sphoto from photos where " + where;
+		byte[] b = new SQLHelper().getPic(sql, null);
+		return b;
+	}
+	public byte[] getRandomPic(String al_no ,int num) {
+		String sql = "select sphoto from (select sphoto,rownum rn from photos where al_no=" + al_no +") where rn = "+num;
 		byte[] b = new SQLHelper().getPic(sql, null);
 		return b;
 	}

@@ -20,7 +20,7 @@ import com.don.util.TransData;
 import com.forum.dao.Article_commentsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.service.Article_commentsService;
-import com.members.model.Members;
+import com.members.model.MembersVO;
 
 @WebServlet("/forum/ArtCmtActionCtrl")
 @MultipartConfig(fileSizeThreshold = 100, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 10 * 1024 * 1024)
@@ -29,7 +29,7 @@ public class ArtCmtActionCtrl extends HttpServlet {
 
 		req.setCharacterEncoding("utf-8");
 		HttpSession session = req.getSession();
-		Members user = ((Members) session.getAttribute("user"));
+		MembersVO user = ((MembersVO) session.getAttribute("user"));
 		String art_no = req.getParameter("art_no");
 		String action = req.getParameter("action");
 
