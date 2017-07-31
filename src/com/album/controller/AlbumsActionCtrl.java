@@ -30,8 +30,8 @@ public class AlbumsActionCtrl extends HttpServlet {
 		if (!mem_no.equals(user.getMem_no())||action==null) {
 			//非會員想做其他操作
 			String referer = (String) req.getSession().getAttribute("referer");
-			if(referer!=null){
-				req.getRequestDispatcher(referer).forward(req, res);				
+			if(referer!=null){						
+				res.sendRedirect(referer);
 			}else{
 				res.sendRedirect(req.getContextPath()+"/index.jsp");
 			}	

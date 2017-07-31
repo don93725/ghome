@@ -14,7 +14,7 @@
 <title>Title Page</title>
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/album/css/jquery.fancybox.min.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/album/css/jquery.fancybox.css">
 <!--[if lt IE 9]>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -64,7 +64,32 @@ div.addAlbum {
 	display: none;
 	
 }
+.pht_cmt{
+	position : fixed;
+	z-index: 99999;
+}
+#pht_cmt{
+	position : fixed;
+	top:50%;
+	width:27%;
+	margin-right:30px;
+	background-color : white;
+	z-index: 1000000;
+	border-top-color: white;
+}
+#hidden-content-b {
+  /* Custom styling */
+  max-width: 550px;
+  border-radius: 4px;
 
+  /* Custom transition - slide from top*/
+  transform: translateY(-50px);
+  transition: all .33s;
+}
+
+.fancybox-slide--current #hidden-content-b {
+  transform: translateY(0);
+}
 
 </style>
 
@@ -75,15 +100,23 @@ div.addAlbum {
 			<div class="row">
 			<div class="panel panel-default">
 				  <div class="panel-heading">
-				  <span class="text-left" align='left' style="margin-left: 30px;">
+				 	<div class="row">
+					<div class="col-xs-12 col-sm-8">
 					<input type="button" class="btn btn-default btn-lg" id='allCheck' value="全選">
 					<input type="button" class="btn btn-default btn-lg" id='choosePic' value="選取">
 					<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 					  新增照片
 					</button>
 					<input type="button" id='editPic' style="display: none;" class="btn btn-primary btn-lg" onclick="editPic()" value="編輯相簿" >
-					<input type="button" id='deletePic' style="display: none;" class="btn btn-primary btn-lg" onclick="return deletePic();" value="刪除照片" >
-				</span>
+					<input type="button" id='deletePic' style="display: none;" class="btn btn-danger btn-lg" onclick="return deletePic('${pageContext.request.contextPath}','${param.mem_no }','${param.al_no }','${thisPage }');" value="刪除照片" >
+					</div>
+					<div class="col-xs-12 col-sm-4 text-right" style="vertical-align: middle;">
+				<button type="button" class="btn btn-default btn-lg" aria-label="Left Align" onclick="four();">
+				<span class="glyphicon glyphicon-th-large"></span></button>
+				<button type="button" class="btn btn-default btn-lg" aria-label="Left Align" onclick="six();">
+				<span class="glyphicon glyphicon-th"></span>
+				</div>
+				</div>
 				  </div>
 				  	<div class="panel-body">				    
 				 
@@ -93,13 +126,29 @@ div.addAlbum {
 				<div class="list-group">
 				<figure>
 					<a href="${pageContext.request.contextPath}/util/OutputPic?photo_no=${photo.photo_no }&type=big" class='try' data-fancybox="group" >
-					<div style='display:none;'>113135445454545454545878</div>
+					
 					<div class="list-group-item">						
 						<div class="row">
 							 						
-							<img src="${pageContext.request.contextPath}/util/OutputPic?photo_no=${photo.photo_no }">									
+							<figcaption style='display:none;' class='dialog'>
+							<div class="panel panel-default">
+							  <div class="panel-heading">留言</div>
+							   <div class="panel-body">
+								    <p>Photo_desc</p>
+								  </div>
+							     <ul class="list-group">
+								    <li class="list-group-item">Cras justo odio</li>
+								    <li class="list-group-item">Dapibus ac facilisis in</li>
+								    <li class="list-group-item">Morbi leo risus</li>
+								    <li class="list-group-item">Porta ac consectetur ac</li>
+								    <li class="list-group-item">Vestibulum at eros</li>
+								  </ul>
+							</div>
+							</figcaption>
+							<img style="height:200px; width:100%" src="${pageContext.request.contextPath}/util/OutputPic?photo_no=${photo.photo_no }">									
 						</div>						
 					</div>
+					
 					</a>	
 					</figure>							
 					<div class="list-group-item text-center" style="padding-left: 0px ;height: 50px; ">								
@@ -109,17 +158,19 @@ div.addAlbum {
 								<input type='text' class='form-control' name='photo_desc' >
 							</div >
 							<span class='input-group-btn' style='margin-left: 0px;' >
-								<input type='button' class='btn btn-group-btn' onclick='update_photo_desc.call(this,"${pageContext.request.contextPath}","${param.mem_no }","${photo.photo_no }","${thisPage }");' value='確認'>
+								<input type='button' class='btn btn-group-btn' onclick='update_photo_desc.call(this,"${pageContext.request.contextPath}","${param.mem_no }","${photo.al_no }","${photo.photo_no }","${thisPage }");' value='確認'>
 							</span>
 						</div>						
-					</div>					
+					</div>		
+								
+
 				</div>	
 			</div>
-</a>
 				</c:forEach>		
 		
 
-				<!-- Button trigger modal -->											<div class="col-xs-12 col-sm-12 text-center">
+				<!-- Button trigger modal -->											
+				<div class="col-xs-12 col-sm-12 text-center">
 				
 	<jsp:include page="/front_end/comm/ChangePage.jsp"></jsp:include>
 				 
@@ -174,7 +225,7 @@ div.addAlbum {
       <div class="modal-footer">
 
       	<button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-        <button type="button" onclick="uploadPhotos('${pageContext.request.contextPath}','${param.mem_no }','${param.al_no }');" class="btn btn-primary">送出</button>
+        <button type="button" onclick="uploadPhotos('${pageContext.request.contextPath}','${param.mem_no }','${param.al_no }','${thisPage }');" class="btn btn-primary">送出</button>
         </div>
         
       </div>
@@ -190,7 +241,16 @@ div.addAlbum {
 		</div>
 		</div>
 
-
+   <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='rptBtn' class="btn">Open demo</a>
+  <div style="display: none;" id="hidden-content-b">
+    <h2>Hello!</h2>
+    <p>rpt</p>
+  </div>
+     <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='shareBtn' class="btn">Open demo</a>
+  <div style="display: none;" id="hidden-content-b">
+    <h2>Hello!</h2>
+    <p>previeShare</p>
+  </div>
 
 
 
@@ -204,14 +264,37 @@ div.addAlbum {
 	<script src='${pageContext.request.contextPath}/front_end/album/js/jquery.ajax-progress.js'></script>	
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.min.js"></script>
+	<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
-	function uploadPhotos(path,mem_no,al_no){
+	function report(){
+		$('#rptBtn').trigger('click');
+	}
+	function makePhotoCmmt(){
+		$(this).prev().val();
+	}
+	function sharePhoto(){
+		
+	}
+	function four(){
+		$('.album').removeClass('col-sm-1');
+		$('.album').addClass('col-sm-2');	
+		$('.album img').css("height","200px");
+
+	}
+	function six(){
+		$('.album').removeClass('col-sm-2');
+		$('.album').addClass('col-sm-1');
+		$('.album img').css("height","120px");
+	}
+	function uploadPhotos(path,mem_no,al_no,thisPage){
 		var upload_progress = $('#upload_progress');
 		var num=0;
 		var data = new FormData();
 		$('.progress').css('display','block');
 		$('.progressCr').css('display','block');
+		upload_progress.html('') ; 
+    	upload_progress.css("width",'') ;                 
+    	upload_progress.attr('aria-valuenow', '') ;
 		$.each(fileList,function(){
 	
 			data.append("image",$(this)[0]);
@@ -227,7 +310,6 @@ div.addAlbum {
             data: data,
             progress: function(e) {
                 //make sure we can compute the length
-                alert('ha');
                 if(e.lengthComputable) {
                 	var intComplete = (e.loaded / e.total) * 100 | 0 ;                    
                 	upload_progress.html(intComplete + '%') ; // 控制進度條的顯示數字，例如65%
@@ -240,17 +322,21 @@ div.addAlbum {
                 }
             },
             success: function(msg){
-            	alert('success')
-
-        		$('.progress').css('display','none');
-        		$('.progressCr').css('display','none');
-        		$('#picReset').trigger('click');
-        		alert('上傳完成');	
-//                 if(msg.length!=0){
-//                 	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;
-//                 }else{
-//                 	//報錯啊
-//                 }
+            	
+				if(msg.length!=0){	
+					upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
+                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
+                	upload_progress.attr('aria-valuenow', 100) ;
+	        		
+	        		$('#picReset').trigger('click');
+	        		alert('上傳完成');		
+	        		$('.progress').css('display','none');
+	        		$('.progressCr').css('display','none');
+                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";
+             	}else{
+                	//報錯啊
+                	alert('上傳失敗');
+             	}
             },
 
              error:function(xhr, ajaxOptions, thrownError){ 
@@ -390,17 +476,21 @@ div.addAlbum {
 // 						$('input[name=photo_no]:checked').parent().next('div').find('input[type=text]').val(val);
 					}
 				}
-				function update_photo_desc(path,mem_no,al_no,thisPage){
+				function update_photo_desc(path,mem_no,al_no,photo_no,thisPage){
 					var val = $(this).parent().prev().find('input[type=text]').val();
-					console.log(val);
+					var self = $(this);
 					 $.ajax({
-			                url: path+"/album/PhotosActionCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage="+thisPage,
-			                data: {photo_desc:val},
+			                url: path+"/album/PhotosActionCtrl?mem_no="+mem_no+"&al_no="+al_no+"&photo_no="+photo_no+"&thisPage="+thisPage,
+			                data: {	
+			                	action:"update",			             
+			                	photo_desc:val
+			                },
+			                
 			                type:"POST",
 			                dataType:'text',
 			                success: function(msg){
 			                    if(msg.length!=0){
-			                    		
+			                    	self.parent().parent().prev().children('span').text(val);	
 			                    	
 			                    }else{
 			                    	//報錯啊
@@ -412,22 +502,46 @@ div.addAlbum {
 			                    alert('更新失敗');
 			                 }
 			            });
-					$(this).parent().parent().prev().children('span').text(val);
+					
 					$(this).parent().parent().prev().show();
-					$(this).parent().parent().hide();
-					$('#choosePic').trigger('click');
-					if($('#action').val()=='insert'){
-                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;			                    		
-                    }
+					$(this).parent().parent().hide();                    			                    		
                     	
 
 				}
-				function deletePic(){
+				function deletePic(path,mem_no,al_no,thisPage){
 					if($('input[name=photo_no]:checked').length==0){
 						alert('請至少選擇一個');
 						return false;
 					}else{
-						return confirm('確認要刪除照片?');
+						if(confirm('確認要刪除照片?')){
+							var photo_no = "";
+							$.each($('input[name=photo_no]:checked') ,function(){
+								photo_no = photo_no + "photo_no=" + $(this).val() +"&";
+							});
+							photo_no = photo_no.substring(0,photo_no.length-1);
+							console.log("action=delete&"+photo_no);
+							$.ajax({
+				                url: path+"/album/PhotosActionCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage="+thisPage,
+				                data:   "action=delete&"+photo_no,				                
+				                type:"POST",
+				                dataType:'text',
+				                success: function(msg){
+				                    if(msg.length!=0){	
+				                    	alert('刪除成功')
+				                    	location.href =path + "/album/PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage="+thisPage;
+				                    }else{
+				                    	//報錯啊
+				                    	alert('刪除失敗');
+				                    }
+				                },
+
+				                 error:function(xhr, ajaxOptions, thrownError){ 
+				                    alert('刪除失敗');
+				                 }
+				            });
+						}else{
+							
+						}
 					}
 				}
 
@@ -514,15 +628,17 @@ div.addAlbum {
 			
 
 			$(function(){
-			
-				$( '[data-fancybox]' ).fancybox({
-					  caption : function( instance, item ) {
-						  return $(this).find('div').text();
+				
+				$( '[data-fancybox=group]' ).fancybox({
+					 
+					clickSlide : false,				    
+						caption : function( instance, item ) {
+						  return $(this).find('figcaption').html();
 				 }
-				})
+				});
 				$('#upload').click(function(){
 					$('#photo').trigger('click');
-				})
+				});
 				Preview.change_file();
 			})
 			var root;

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.servlet.http.Part;
 
+import com.album.dao.AlbumsDAO;
 import com.album.dao.PhotosDAO;
 import com.don.util.ResizeImage;
 import com.don.util.TransData;
@@ -56,8 +57,18 @@ public class PhotosService {
 		return result;
 
 	}	
-	public boolean update(){
-		return false;
+	public boolean update(String photo_no, String photo_desc){
+		PhotosDAO dao = new PhotosDAO();
+		Photos photos = new Photos();
+		photos.setPhoto_no(photo_no);
+		photos.setPhoto_desc(photo_desc);
+		boolean result = dao.updateByVO(photos);
+		return result;
+	}
+	public boolean delete(String[] photo_no){
+		PhotosDAO dao = new PhotosDAO();
+		boolean result = dao.executeDelete(photo_no);
+		return result;
 	}
 	public int getPageNum(String al_no,int pageSize){
 		PhotosDAO dao = new PhotosDAO();
@@ -69,6 +80,8 @@ public class PhotosService {
 		PhotosDAO dao = new PhotosDAO();
 		String order = "ul_date desc";
 		String where = "al_no="+al_no;
+		AlbumsDAO albumDAO = new AlbumsDAO();
+		albumDAO.updateAlbumViews(al_no);
 		List<Photos> photos = dao.pageAndRank(page, pageSize, order, where);
 		return photos;
 	}

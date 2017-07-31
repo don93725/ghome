@@ -29,7 +29,7 @@ public class PhotosShowCtrl extends HttpServlet {
 			// 沒選擇相簿
 			String referer = (String) req.getSession().getAttribute("referer");
 			if(referer!=null){
-				res.sendRedirect(req.getContextPath()+referer);				
+				res.sendRedirect(referer);				
 			}else{
 				res.sendRedirect(req.getContextPath()+"/index.jsp");
 			}
@@ -37,7 +37,7 @@ public class PhotosShowCtrl extends HttpServlet {
 		}
 
 		int thisPage = (req.getParameter("thisPage") == null) ? 1 : Integer.valueOf(req.getParameter("thisPage"));
-		int pageSize = 24;
+		int pageSize = 36;
 		if (user == null || !mem_no.equals(user.getMem_no())) {
 			// 會員看
 			AlbumsService albumsService = new AlbumsService();
@@ -51,7 +51,7 @@ public class PhotosShowCtrl extends HttpServlet {
 				req.setAttribute("photos", photos);
 				req.setAttribute("thisPage", thisPage);
 				req.setAttribute("allPageCount", allPageCount);
-				req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no +"al_no="+al_no);
+				req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no +"&al_no="+al_no);
 				req.getRequestDispatcher("/front_end/album/Photos.jsp").forward(req, res);
 				return;
 			} else {
@@ -85,7 +85,7 @@ public class PhotosShowCtrl extends HttpServlet {
 			req.setAttribute("photos", photos);
 			req.setAttribute("thisPage", thisPage);
 			req.setAttribute("allPageCount", allPageCount);
-			req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no +"al_no="+al_no);
+			req.setAttribute("queryStr", "album/PhotosShowCtrl?mem_no=" + mem_no +"&al_no="+al_no);
 			req.getRequestDispatcher("/front_end/album/Photos.jsp").forward(req, res);
 		}
 

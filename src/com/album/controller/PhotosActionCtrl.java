@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Type;
 import java.util.Base64;
 import java.util.Collection;
@@ -37,12 +38,12 @@ import com.members.model.MembersVO;
 public class PhotosActionCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
-
+		PrintWriter out = res.getWriter();
 		String action = req.getParameter("action");
 		String mem_no = req.getParameter("mem_no");
 		String al_no = req.getParameter("al_no");
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
-
+System.out.println(action);
 		if (action == null || !user.getMem_no().equals(mem_no)) {
 			String referer = (String) req.getSession().getAttribute("referer");
 			if(referer!=null){
@@ -60,14 +61,32 @@ public class PhotosActionCtrl extends HttpServlet {
 			Collection<Part> parts = req.getParts();
 			PhotosService photosService = new PhotosService();
 			boolean result = photosService.add(parts, names, al_no);
+			if(result){
+				out.print("ok");
+			}
 			return;
 		}
-		if ("update".equals(action)) {
-			// 修改
+		if ("update".equals(action)) {	
+			// 修改			
+			String photo_desc = req.getParameter("photo_desc");
+			String photo_no = req.getParameter("photo_no");
+			PhotosService photosService = new PhotosService();
+			System.out.println(photo_no+ photo_desc);
+			boolean result = photosService.update(photo_no, photo_desc);		
+			if(result){
+				out.print("ok");
+			}
 			return;
+
 		}
 		if ("delete".equals(action)) {
 			// 刪除
+			String[] photo_no = req.getParameterValues("photo_no");
+			PhotosService photosService = new PhotosService();
+			boolean result = photosService.delete(photo_no);		
+			if(result){
+				out.print("ok");
+			}
 			return;
 		}
 

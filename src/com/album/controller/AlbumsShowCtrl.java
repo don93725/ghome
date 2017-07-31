@@ -29,7 +29,7 @@ public class AlbumsShowCtrl extends HttpServlet {
 			// 沒選擇相簿
 			String referer = (String) req.getSession().getAttribute("referer");
 			if(referer!=null){
-				res.sendRedirect(req.getContextPath()+referer);				
+				res.sendRedirect(referer);				
 			}else{
 				res.sendRedirect(req.getContextPath()+"/index.jsp");
 			}	
@@ -61,10 +61,12 @@ public class AlbumsShowCtrl extends HttpServlet {
 			if (thisPage > allPageCount) {
 				thisPage = allPageCount;
 			}
+			Map<String,Integer> photosNum = albumsService.getPhotosNum(mem_no);
 			List<Albums> albums = albumsService.getPublicVO(thisPage, pageSize, mem_no);
 			req.setAttribute("albums", albums);
 			req.setAttribute("thisPage", thisPage);
 			req.setAttribute("allPageCount", allPageCount);
+			req.setAttribute("photosNum", photosNum);
 			req.setAttribute("queryStr", "album/AlbumsShowCtrl?mem_no=" + mem_no);
 			req.getRequestDispatcher("/front_end/album/Album.jsp").forward(req, res);
 			return;

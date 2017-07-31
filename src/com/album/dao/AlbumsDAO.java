@@ -177,9 +177,8 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 
 	public boolean updateAlbumViews(String al_no) {
 			
-			String sql = "update albums set al_views=al_views+1 from album where al_no=?";
-			Object[] param = { al_no };
-			boolean updateResult = new SQLHelper().executeUpdate(sql, param);
+			String sql = "update albums set al_views = (select al_views+1 from albums where al_no="+al_no+") where al_no="+al_no;
+			boolean updateResult = new SQLHelper().executeUpdate(sql, null);
 			return updateResult;
 	}
 

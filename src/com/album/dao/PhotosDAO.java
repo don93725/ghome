@@ -91,9 +91,8 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	// 建置修改
 
 	public boolean updateByVO(Photos photos) {
-		String sql = "update photos set album_no=?,photo_desc=?,photo=?,sphoto=? where photo_no=?";
-		Object[] param = { photos.getPhoto_no(), photos.getAl_no(), photos.getPhoto_desc(), photos.getPhoto(),
-				photos.getSphoto() };
+		String sql = "update photos set photo_desc=? where photo_no=?";
+		Object[] param = { photos.getPhoto_desc(), photos.getPhoto_no() };
 		boolean updateResult = new SQLHelper().executeUpdate(sql, param);
 		return updateResult;
 	}
@@ -123,20 +122,46 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	}
 	// 建置刪除
 
-	public boolean executeDelete(String photo_no) {
-		String sql = "delete from photos where photo_no=?";
-		Object[] param = { photo_no };
-		boolean deleteResult = new SQLHelper().executeUpdate(sql, param);
-		return deleteResult;
+	public boolean executeDelete(String[] photo_no) {
+		SQLHelper helper = new SQLHelper();
+		Connection con = helper.getConnection();
+		boolean result = true;
+		for (String s : photo_no) {
+			String sql = "delete from photos where photo_no=?";
+			Object[] param = { s };
+			String res = helper.executeUpdate(sql, param, null, con);
+			if (res == null) {
+				result = false;
+			}
+		}
+			try {
+				if(result){
+					con.commit();
+				}else{
+					con.rollback();
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					con.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		return result;
 	}
 	// 建置多重交易刪除
 
-	public boolean executeDelete(String[] al_no, Connection conn) {
+	public boolean executeDelete(String[] photo_no, Connection conn) {
 		SQLHelper helper = new SQLHelper();
 		Connection con = conn;
 		boolean result = true;
 
-		for (String s : al_no) {
+		for (String s : photo_no) {
 			String sql = "delete from photos where photo_no=?";
 			Object[] param = { s };
 			String res = helper.executeUpdate(sql, param, null, conn);
@@ -197,5 +222,11 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 		return colData;
 		// Service層實作
 
+	}
+
+	@Override
+	public boolean executeDelete(String no) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

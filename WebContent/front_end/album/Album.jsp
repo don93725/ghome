@@ -32,14 +32,23 @@
 		<div class="container">
 			<div class="row">
 			<div class="panel panel-default">
+
 				<div class ="panel-heading">
-				<span class="text-left" align='left' style="margin-left: 30px;">
+				<div class="row">
+				<div class="col-xs-12 col-sm-8">
 					<input type="button" class="btn btn-default btn-lg" id='allCheck' value="全選">
 					<input type="button" class="btn btn-default btn-lg" id='chooseAlbum' value="選取">
 					<input type="button" class="btn btn-primary btn-lg" id='createAlbum'  data-toggle="modal" data-target="#myModal"  value="新增相簿">
 					<input type="button" id='editAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="editAlbum()" value="編輯相簿" >
-					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="return deleteAlbum('${pageContext.request.contextPath}','${param.mem_no }','${thisPage }')" value="刪除相簿" >
-				</span>
+					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-danger btn-lg " onclick="return deleteAlbum('${pageContext.request.contextPath}','${param.mem_no }','${thisPage }')" value="刪除相簿" >
+				</div>
+				<div class="col-xs-12 col-sm-4 text-right" style="vertical-align: middle;">
+				<button type="button" class="btn btn-default btn-lg" aria-label="Left Align" onclick="four();">
+				<span class="glyphicon glyphicon-th-large"></span></button>
+				<button type="button" class="btn btn-default btn-lg" aria-label="Left Align" onclick="six();">
+				<span class="glyphicon glyphicon-th"></span>
+				</div>
+				</div>
 
 					
 		
@@ -54,7 +63,7 @@
 						<div class="list-group">
 						<a href="${pageContext.request.contextPath}/album/PhotosShowCtrl?mem_no=${param.mem_no }&al_no=${album.al_no }" class="thumbnail">
 						<div class="list-group-item">
-						<img src="${pageContext.request.contextPath}/util/OutputPic?al_no=${album.al_no }&num=<c:out value="${photosNum[album.al_no] }" default="0"/>">
+						<img style='height:250px ; width:100%' src="${pageContext.request.contextPath}/util/OutputPic?al_no=${album.al_no }&num=<c:out value="${photosNum[album.al_no] }" default="0"/>">
 						</div>
 						<div class="list-group-item list-group-item-danger text-center">
 						<input type="checkbox" name="al_no" value='${album.al_no }' hidden><span>${album.al_name }</span>
@@ -105,7 +114,7 @@
 					<label for="al_name">相簿名稱：</label>
 					<input type="text" id='al_name' name="al_name">
 				</div>
-						<input type='text' id='action' value='insert' >
+						<input type='text' id='action' value='insert' style="display:none;">
 				<label for="inlineRadioOptions">開放狀態：
 				
 					<label class="radio-inline">
@@ -133,6 +142,16 @@
 		
 		<script src="https://code.jquery.com/jquery.js"></script>
 		<script type="text/javascript">
+				function four(){
+					$('.album').removeClass('col-sm-2');
+					$('.album').addClass('col-sm-3');	
+					$('.album img').css("height","250px");
+				}
+				function six(){
+					$('.album').removeClass('col-sm-3');
+					$('.album').addClass('col-sm-2');
+					$('.album img').css("height","150px");
+				}
 				$(function (){
 						var flag = 1;
 						$('#chooseAlbum').click(function(){
