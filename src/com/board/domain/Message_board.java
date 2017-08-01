@@ -4,10 +4,16 @@ import java.util.Date;
 
 public class Message_board {
 	Integer bd_likes;
-	String bd_msg_no,mem_no,bd_type,bd_msg_ctx,bd_ref_ctx,bd_prvt;
+	String bd_msg_no,mem_no,bd_type,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_ref_url;
 	Date bd_msg_time,bd_upd_time;
 	byte[] bd_film;
 	
+	public String getBd_ref_url() {
+		return bd_ref_url;
+	}
+	public void setBd_ref_url(String bd_ref_url) {
+		this.bd_ref_url = bd_ref_url;
+	}
 	public byte[] getBd_film() {
 		return bd_film;
 	}

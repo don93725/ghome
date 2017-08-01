@@ -45,6 +45,10 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	if(obj[8]!=null){
 	message_board.setBd_upd_time((Date)obj[8]);
 	}
+	if(obj[9]!=null){
+		message_board.setBd_ref_url(String.valueOf(obj[9]));
+	}
+	
 	tempList.add(message_board);
 	}
 	return tempList;
@@ -74,16 +78,16 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	//建置修改
 
 	public boolean updateByVO(Message_board message_board){
-	String sql="update message_board set mem_no=?,bd_type=?,bd_likes=?,bd_msg_ctx=?,bd_ref_ctx=?,bd_prvt=?,bd_msg_time=?,bd_upd_time=? where bd_msg_no=?";
-	Object[] param ={message_board.getBd_msg_no(),message_board.getMem_no(),message_board.getBd_type(),message_board.getBd_likes(),message_board.getBd_msg_ctx(),message_board.getBd_ref_ctx(),message_board.getBd_prvt(),message_board.getBd_msg_time(),message_board.getBd_upd_time()};
+	String sql="update message_board set mem_no=?,bd_type=?,bd_likes=?,bd_msg_ctx=?,bd_ref_ctx=?,bd_prvt=?,bd_msg_time=?,bd_upd_time=?,bd_ref_url=? where bd_msg_no=?";
+	Object[] param ={message_board.getBd_msg_no(),message_board.getMem_no(),message_board.getBd_type(),message_board.getBd_likes(),message_board.getBd_msg_ctx(),message_board.getBd_ref_ctx(),message_board.getBd_prvt(),message_board.getBd_msg_time(),message_board.getBd_upd_time(),message_board.getBd_ref_url()};
 	boolean updateResult = new SQLHelper().executeUpdate(sql,param);
 	return updateResult;
 	}
 	//建置新增
 
 	public boolean executeInsert(Message_board message_board){
-	String sql="insert into message_board values(?,?,?,?,?,?,?,?,?)";
-	Object[] param ={message_board.getBd_msg_no(),message_board.getMem_no(),message_board.getBd_type(),message_board.getBd_likes(),message_board.getBd_msg_ctx(),message_board.getBd_ref_ctx(),message_board.getBd_prvt(),message_board.getBd_msg_time(),message_board.getBd_upd_time(),message_board.getBd_film()};
+	String sql="insert into message_board values(?,?,?,?,?,?,?,?,?,?)";
+	Object[] param ={message_board.getBd_msg_no(),message_board.getMem_no(),message_board.getBd_type(),message_board.getBd_likes(),message_board.getBd_msg_ctx(),message_board.getBd_ref_ctx(),message_board.getBd_prvt(),message_board.getBd_msg_time(),message_board.getBd_upd_time(),message_board.getBd_film(),message_board.getBd_ref_url()};
 	boolean insertResult = new SQLHelper().executeUpdate(sql,param);
 	return insertResult;
 	}
@@ -100,7 +104,7 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	public List<Message_board> pageAndRank(int page,int pageSize,String order,String where){
 	int firstPage=(page-1)*pageSize+1;
 	int lastPage = page*pageSize;
-	String sql="select bd_msg_no,mem_no,bd_type,bd_likes,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_msg_time,bd_upd_time from (select bd_msg_no,mem_no,bd_type,bd_likes,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_msg_time,bd_upd_time, rownum rn from (select * from message_board";
+	String sql="select bd_msg_no,mem_no,bd_type,bd_likes,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_msg_time,bd_upd_time,bd_ref_url from (select bd_msg_no,mem_no,bd_type,bd_likes,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_msg_time,bd_upd_time,bd_ref_url, rownum rn from (select * from message_board";
 	if(where!=null){
 	sql = sql +" where " + where;
 	}
