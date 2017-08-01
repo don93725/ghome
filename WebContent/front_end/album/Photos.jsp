@@ -141,9 +141,10 @@ div.addAlbum {
 								    <li class="list-group-item">Dapibus ac facilisis in</li>
 								    <li class="list-group-item">Morbi leo risus</li>
 								    <li class="list-group-item">Porta ac consectetur ac</li>
-								    <li class="list-group-item">Vestibulum at eros</li>
+								    <li class="list-group-item">Vestibulum at eros</li>								    
 								  </ul>
 							</div>
+							
 							</figcaption>
 							<img style="height:200px; width:100%" src="${pageContext.request.contextPath}/util/OutputPic?photo_no=${photo.photo_no }">									
 						</div>						

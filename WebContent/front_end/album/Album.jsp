@@ -2,7 +2,7 @@
     pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh-cn-en">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,6 +12,7 @@
 		<meta content="Pragma" content="no-cache">
 		<title>Title Page</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+						<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/css/ace.min.css" />
 		<!--[if lt IE 9]>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -36,10 +37,11 @@
 				<div class ="panel-heading">
 				<div class="row">
 				<div class="col-xs-12 col-sm-8">
-					<input type="button" class="btn btn-default btn-lg" id='allCheck' value="全選">
-					<input type="button" class="btn btn-default btn-lg" id='chooseAlbum' value="選取">
+					<input type="button" class="btn btn-inverse btn-lg" id='allCheck' value="全選">
+					<input type="button" class="btn btn-inverse btn-lg" id='chooseAlbum' value="選取">
 					<input type="button" class="btn btn-primary btn-lg" id='createAlbum'  data-toggle="modal" data-target="#myModal"  value="新增相簿">
 					<input type="button" id='editAlbum' style="display: none;" class="btn btn-primary btn-lg" onclick="editAlbum()" value="編輯相簿" >
+
 					<input type="button" id='deleteAlbum' style="display: none;" class="btn btn-danger btn-lg " onclick="return deleteAlbum('${pageContext.request.contextPath}','${param.mem_no }','${thisPage }')" value="刪除相簿" >
 				</div>
 				<div class="col-xs-12 col-sm-4 text-right" style="vertical-align: middle;">
@@ -270,6 +272,5 @@
 
 		</script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	
 	</body>
 </html>

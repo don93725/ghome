@@ -46,8 +46,10 @@ public class PhotosActionCtrl extends HttpServlet {
 System.out.println(action);
 		if (action == null || !user.getMem_no().equals(mem_no)) {
 			String referer = (String) req.getSession().getAttribute("referer");
+			req.getSession().removeAttribute("referer");
 			if(referer!=null){
-				req.getRequestDispatcher(referer).forward(req, res);				
+				req.getRequestDispatcher(referer).forward(req, res);	
+				
 			}else{
 				res.sendRedirect(req.getContextPath()+"/index.jsp");
 			}	
