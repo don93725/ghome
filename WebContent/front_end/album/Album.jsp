@@ -245,7 +245,7 @@
 					var queryStr = "" ;				  	
 				  	var al = $('input[name=al_no]:checked');
 				  	for(var i =0 ;i<al.length  ;i++ ){
-				  		queryStr = queryStr +"al_no="+ al[i].value +",";
+				  		queryStr = queryStr +"al_no="+ al[i].value +"&";
 
 				  	}
 				  	queryStr = "?action=delete&mem_no="+mem_no+"&"+queryStr.substring(0,queryStr.length-1);

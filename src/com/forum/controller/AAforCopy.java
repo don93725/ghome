@@ -18,18 +18,21 @@ public class AAforCopy extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
-
+		res.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
+		String mem_no = req.getParameter("mem_no");
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 
-		if (action == null) {
-
-		}
-
-		if (user == null) {
-			// 轉回登入頁面
-			req.getRequestDispatcher("/LoginCtrl").forward(req, res);
-			return;
+		if (!mem_no.equals(user.getMem_no())||action==null) {
+			//非會員想做其他操作
+			String referer = (String) req.getSession().getAttribute("referer");
+			req.getSession().removeAttribute("referer");
+			if(referer!=null){						
+				res.sendRedirect(referer);
+			}else{
+				res.sendRedirect(req.getContextPath()+"/index.jsp");
+			}	
+			return;		
 		}
 
 		if ("insert".equals(action)) {

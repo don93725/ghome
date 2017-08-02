@@ -30,8 +30,16 @@ public class OutputPic extends HttpServlet {
 		String art_cmt_no = req.getParameter("art_cmt_no");
 		String art_no = req.getParameter("art_no");
 		String al_no = req.getParameter("al_no");
-
+		String vtype = req.getParameter("vtype"); 
 		byte[] bytes = null;
+		if("video".equals(vtype)){
+			res.setContentType("video/mp4");
+			String no = req.getParameter("no");
+			System.out.println(no);
+			bytes = new PhotosDAO().getBigPic("photo_no="+ no);
+			out.write(bytes);
+			return ;
+		}
 		try {
 			// 判斷區請寫入B
 			if (art_cmt_no != null) {
@@ -55,8 +63,7 @@ public class OutputPic extends HttpServlet {
 			}
 			if (al_no != null) {
 				int num = (int) (Math.random() * Integer.parseInt(req.getParameter("num")));
-				bytes = new PhotosDAO().getRandomPic(al_no, (num + 1));
-				
+				bytes = new PhotosDAO().getRandomPic(al_no, (num + 1));				
 
 			}
 

@@ -107,6 +107,7 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 				innerResult2 = true;
 				String sql = null;
 				for(String s: al_no){
+					System.out.println(s);
 					sql = "delete from albums where al_no=?";
 					Object[] param = {s};
 					String res = helper.executeUpdate(sql, param, null, con);

@@ -156,13 +156,13 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 	}
 	// 建置多重交易刪除
 
-	public boolean executeDelete(String[] photo_no, Connection conn) {
+	public boolean executeDelete(String[] al_no, Connection conn) {
 		SQLHelper helper = new SQLHelper();
 		Connection con = conn;
 		boolean result = true;
 
-		for (String s : photo_no) {
-			String sql = "delete from photos where photo_no=?";
+		for (String s : al_no) {
+			String sql = "delete from photos where al_no=?";
 			Object[] param = { s };
 			String res = helper.executeUpdate(sql, param, null, conn);
 			if (res == null) {
