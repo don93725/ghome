@@ -182,4 +182,11 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	//Service層實作
 
 	}
+	public byte[] getPic(String col, String  bd_msg_no){
+		String sql = "select "+col+" from message_board where bd_msg_no="+bd_msg_no;
+		byte[] b = new SQLHelper().getPic(sql, null);
+		return b;
+		//Service層實作
+
+		}
 }

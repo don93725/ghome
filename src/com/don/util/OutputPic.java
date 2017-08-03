@@ -36,8 +36,7 @@ public class OutputPic extends HttpServlet {
 		try {
 			if(bd_msg_no!=null){
 				res.setContentType("video/mp4");
-				Object[] param = {bd_msg_no};
-				bytes = (byte[])new Message_boardDAO().getCol("bd_film", param)[0];
+				bytes = new Message_boardDAO().getPic("bd_film",bd_msg_no);
 				out.write(bytes);
 				return ;
 			}

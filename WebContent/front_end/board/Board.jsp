@@ -248,34 +248,32 @@
 														src="${pageContext.request.contextPath}/front_end/board/images/cmmtPrvt${message_board.bd_prvt }.png">
 													<c:if test="${param.mem_no==user.mem_no }">
 														<span class="caret"></span>
-													</c:if>
 												</div>
-												<c:if test="${param.mem_no==user.mem_no }">
-													<ul class="dropdown-menu" id='cmtPrvt'>
-														<li><a href="#">隱私設定</a></li>
-														<li role="separator" class="divider"></li>
-														<li><a href="#" onclick="setCmmtPrvt.call(this,'0');">朋友</a></li>
-														<li><a href="#" onclick="setCmmtPrvt.call(this,'1');">公開</a></li>
-														<li><a href="#" onclick="setCmmtPrvt.call(this,'2');">本人</a></li>
-													</ul>
-												</c:if>
+
+												<ul class="dropdown-menu" id='cmtPrvt'>
+													<li><a href="#">隱私設定</a></li>
+													<li role="separator" class="divider"></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'0');">朋友</a></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'1');">公開</a></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'2');">本人</a></li>
+												</ul>
+
 											</div>
 
 										</div>
 
 
 									</div>
-									<c:if test="${param.mem_no==user.mem_no }">
-										<div class="col-xs-12 col-sm-2 boardEdit">
-											<button class="btn btn-info" onclick='edit.call(this);'>
-												<span class="glyphicon glyphicon-pencil"></span>
-											</button>
-											<button class="btn btn-danger"
-												onclick="deleteBoard.call('號碼');">
-												<span class="glyphicon glyphicon-trash"></span>
-											</button>
-										</div>
-									</c:if>
+									<div class="col-xs-12 col-sm-2 boardEdit">
+										<button class="btn btn-info" onclick='edit.call(this);'>
+											<span class="glyphicon glyphicon-pencil"></span>
+										</button>
+										<button class="btn btn-danger"
+											onclick="deleteBoard.call('號碼');">
+											<span class="glyphicon glyphicon-trash"></span>
+										</button>
+										</c:if>
+									</div>
 								</div>
 
 							</h3>
@@ -283,10 +281,10 @@
 						<div class="panel-body">
 							<div class='content'>${message_board.bd_msg_ctx}</div>
 						</div>
-						<div class="panel-body">
-							<!-- 如果有照片  -->
-							<c:if
-								test="${message_board.bd_type==1 || message_board.bd_type==3 }">
+						<c:if
+							test="${message_board.bd_type==1 || message_board.bd_type==3 }">
+							<div class="panel-body">
+								<!-- 如果有照片  -->
 								<div class="well">
 									<div id="myCarousel" class="carousel fdi-Carousel slide">
 										<!-- Carousel items -->
@@ -301,7 +299,8 @@
 															<figure>
 																<a
 																	href="${pageContext.request.contextPath}/util/OutputPic?photo_no=${bd_photo}&type=big"
-																	class='try' data-fancybox="group"> <img
+																	class='try'
+																	data-fancybox="group${message_board.bd_msg_no }"> <img
 																	style='height: 250px; width: 100%;'
 																	src="${pageContext.request.contextPath}/util/OutputPic?photo_no=${bd_photo}"
 																	class="img-responsive center-block">
@@ -345,25 +344,29 @@
 									</div>
 									<!--/myCarousel-->
 								</div>
-								<!--/well-->								
-									<!-- 如果有影片  -->								
-							</c:if>
-						<c:if test="${message_board.bd_type==3 }">
-							<div class="panel-body">
+								<!--/well-->
+
+							</div>
+							<!--/panel-body  -->
+						</c:if>
+						<!-- 如果有影片  -->
+						<c:if
+							test="${message_board.bd_type==2 || message_board.bd_type==3 }">
+							<div class="panel-body text-center">
 								<div class="well">
-									<div class="col-xs-12 col-sm-12">
-										<video controls="controls">
-											<source
-												src="${pageContext.request.contextPath}/util/OutputPic?bd_msg_no=${message_board.bd_msg_no">
-										</video>
+									<div class="row">
+										<div class="col-xs-12 col-sm-12">
+											<video controls="controls">
+												<source
+													src="${pageContext.request.contextPath}/util/OutputPic?bd_msg_no=${message_board.bd_msg_no}">
+											</video>
+										</div>
 									</div>
 								</div>
 								<!--well -->
 							</div>
 							<!--panel-body -->
 						</c:if>
-						</div>
-						<!--/panel-body  -->
 						<div class="panel-body updatTime">
 							<div class="col-xs-12 col-sm-4 col-sm-offset-8">
 								<fmt:setLocale value="en_US" />
@@ -552,42 +555,123 @@
 		src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
 		var count = 0;
-		$(document).ready(
-				function() {
-					$('#myCarousel').carousel({
-						interval : 5000
-					});
-					$('.fdi-Carousel .item').each(
-							function() {
-								var sibNum = $(this).siblings().length;
-								var next = $(this).next();
-								if (!next.length) {
-									next = $(this).siblings(':first');
-								}
-								next.children(':first-child').clone().appendTo(
-										$(this));
-
-								if (sibNum > 2) {
-									if (next.next().length > 0) {
-										next.next().children(':first-child')
-												.clone().appendTo($(this));
-									} else {
-										$(this).siblings(':first').children(
-												':first-child').clone()
-												.appendTo($(this));
-									}
-								}
-
+		$(document)
+				.ready(
+						function() {
+							$('#myCarousel').carousel({
+								interval : 5000
 							});
+							$('.fdi-Carousel .item')
+									.each(
+											function() {
+												var sibNum = $(this).siblings().length;
+												var next = $(this).next();
+												if (!next.length) {
+													next = $(this).siblings(
+															':first');
+												}
+												next.children(':first-child')
+														.clone().appendTo(
+																$(this));
+												$(this)
+														.children(':last-child')
+														.children()
+														.children()
+														.prop("href", "#")
+														.removeAttr(
+																"data-fancybox")
+														.click(
+																function(event) {
+																	event
+																			.preventDefault();
+																	next
+																			.children(
+																					':first-child')
+																			.children()
+																			.children()
+																			.trigger(
+																					'click');
+																});
 
-					$('[data-fancybox=group]').fancybox({
+												if (sibNum > 2) {
+													if (next.next().length > 0) {
+														next
+																.next()
+																.children(
+																		':first-child')
+																.clone()
+																.appendTo(
+																		$(this));
+														$(this)
+																.children(
+																		':last-child')
+																.children()
+																.children()
+																.prop("href",
+																		"#")
+																.removeAttr(
+																		"data-fancybox")
+																.click(
+																		function(
+																				event) {
+																			event
+																					.preventDefault();
+																			next
+																					.next()
+																					.children(
+																							':first-child')
+																					.children()
+																					.children()
+																					.trigger(
+																							'click');
+																		});
+													} else {
+														$(this)
+																.siblings(
+																		':first')
+																.children(
+																		':first-child')
+																.clone()
+																.appendTo(
+																		$(this));
+														$(this)
+																.children(
+																		':last-child')
+																.children()
+																.children()
+																.prop("href",
+																		"#")
+																.removeAttr(
+																		"data-fancybox")
+																.click(
+																		function(
+																				event) {
+																			event
+																					.preventDefault();
+																			$(
+																					this)
+																					.siblings(
+																							':first')
+																					.children(
+																							':first-child')
+																					.children()
+																					.children()
+																					.trigger(
+																							'click');
+																		});
+													}
+												}
 
-						clickSlide : false,
-						caption : function(instance, item) {
-							return $(this).find('figcaption').html();
-						}
-					});
-				});
+											});
+
+							$('[data-fancybox]').fancybox({
+
+								clickSlide : false,
+								caption : function(instance, item) {
+									return $(this).find('figcaption').html();
+								}
+							});
+						});
 		function deleteBoard(mem_no, bd_msg_no) {
 			if (confirm('將會把照片及內文完全刪除，確定不會捨不得，執意還要刪除？')) {
 
