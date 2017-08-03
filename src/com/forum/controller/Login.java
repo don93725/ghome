@@ -23,8 +23,7 @@ public class Login extends HttpServlet {
 		members.setMem_rank("3");
 		session.setAttribute("user",members);
 		res.setContentType("text/html; charset=utf-8");
-		System.out.println(((MembersVO)session.getAttribute("user")).getMem_nickname()+"登入了");
-		res.sendRedirect(req.getContextPath()+"/album/AlbumsShowCtrl?mem_no=1");
+		System.out.println(((MembersVO)session.getAttribute("user")).getMem_nickname()+"登入了阿");
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

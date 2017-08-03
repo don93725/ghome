@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.album.dao.PhotosDAO;
+import com.board.dao.Message_boardDAO;
 import com.forum.dao.Article_commentsDAO;
 import com.forum.dao.Article_photosDAO;
 import com.sun.xml.internal.messaging.saaj.util.Base64;
@@ -30,17 +31,16 @@ public class OutputPic extends HttpServlet {
 		String art_cmt_no = req.getParameter("art_cmt_no");
 		String art_no = req.getParameter("art_no");
 		String al_no = req.getParameter("al_no");
-		String vtype = req.getParameter("vtype"); 
+		String bd_msg_no = req.getParameter("bd_msg_no");
 		byte[] bytes = null;
-		if("video".equals(vtype)){
-			res.setContentType("video/mp4");
-			String no = req.getParameter("no");
-			System.out.println(no);
-			bytes = new PhotosDAO().getBigPic("photo_no="+ no);
-			out.write(bytes);
-			return ;
-		}
 		try {
+			if(bd_msg_no!=null){
+				res.setContentType("video/mp4");
+				Object[] param = {bd_msg_no};
+				bytes = (byte[])new Message_boardDAO().getCol("bd_film", param)[0];
+				out.write(bytes);
+				return ;
+			}
 			// 判斷區請寫入B
 			if (art_cmt_no != null) {
 				bytes = new Article_commentsDAO().getPic(art_cmt_no);
