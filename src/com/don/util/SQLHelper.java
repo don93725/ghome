@@ -35,9 +35,11 @@ public class SQLHelper {
 				b = rs.getBytes(1);
 			}
 
-		} catch (Exception e) {
+		} catch (SQLException se) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			se.printStackTrace();
+			throw new RuntimeException("A database error occured. "
+                    + se.getMessage());
 		} finally {
 			close(con, pstmt, rs);
 		}
@@ -72,8 +74,10 @@ public class SQLHelper {
 				}
 				al.add(obj);
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException se) {
+			se.printStackTrace();
+			throw new RuntimeException("A database error occured. "
+                    + se.getMessage());
 		} finally {
 			close(con, pstmt, rs);
 		}
@@ -98,15 +102,10 @@ public class SQLHelper {
 			}
 			pstmt.executeUpdate();
 			con.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				updateResult = false;
-				con.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-
-			}
+		} catch (SQLException se) {
+			se.printStackTrace();
+			throw new RuntimeException("A database error occured. "
+                    + se.getMessage());			
 		} finally {
 			close(con, pstmt);
 		}
@@ -146,17 +145,13 @@ public class SQLHelper {
 				result = "ok";
 			}
 			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				updateResult = false;
-				con.rollback();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
+		} catch (SQLException se) {
+			se.printStackTrace();
+			throw new RuntimeException("A database error occured. "
+                    + se.getMessage());
 
-			} finally{
-				close(pstmt,rs);
-			}
+		} finally{
+			close(pstmt,rs);
 		}
 		return result;
 	}
@@ -181,14 +176,10 @@ public class SQLHelper {
 			}
 			con.commit();
 
-		} catch (SQLException e) {
-			e.printStackTrace();
-			try {
-				con.rollback();
-				updateResult = false;
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+		} catch (SQLException se) {
+			se.printStackTrace();
+			throw new RuntimeException("A database error occured. "
+                    + se.getMessage());
 		} finally {
 			close(con, pstmt);
 		}
@@ -200,7 +191,7 @@ public class SQLHelper {
 	static {
 		try {
 			Context ctx = new javax.naming.InitialContext();
-			ds = (DataSource) ctx.lookup("java:comp/env/jdbc/TestDB");
+			ds = (DataSource) ctx.lookup("java:comp/env/jdbc/BA102G4DB");
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

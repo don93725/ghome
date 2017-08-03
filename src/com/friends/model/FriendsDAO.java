@@ -11,7 +11,15 @@ import com.don.util.SQLHelper;
 
 public class FriendsDAO extends BasicDAO {
 	// 建置查詢
-
+	public boolean checkFriendShip(String mem_no, String fd_no){
+		String sql = "select * from friends where mem_no="+mem_no+" and fd_no="+fd_no;
+		List friends = getVOBySQL(sql, null);
+		if(friends.size()!=0){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	public List<Friends> getVOBySQL(String sql, Object[] param) {
 		List list = new SQLHelper().executeQuery(sql, param);
 		List<Friends> tempList = new ArrayList<Friends>();

@@ -1,13 +1,23 @@
 package com.board.domain;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class Message_board {
 	Integer bd_likes;
 	String bd_msg_no,mem_no,bd_type,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_ref_url;
 	Date bd_msg_time,bd_upd_time;
 	byte[] bd_film;
+	List<String> board_photo;	
 	
+	
+	public List<String> getBoard_photo() {
+		return board_photo;
+	}
+	public void setBoard_photo(List<String> board_photo) {
+		this.board_photo = board_photo;
+	}
 	public String getBd_ref_url() {
 		return bd_ref_url;
 	}

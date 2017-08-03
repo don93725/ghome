@@ -123,7 +123,7 @@ div.addAlbum {
 				 
 				<c:forEach var="photo" items="${photos }" varStatus="loop"> 
 				<div class="col-xs-12 col-sm-2 album" style='padding: 2px;'>
-				<div class="list-group">
+				<div class="list-group">				
 				<figure>
 					<a href="${pageContext.request.contextPath}/util/OutputPic?photo_no=${photo.photo_no }&type=big" class='try' data-fancybox="group" >
 					

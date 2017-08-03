@@ -1,14 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=BIG5"
-    pageEncoding="BIG5"%>
+<%@ page language="java" contentType="text/html; charset=utf-8"
+    pageEncoding="utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html>
 <html lang="zh-ch-en">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-		<title >°·³f - GYMHome</title>
+		<title >å¥è²¨ - GYMHome</title>
 
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/album/css/jquery.fancybox.css">
 		<!--[if lt IE 9]>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -75,6 +78,27 @@
 				background-repeat:no-repeat;
 				opacity: 0.5;
 			}
+			.boardEdit {
+				margin-top: 15px;
+			}
+			.carousel-inner.onebyone-carosel { margin: auto; width: 90%; }
+			.onebyone-carosel .active.left { left: -33.33%; }
+			.onebyone-carosel .active.right { left: 33.33%; }
+			.onebyone-carosel .next { left: 33.33%; }
+			.onebyone-carosel .prev { left: -33.33%; }
+			.pht_cmt{
+				position : fixed;
+				z-index: 99999;
+			}
+			#pht_cmt{
+				position : fixed;
+				top:50%;
+				width:27%;
+				margin-right:30px;
+				background-color : white;
+				z-index: 1000000;
+				border-top-color: white;
+			}
 		</style>
 	</head>
 	<body ondragover="javascript: dragHandler(event);"  ondragleave="javascript: leave_image(event);">
@@ -94,10 +118,10 @@
 				<div class="col-xs-12 col-sm-10">
 							<div class="panel panel-default opcityDiv" id='showBorder' ondrop="javascript: drop_image(event);" >
 							  <div class="panel-heading">
-							    <h3 class="panel-title">·s¼W°ÊºA</h3>
+							    <h3 class="panel-title">æ–°å¢å‹•æ…‹</h3>
 							  </div>
 							  <div class="panel-body">
-							   <textarea class="form-control scrollable" id='bd_msg_ctx' style="resize: none;background-color:transparent;" rows="8" placeholder="§õ©vÀM¡A¦b·Q¨Ç¤°»ò©O¡H"></textarea>
+							   <textarea class="form-control scrollable" id='bd_msg_ctx' style="resize: none;background-color:transparent;" rows="8" placeholder="æå®—éœ–ï¼Œåœ¨æƒ³äº›ä»€éº¼å‘¢ï¼Ÿ"></textarea>
 							  </div>
 							  	<div class="row-fluid" id='media'>						  		
 							  		
@@ -110,9 +134,9 @@
 							  <div class="row">
 							  		<div class="col-xs-12 col-sm-8">
 							  			<div class="panel-heading" >
-								  <button class="btn btn-default" id='uploadTrigger'><span class="glyphicon glyphicon-picture"> ·s¼W·Ó¤ù</span></button>
+								  <button class="btn btn-default" id='uploadTrigger'><span class="glyphicon glyphicon-picture"> æ–°å¢ç…§ç‰‡</span></button>
 								  <input type="file" style="display:none;"  id="uploadPhoto" multiple>
-								  <button  class="btn btn-default" id='uploadFilmTrigger'><span class="glyphicon glyphicon-facetime-video"> ·s¼W¼v¤ù</span>
+								  <button  class="btn btn-default" id='uploadFilmTrigger'><span class="glyphicon glyphicon-facetime-video"> æ–°å¢å½±ç‰‡</span>
 								  </button>
 								  <input type="file" style="display:none;"  id="uploadFilm">								  
 							  </div>
@@ -124,13 +148,13 @@
 										<div class="panel-heading" >
 											<div class="dropdown">
 												 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" value="0">
-												    Áô¨p³]©w
+												    éš±ç§è¨­å®š
 												    <span class="caret"></span>
 												  </button>
 												  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-												    <li><a href="#" onclick="chooseCmmtPrvt.call(this,'0');">ªB¤Í&nbsp</a></li>
-												    <li><a href="#" onclick="chooseCmmtPrvt.call(this,'1');">¤½¶}&nbsp</a></li>
-												    <li><a href="#" onclick="chooseCmmtPrvt.call(this,'2');">¥»¤H&nbsp</a></li>
+												    <li><a href="#" onclick="chooseCmmtPrvt.call(this,'0');">æœ‹å‹&nbsp</a></li>
+												    <li><a href="#" onclick="chooseCmmtPrvt.call(this,'1');">å…¬é–‹&nbsp</a></li>
+												    <li><a href="#" onclick="chooseCmmtPrvt.call(this,'2');">æœ¬äºº&nbsp</a></li>
 												  </ul>											
 											</div>
 
@@ -149,7 +173,7 @@
 							  			<div class="panel-heading" style="padding-left: " >
 										
 							  			<button class="btn btn-primary" onclick="submit.call(this,'${pageContext.request.contextPath}','${param.mem_no }');">
-							  			&nbsp&nbsp&nbsp°e¥X&nbsp&nbsp&nbsp</button>		
+							  			&nbsp&nbsp&nbspé€å‡º&nbsp&nbsp&nbsp</button>		
 
 								 	 </div>
 							  		</div>
@@ -157,58 +181,106 @@
 							  </div>
 							</div>
 							</div>
-							<div class="panel panel-default">
-							  <div class="panel-heading">
-							    <h3 class="panel-title">
-							    	<div class="row">
-							    		<div class="col-xs-12 col-sm-1">
-								  				 
-								  	<img  src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg" class="img-circle cmt_mem_pic">
-								
-								  			</div>
-								  			  </a>								  			
-								  			<div class="col-xs-12 col-sm-11">
-								  			<div class="col-xs-12 col-sm-12 cmtInfo">
-								  				<a href="#">§õ©vÀM</a>
-								  			</div>
-								  			<div class="col-xs-12 col-sm- cmtInfo cmtTime">
-								  				yyyy/MM/dd HH:mm
-								  				<div class="btn-group cmtPrvt">
-													<div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-														  <img src="${pageContext.request.contextPath}/front_end/board/images/cmmtPrvt1.png" >
-														   <span class="caret"></span>
-													</div>
-												 	 <ul class="dropdown-menu" id='cmtPrvt'>
-												  		<li><a href="#">Áô¨p³]©w</a></li>
-													  	<li role="separator" class="divider"></li>	
-													    <li><a href="#" onclick="setCmmtPrvt.call(this,'0');">ªB¤Í</a></li>
-													    <li><a href="#" onclick="setCmmtPrvt.call(this,'1');">¤½¶}</a></li>
-													    <li><a href="#" onclick="setCmmtPrvt.call(this,'2');">¥»¤H</a></li>
-													 </ul>
-												</div>
-								  			</div>
-
-								  				
-								  			</div>
-							    	</div>
+			
+			<c:forEach var="message_board" items="${message_board}">
+				<div class="panel panel-default">
+				  <div class="panel-heading">
+				    <h3 class="panel-title">
+				    	<div class="row">
+				    		<div class="col-xs-12 col-sm-1">
+					  				 
+					  	<img  src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg" class="img-circle cmt_mem_pic">
+					
+					  			</div>
+					  			  </a>								  			
+					  			<div class="col-xs-12 col-sm-9">
+					  			<div class="col-xs-12 col-sm-12 cmtInfo">
+					  				<a href="#">${message_board.mem_no }</a>
+					  			</div>
+					  			<div class="col-xs-12 col-sm-12 cmtInfo cmtTime">
+					  				<fmt:setLocale value="en_US" />
+										<fmt:formatDate value="${message_board.bd_msg_time}" pattern="yyyy-MM-dd HH:mm" /> 
+					  				<div class="btn-group cmtPrvt">
+										<div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											  <img src="${pageContext.request.contextPath}/front_end/board/images/cmmtPrvt${message_board.bd_prvt }.png" >
+										<c:if test="${param.mem_no==user.mem_no }">
+											   <span class="caret"></span>
+										</div>
+										
+									 	 <ul class="dropdown-menu" id='cmtPrvt'>
+									  		<li><a href="#">éš±ç§è¨­å®š</a></li>
+										  	<li role="separator" class="divider"></li>	
+										    <li><a href="#" onclick="setCmmtPrvt.call(this,'0');">æœ‹å‹</a></li>
+										    <li><a href="#" onclick="setCmmtPrvt.call(this,'1');">å…¬é–‹</a></li>
+										    <li><a href="#" onclick="setCmmtPrvt.call(this,'2');">æœ¬äºº</a></li>
+										 </ul>
+										 
+									</div>
+									
+					  			</div>
+									
+					  				
+					  			</div>
+					  			<div class="col-xs-12 col-sm-2 boardEdit">
+								  			<button class="btn btn-info" onclick='edit.call(this);'><span class="glyphicon glyphicon-pencil"></span></button>
+								  			<button class="btn btn-danger" onclick="deleteBoard.call('è™Ÿç¢¼');">
+								  			<span class="glyphicon glyphicon-trash"></span></button>
+								  		</c:if>	
+								 </div>
+				    	</div>
 
 							    </h3>
 							  </div>
 							  <div class="panel-body">
-							    °ÊºA¤º®e
-							    	<div class="panel panel-default shareContent" >
-									  <div class="panel-heading">
-									    <h3 class="panel-title">Panel title</h3>
-									  </div>
-									 
-									  <div class="panel-body">
-									    ¤À¨É¤º®e
-									  </div>
-									</div>
-							  </div>
+							    	<div class='content'>${message_board.bd_msg_ctx}</div>
+					<!-- å¦‚æœæœ‰ç…§ç‰‡  -->
+					<c:if test="${message_board.bd_type==1 || message_board.bd_type==3 }" >
+					<div class="well">
+                    <div id="myCarousel" class="carousel fdi-Carousel slide">
+                     <!-- Carousel items -->
+                        <div class="carousel fdi-Carousel slide" id="eventCarousel" data-interval="0">
+                            <div class="carousel-inner onebyone-carosel">
+                                <div class="item active" >                                    
+							<c:forEach var="bd_photo" items="${message_board.board_photo }">							
+                                    <div class="col-md-4">
+                                    <figure>
+                                        <a href="${pageContext.request.contextPath}/util/OutputPic?photo_no=${bd_photo}&type=big" class='try' data-fancybox="group">
+	                                        <img src="${pageContext.request.contextPath}/util/OutputPic?photo_no=${bd_photo}" class="img-responsive center-block">
+	                                        <figcaption style='display:none;' class='dialog'>
+												<div class="panel panel-default">
+												  <div class="panel-heading">ç•™è¨€${bd_photo}</div>
+												   <div class="panel-body">
+													    <p>Photo_desc</p>
+													  </div>
+												     <ul class="list-group">
+													    <li class="list-group-item">Cras justo odio</li>
+													    <li class="list-group-item">Dapibus ac facilisis in</li>
+													    <li class="list-group-item">Morbi leo risus</li>
+													    <li class="list-group-item">Porta ac consectetur ac</li>
+													    <li class="list-group-item">Vestibulum at eros</li>								    
+													  </ul>
+												</div>							
+											</figcaption>
+                                        </a>
+                                        </figure>
+                                    </div>
+                					</c:forEach>
+                                </div>     
+                                                           
+                            </div>
+                            <a class="left carousel-control" href="#eventCarousel" data-slide="prev"></a>
+                            <a class="right carousel-control" href="#eventCarousel" data-slide="next"></a>
+                        </div>
+                        <!--/carousel-inner-->
+                    </div><!--/myCarousel-->
+                </div><!--/well-->	
+                </c:if>					    	
+			</div><!--/panel-body  -->
+							  
 							<div class="panel-body updatTime">
 								<div class="col-xs-12 col-sm-4 col-sm-offset-8">
-									 ³Ì«á§ó·s©ó yyyy/MM/dd HH:mm
+									 <fmt:setLocale value="en_US" />
+						<fmt:formatDate value="${message_board.bd_upd_time}" pattern="æœ€å¾Œæ›´æ–°æ–¼ yyyy-MM-dd HH:mm" /> 
 								</div>								
 									   
 									  </div>
@@ -216,14 +288,14 @@
 							  <div class="panel-heading" >
 							    <ul class="nav nav-pills">
 								  <li role="presentation"><a href="#" onclick="return false;">
-								  	<span class="glyphicon glyphicon-thumbs-up">&nbspÆg</span>
+								  	<span class="glyphicon glyphicon-thumbs-up">&nbspè®š</span>
 								  </a></li>
 								  <li role="presentation"><a href="#" onclick="return showCmmt('1','1');">
 								  	<span class="badage">10</span>
-								  	<span class="glyphicon glyphicon-comment">&nbsp¯d¨¥</span>
+								  	<span class="glyphicon glyphicon-comment">&nbspç•™è¨€</span>
 								  </a></li>
 								  <li role="presentation"><a href="#" onclick="return false;">
-								  	<span class="glyphicon glyphicon-share-alt">&nbsp¤À¨É</span>
+								  	<span class="glyphicon glyphicon-share-alt">&nbspåˆ†äº«</span>
 								  </a></li>
 								</ul>
 							  </div>
@@ -251,12 +323,123 @@
 								  <li class="list-group-item">Dapibus ac facilisis in</li>
 								  <li class="list-group-item">Morbi leo risus</li>
 								  <li class="list-group-item">Porta ac consectetur ac</li>
-								  <li  class="list-group-item" ><a href="#" onclick="return false;">Åã¥Ü§ó¦h</a></li>
+								  <li  class="list-group-item" ><a href="#" onclick="return false;">é¡¯ç¤ºæ›´å¤š</a></li>
 								  <li  class="list-group-item" >
 								  	 <div class="input-group">									      
-									      <input type="text" class="form-control" placeholder="¯d¨Ç¤°»ò§a">
+									      <input type="text" class="form-control" placeholder="ç•™äº›ä»€éº¼å§">
 									      <span class="input-group-btn">
-									        <button class="btn btn-default" type="button">°e¥X</button>
+									        <button class="btn btn-default" type="button">é€å‡º</button>
+									      </span>
+									    </div>
+								  </li>
+							</ul>							    
+							</div>
+					</c:forEach>
+							
+							
+							
+							
+							
+			<div class="panel panel-default">
+				  <div class="panel-heading">
+				    <h3 class="panel-title">
+				    	<div class="row">
+				    		<div class="col-xs-12 col-sm-1">
+					  				 
+					  	<img  src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg" class="img-circle cmt_mem_pic">
+					
+					  			</div>
+					  			  </a>								  			
+					  			<div class="col-xs-12 col-sm-11">
+					  			<div class="col-xs-12 col-sm-12 cmtInfo">
+					  				<a href="#">æå®—éœ–</a>
+					  			</div>
+					  			<div class="col-xs-12 col-sm- cmtInfo cmtTime">
+					  				yyyy/MM/dd HH:mm
+					  				<div class="btn-group cmtPrvt">
+										<div data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											  <img src="${pageContext.request.contextPath}/front_end/board/images/cmmtPrvt1.png" >
+											   <span class="caret"></span>
+										</div>
+									 	 <ul class="dropdown-menu" id='cmtPrvt'>
+									  		<li><a href="#">éš±ç§è¨­å®š</a></li>
+										  	<li role="separator" class="divider"></li>	
+										    <li><a href="#" onclick="setCmmtPrvt.call(this,'0');">æœ‹å‹</a></li>
+										    <li><a href="#" onclick="setCmmtPrvt.call(this,'1');">å…¬é–‹</a></li>
+										    <li><a href="#" onclick="setCmmtPrvt.call(this,'2');">æœ¬äºº</a></li>
+										 </ul>
+									</div>
+					  			</div>
+
+					  				
+					  			</div>
+				    	</div>
+
+							    </h3>
+							  </div>
+							  <div class="panel-body">
+							    å‹•æ…‹å…§å®¹
+							    	<div class="panel panel-default shareContent" >
+									  <div class="panel-heading">
+									    <h3 class="panel-title">Panel title</h3>
+									  </div>
+									 
+									  <div class="panel-body">
+									    åˆ†äº«å…§å®¹
+									  </div>
+									</div>
+							  </div>
+							<div class="panel-body updatTime">
+								<div class="col-xs-12 col-sm-4 col-sm-offset-8">
+									 æœ€å¾Œæ›´æ–°æ–¼ yyyy/MM/dd HH:mm
+								</div>								
+									   
+									  </div>
+							  <div class="panel panel-default" style="margin-bottom: 0px;">
+							  <div class="panel-heading" >
+							    <ul class="nav nav-pills">
+								  <li role="presentation"><a href="#" onclick="return false;">
+								  	<span class="glyphicon glyphicon-thumbs-up">&nbspè®š</span>
+								  </a></li>
+								  <li role="presentation"><a href="#" onclick="return showCmmt('1','1');">
+								  	<span class="badage">10</span>
+								  	<span class="glyphicon glyphicon-comment">&nbspç•™è¨€</span>
+								  </a></li>
+								  <li role="presentation"><a href="#" onclick="return false;">
+								  	<span class="glyphicon glyphicon-share-alt">&nbspåˆ†äº«</span>
+								  </a></li>
+								</ul>
+							  </div>
+							</div>
+							  							    
+							 <ul id='b1_commt1' class="list-group" style="display: none;">
+								  <div class="row">
+								  	<div class="container">
+										<a href="#">
+								  			<div class="col-xs-12 col-sm-1">
+								  				 
+								  	<img  src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg" class="img-circle cmt_mem_pic">
+								
+								  			</div>
+								  			  </a>								  			
+								  			<div class="col-xs-12 col-sm-11 cmt">
+								  			<div  >
+								  				hahaha
+								  			</div>
+								  				
+								  			</div>
+								  		
+								  	</div>
+								  </div>		
+								  <li class="list-group-item">Dapibus ac facilisis in</li>
+								  <li class="list-group-item">Morbi leo risus</li>
+								  <li class="list-group-item">Porta ac consectetur ac</li>
+								  <li  class="list-group-item" ><a href="#" onclick="return false;">é¡¯ç¤ºæ›´å¤š</a></li>
+								  <li  class="list-group-item" >
+								  	 <div class="input-group">									      
+									      <input type="text" class="form-control" placeholder="ç•™äº›ä»€éº¼å§">
+									      <span class="input-group-btn">
+									        <button class="btn btn-default" type="button">é€å‡º</button>
 									      </span>
 									    </div>
 								  </li>
@@ -271,15 +454,90 @@
 		
 		<script src="https://code.jquery.com/jquery.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 		<script type="text/javascript">
+		$(document).ready(function () {
+		    $('#myCarousel').carousel({
+		        interval: 10000
+		    })
+		    $('.fdi-Carousel .item').each(function () {
+		        var next = $(this).next();
+		        if (!next.length) {
+		            next = $(this).siblings(':first');
+		        }
+		        next.children(':first-child').clone().appendTo($(this));
 
+		        if (next.next().length > 0) {
+		            next.next().children(':first-child').clone().appendTo($(this));
+		        }
+		        else {
+		            $(this).siblings(':first').children(':first-child').clone().appendTo($(this));
+		        }
+		    });
+		    $( '[data-fancybox=group]' ).fancybox({
+				 
+				clickSlide : false,				    
+					caption : function( instance, item ) {
+					  return $(this).find('figcaption').html();
+			 }
+			});
+		});
+		function deleteBoard(mem_no,bd_msg_no){
+			if(confirm('å°‡æœƒæŠŠç…§ç‰‡åŠå…§æ–‡å®Œå…¨åˆªé™¤ï¼Œç¢ºå®šä¸æœƒæ¨ä¸å¾—ï¼ŒåŸ·æ„é‚„è¦åˆªé™¤ï¼Ÿ')){
+				
+			}
+		}
+		function edit(){
+			var btn = $(this);
+			var btnSpan = $(this).children();
+			var spanClass = $(this).children().attr('class');
+			var content = $(this).parents(".panel-default").find(".content");
+			var originText = content.text();	
+			if(spanClass=="glyphicon glyphicon-pencil"){
+				btn.removeClass('btn-info');
+				btn.addClass('btn-success');
+				btnSpan.removeClass(spanClass);
+				btnSpan.addClass('glyphicon glyphicon-ok');
+				content.attr("contenteditable","true");				
+	    		content.focus();
+	    		setCursorToEnd(content.get(0));
+			}else{
+				btn.removeClass('btn-success');
+				btn.addClass('btn-info');
+				btnSpan.removeClass(spanClass);
+				btnSpan.addClass('glyphicon glyphicon-pencil');
+				content.attr("contenteditable","false");					
+				//ajax
+			}
+			
+			
+		}
+		function setCursorToEnd(ele){
+		    var range = document.createRange();
+		    var sel = window.getSelection();
+		    range.setStart(ele, 1);
+		    range.collapse(true);
+		    sel.removeAllRanges();
+		    sel.addRange(range);
+		    ele.focus();
+		}
 			function submit(path,mem_no){
 				var bd_prvt = $('#dropdownMenu1').val()
 				var bd_msg_ctx = $('#bd_msg_ctx').val()
-				fileList;
-				film;
-				var num=0;
+				var num=0;				
 				var data = new FormData();
+				var bd_type = 0;
+				alert(film);
+				
+				
+				if(!fileList.length==0&&film!=undefined){
+					bd_type=3;
+				}else if(film!=undefined){
+					bd_type=2;
+				}else if(!fileList.length==0){
+					bd_type=1;
+				}
+				
 				$.each(fileList,function(){
 					
 					data.append("image",$(this)[0]);
@@ -291,17 +549,17 @@
 				
 				$.ajax({
 		            type: "POST",
-		            url: path+"/board/BoardActionCtrl?action=insert&bd_type=0&mem_no="+mem_no,
+		            url: path+"/board/BoardActionCtrl?action=insert&bd_type="+bd_type+"&mem_no="+mem_no,
 		            dataType:'text',
 		            contentType: false,
-		            processData: false, //¤£°µ¥ô¦ó³B²z¡A¥u¤W¶Ç­ì©l¸ê®Æ
+		            processData: false, //ä¸åšä»»ä½•è™•ç†ï¼Œåªä¸Šå‚³åŸå§‹è³‡æ–™
 		            data: data,
 // 		            progress: function(e) {
 // 		                //make sure we can compute the length
 // 		                if(e.lengthComputable) {
 // 		                	var intComplete = (e.loaded / e.total) * 100 | 0 ;                    
-// 		                	upload_progress.html(intComplete + '%') ; // ±±¨î¶i«×±øªºÅã¥Ü¼Æ¦r¡A¨Ò¦p65%
-// 		                	upload_progress.css("width",intComplete + '%') ; // ±±¨î¶i«×±øªºªø«×                        
+// 		                	upload_progress.html(intComplete + '%') ; // æ§åˆ¶é€²åº¦æ¢çš„é¡¯ç¤ºæ•¸å­—ï¼Œä¾‹å¦‚65%
+// 		                	upload_progress.css("width",intComplete + '%') ; // æ§åˆ¶é€²åº¦æ¢çš„é•·åº¦                        
 // 		                	upload_progress.attr('aria-valuenow', intComplete) ;
 // 		                }
 // 		                //this usually happens when Content-Length isn't set
@@ -312,18 +570,18 @@
 		            success: function(msg){
 		            	
 						if(msg.length!=0){	
-// 							upload_progress.html(100 + '%') ; // ±±¨î¶i«×±øªºÅã¥Ü¼Æ¦r¡A¨Ò¦p65%
-// 		                	upload_progress.css("width",100 + '%') ; // ±±¨î¶i«×±øªºªø«×                        
+// 							upload_progress.html(100 + '%') ; // æ§åˆ¶é€²åº¦æ¢çš„é¡¯ç¤ºæ•¸å­—ï¼Œä¾‹å¦‚65%
+// 		                	upload_progress.css("width",100 + '%') ; // æ§åˆ¶é€²åº¦æ¢çš„é•·åº¦                        
 // 		                	upload_progress.attr('aria-valuenow', 100) ;
 			        		
 			        		$('#picReset').trigger('click');
-			        		alert('¤W¶Ç§¹¦¨');		
+			        		alert('ä¸Šå‚³å®Œæˆ');		
 // 			        		$('.progress').css('display','none');
 // 			        		$('.progressCr').css('display','none');
 // 		                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";
 		             	}else{
-		                	//³ø¿ù°Ú
-		                	alert('¤W¶Ç¥¢±Ñ');
+		                	//å ±éŒ¯å•Š
+		                	alert('ä¸Šå‚³å¤±æ•—');
 		             	}
 		            },
 
@@ -336,7 +594,7 @@
 			}
 			function setCmmtPrvt(bd_prvt){
 
-				if(confirm("½T©w­n§ó§ïÁô¨p³]©w¶Ü¡H")){
+				if(confirm("ç¢ºå®šè¦æ›´æ”¹éš±ç§è¨­å®šå—ï¼Ÿ")){
 
 					/*$.ajax({
 						url: path+"/board/MessageBoardCtrl?bd_msg_no="+bd_msg_no+"&bd_prvt="+bd_prvt;
@@ -346,7 +604,7 @@
 
 						},
 						error: function(xhr, ajaxOptions, thrownError){ 
-			                    alert('§ó·s¥¢±Ñ');
+			                    alert('æ›´æ–°å¤±æ•—');
 			            }
 
 					});*/
@@ -367,7 +625,7 @@
 
 						},
 						error: function(xhr, ajaxOptions, thrownError){ 
-			                    alert('§ó·s¥¢±Ñ');
+			                    alert('æ›´æ–°å¤±æ•—');
 			            }
 
 					});*/
@@ -385,8 +643,8 @@
 				})
 				
 				Preview.file_change();
-				ShowFilm.file_change();
-			})
+				ShowFilm.file_change();				
+				})
 			var film;
 			var fileList =[];
 			var count = 0;
@@ -410,7 +668,7 @@
 				var each_img = function(files){
 					$.each(files,function(index,file){
 						if (!file.type.match('image')){
-			    			alert('³o¤S¤£¬O¹Ï¤ù..');
+			    			alert('é€™åˆä¸æ˜¯åœ–ç‰‡..');
 			    			return;
 			    		}
 			    		var reader  = new FileReader();			    		
@@ -458,17 +716,17 @@ ShowFilm = new function(){
 		}
 		this.removeFilm = function (){
 			$(this).parent().parent().parent().remove();
-			film = [];
+			film = null;
 		}
 		var each_img = function(files){
 			$.each(files,function(index,file){
 				if (!file.type.match('video')){
-					alert('³o¤S¤£¬O¼v¤ù..');
+					alert('é€™åˆä¸æ˜¯å½±ç‰‡..');
 					return;
 				}
 				var reader  = new FileReader();	
 				if (file.type.match('video')){
-					film = [];
+					film = null;
 	    						
 		    		reader.onload = function(){		    			
 		    			var video="<div class='col-xs-12 col-sm-12'>"+
@@ -502,24 +760,24 @@ ShowFilm = new function(){
 
 	}
 	function dragHandler(e){
-	    e.preventDefault() ; //¨¾¤îÂsÄı¾¹°õ¦æ¹w³]°Ê§@
+	    e.preventDefault() ; //é˜²æ­¢ç€è¦½å™¨åŸ·è¡Œé è¨­å‹•ä½œ
 	    $('#showBorder').addClass('showBorder');
 	}
 	leave_image
 	function leave_image(e){
-	    e.preventDefault() ; //¨¾¤îÂsÄı¾¹°õ¦æ¹w³]°Ê§@
+	    e.preventDefault() ; //é˜²æ­¢ç€è¦½å™¨åŸ·è¡Œé è¨­å‹•ä½œ
 	    $('#showBorder').removeClass('showBorder');
 	}
 	function drop_image(e){
-	    e.preventDefault() ; //¨¾¤îÂsÄı¾¹°õ¦æ¹w³]°Ê§@
+	    e.preventDefault() ; //é˜²æ­¢ç€è¦½å™¨åŸ·è¡Œé è¨­å‹•ä½œ
 	    $('#showBorder').removeClass('showBorder');
-	    var files  = e.dataTransfer.files ; //Â^¨ú©ì¦²ªºÀÉ®×
+	    var files  = e.dataTransfer.files ; //æ“·å–æ‹–æ›³çš„æª”æ¡ˆ
 	    for(var i =0 ; i < files.length ; i++){
 
 	    	$.each(files, function(index,file){
 	    		if (file.type.match('video')){
 	    			var reader  = new FileReader();
-					film = [];	    						
+					film = null;	    						
 		    		reader.onload = function(){		    			
 		    			var video="<div class='col-xs-12 col-sm-12'>"+
 						"<div class='list-group text-center'><div class='list-group-item imgDiv'>"+
@@ -573,11 +831,11 @@ ShowFilm = new function(){
 						}
 			    			return;
 			    		}		
-			    alert('³o¬O¤°»ò®æ¦¡..?');
-			    			
+			    alert('é€™æ˜¯ä»€éº¼æ ¼å¼..?');			    			
 				});
 	    	}
-	    }	
-		</script>
+	     }
+			
+	</script>
 	</body>
 </html>

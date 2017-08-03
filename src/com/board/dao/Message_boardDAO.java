@@ -1,9 +1,13 @@
 package com.board.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.album.dao.PhotosDAO;
+import com.album.domain.Photos;
 import com.board.domain.Message_board;
 import com.don.inteface.DAOInterface;
 import com.don.util.BasicDAO;
@@ -26,6 +30,11 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	}
 	if(obj[2]!=null){
 	message_board.setBd_type((String)obj[2]);
+	if("1".equals(String.valueOf(obj[2]))||"3".equals(String.valueOf(obj[2]))){
+		Board_photoDAO board_photoDAO = new Board_photoDAO();
+		List<String> board_photo= board_photoDAO.getPhotosListBySQL(String.valueOf(obj[0]));
+		message_board.setBoard_photo(board_photo);
+	}
 	}
 	if(obj[3]!=null){
 	message_board.setBd_likes(Integer.parseInt(obj[3].toString()));
@@ -89,6 +98,45 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	String sql="insert into message_board values(?,?,?,?,?,?,?,?,?,?)";
 	Object[] param ={message_board.getBd_msg_no(),message_board.getMem_no(),message_board.getBd_type(),message_board.getBd_likes(),message_board.getBd_msg_ctx(),message_board.getBd_ref_ctx(),message_board.getBd_prvt(),message_board.getBd_msg_time(),message_board.getBd_upd_time(),message_board.getBd_film(),message_board.getBd_ref_url()};
 	boolean insertResult = new SQLHelper().executeUpdate(sql,param);
+	return insertResult;
+	}
+	//建置新增
+
+	public boolean executeInsert(Message_board message_board, List<Photos> photos){
+	SQLHelper helper = new SQLHelper();
+	Connection con = helper.getConnection();
+	boolean insertResult = false;
+	try {
+		con.setAutoCommit(false);
+		//動態
+		String sql="insert into message_board values(message_board_pk_seq.nextval,?,?,default,?,?,?,default,null,?,?)";
+		Object[] param ={message_board.getMem_no(),message_board.getBd_type(),message_board.getBd_msg_ctx(),message_board.getBd_ref_ctx(),message_board.getBd_prvt(),message_board.getBd_film(),message_board.getBd_ref_url()};
+		String boardKey = new SQLHelper().executeUpdate(sql, param, "bd_msg_no", con);
+		boolean result = false;
+		System.out.println("哪阿"+message_board.getBd_type());
+		if(("1".equals(message_board.getBd_type())||"3".equals(message_board.getBd_type()))&&photos.size()!=0){			
+			//動態相片(先找動態相片的主鍵)
+			PhotosDAO photosDAO = new PhotosDAO();
+			List<String> photosKey = photosDAO.executeInsert(photos, message_board.getMem_no(), con);
+			//新增動態相片複合表
+			Board_photoDAO board_photoDAO = new Board_photoDAO();
+			result = board_photoDAO.executeInsert(boardKey, photosKey, con);
+		}
+		System.out.println(boardKey);
+		if(result||boardKey.length()!=0){
+			con.commit();
+			insertResult=true;			
+		}
+		
+	} catch (SQLException e) {
+		try {
+			con.rollback();
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		e.printStackTrace();
+	}
 	return insertResult;
 	}
 	//建置刪除

@@ -1,7 +1,10 @@
 package com.board.dao;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.board.domain.Board_photo;
 import com.don.inteface.DAOInterface;
@@ -9,6 +12,22 @@ import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
 
 public class Board_photoDAO extends BasicDAO {
+	// 建置查詢MAP
+
+		public List<String> getPhotosListBySQL(String bd_msg_no) {
+			String sql = "select photo_no from board_photo where bd_msg_no="+bd_msg_no;
+			List<Object[]> list = new SQLHelper().executeQuery(sql, null);
+			List<String> tempList = new ArrayList<String>();
+			for (int i = 0; i < list.size(); i++) {
+				Object[] obj = (Object[]) list.get(i);
+				if (obj[0] != null) {
+					tempList.add(String.valueOf(obj[0]));
+				}
+			
+				
+			}
+			return tempList;
+		}
 	// 建置查詢
 
 	public List<Board_photo> getVOBySQL(String sql, Object[] param) {
@@ -47,6 +66,34 @@ public class Board_photoDAO extends BasicDAO {
 		Object[] param = { board_photo.getBd_msg_no(), board_photo.getPhoto_no() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 		return insertResult;
+	}
+	public boolean executeInsert(String bd_msg_no, List<String> photosKey,Connection conn) {
+		Connection con =conn;
+		String sql = "insert into board_photo values("+bd_msg_no+",?)";
+		boolean result = true;
+		try {
+			con.prepareStatement(sql);
+			for(String s : photosKey){
+				Object[] param = { s };
+				String res = new SQLHelper().executeUpdate(sql, param, null, con);
+				if(res.length()==0){
+					result = false;
+					System.out.println("出錯拉");
+				}
+			}
+		} catch (SQLException se) {
+			// TODO Auto-generated catch block
+			try {
+				result = false;
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			throw new RuntimeException("A database error occured. "
+                    + se.getMessage());	
+		} 
+		return result;
 	}
 	// 建置刪除
 

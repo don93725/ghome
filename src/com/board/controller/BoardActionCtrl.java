@@ -28,7 +28,6 @@ public class BoardActionCtrl extends HttpServlet {
 		String action = req.getParameter("action");
 		String mem_no = req.getParameter("mem_no");
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
-		System.out.println("in");
 //		if (!mem_no.equals(user.getMem_no())||action==null) {
 //			//非會員想做其他操作
 //			String referer = (String) req.getSession().getAttribute("referer");

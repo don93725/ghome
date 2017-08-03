@@ -112,13 +112,33 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 		boolean insertResult = true;
 		for (Photos p : photos) {
 			Object[] param = { p.getAl_no(), p.getPhoto_desc(), p.getPhoto(), p.getSphoto() };
-			System.out.println(p.getAl_no());
 			boolean res = new SQLHelper().executeUpdate(sql, param);
 			if (!res) {
 				insertResult = false;
 			}
 		}
 		return insertResult;
+	}
+	// 建置動態相簿新增
+
+	public List<String> executeInsert(List<Photos> photos,String mem_no,Connection conn) {
+		List<String> photosKey;
+		try {
+			photosKey = new ArrayList<String>();
+			String al_no = getCol(mem_no);
+			String sql = "insert into photos values(photos_pk_seq.nextval,"+al_no+",null,?,?,default)";
+			for (Photos p : photos) {
+				Object[] param = {p.getPhoto(), p.getSphoto() };
+				String key = new SQLHelper().executeUpdate(sql, param, "photo_no", conn);
+				photosKey.add(key);
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new RuntimeException("A database error occured. "
+                    + e.getMessage());	
+		}
+		return photosKey;
 	}
 	// 建置刪除
 
@@ -220,7 +240,15 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 		List<Object[]> list = new SQLHelper().executeQuery(sql, param);
 		Object[] colData = list.get(0);
 		return colData;
-		// Service層實作
+
+	}
+	// 建置取得動態相簿編號
+
+	public String getCol(String mem_no) {
+		String sql = "select al_no from albums where mem_no="+mem_no+" and al_board=1";
+		List<Object[]> list = new SQLHelper().executeQuery(sql, null);
+		String colData = String.valueOf(list.get(0)[0]);
+		return colData;
 
 	}
 
