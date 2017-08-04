@@ -130,6 +130,31 @@
 	z-index: 1000000;
 	border-top-color: white;
 }
+.pic img.delete {
+	position: absolute;
+	top: 0%;
+	right: 5%;
+	width: 90%;
+	height: 90%;
+	display:none;
+}
+.pic img.check {
+	position: absolute;
+	top: 5%;
+	right: 10%;
+	width: 80%;
+	height: 80%;
+	display:none;
+}
+
+.addPic{
+	position: absolute;
+	bottom: 5%;
+	right: -5%;
+	width: 75px;
+	height: 75px;
+	z-index: 10;
+}
 </style>
 </head>
 <body ondragover="javascript: dragHandler(event);"
@@ -265,11 +290,11 @@
 
 									</div>
 									<div class="col-xs-12 col-sm-2 boardEdit">
-										<button class="btn btn-info" onclick='edit.call(this);'>
+										<button class="btn btn-info" onclick='edit.call(this,${message_board.bd_msg_no });'>
 											<span class="glyphicon glyphicon-pencil"></span>
 										</button>
 										<button class="btn btn-danger"
-											onclick="deleteBoard.call('號碼');">
+											onclick="deleteBoard.call(this,'${pageContext.request.contextPath}','${user.mem_no }','${message_board.bd_msg_no }');">
 											<span class="glyphicon glyphicon-trash"></span>
 										</button>
 										</c:if>
@@ -285,25 +310,31 @@
 							test="${message_board.bd_type==1 || message_board.bd_type==3 }">
 							<div class="panel-body">
 								<!-- 如果有照片  -->
-								<div class="well">
-									<div id="myCarousel" class="carousel fdi-Carousel slide">
+								<div class="well">			
+								<div id="myCarousel" class="carousel fdi-Carousel slide">	
 										<!-- Carousel items -->
 										<div class="carousel fdi-Carousel slide"
-											id="eventCarousel${message_board.bd_msg_no }"
+											id="eventCarousel${message_board.bd_msg_no }"											
 											data-interval="0">
 											<div class="carousel-inner onebyone-carosel">
 												<c:forEach var="bd_photo"
 													items="${message_board.board_photo }" varStatus="loop">
-													<div class="item ${(loop.index==0)? 'active':'' }">
-														<div class="col-sm-4">
+													
+													<div class="item ${(loop.index==0)? 'active':''  }">
+														<div class="col-sm-4 pic">
 															<figure>
-																<a
+															
+																<a id='${bd_photo}'
 																	href="${pageContext.request.contextPath}/util/OutputPic?photo_no=${bd_photo}&type=big"
-																	class='try'
-																	data-fancybox="group${message_board.bd_msg_no }"> <img
+																	data-fancybox="group${message_board.bd_msg_no }" class='aLink'> 
+																	<img src='/BA102G4/front_end/board/images/cancel.png' class='check checkGroup${bd_photo}'/>
+																	<img src='/BA102G4/front_end/board/images/select.png' class='delete delGroup${message_board.bd_msg_no }' onclick="del('${bd_photo}');"/>
+																	
+																	<img
 																	style='height: 250px; width: 100%;'
 																	src="${pageContext.request.contextPath}/util/OutputPic?photo_no=${bd_photo}"
 																	class="img-responsive center-block">
+																	
 																	<div class="text-center">${loop.count }/${fn:length(message_board.board_photo) }</div>
 																	<figcaption style='display: none;' class='dialog'>
 																		<div class="panel panel-default">
@@ -324,6 +355,7 @@
 																	</figcaption>
 																</a>
 															</figure>
+															<input type="checkbox" id='del${bd_photo }' name='delPhoto_no' value='${bd_photo }' hidden/>
 														</div>
 													</div>
 												</c:forEach>
@@ -349,6 +381,7 @@
 							</div>
 							<!--/panel-body  -->
 						</c:if>
+						
 						<!-- 如果有影片  -->
 						<c:if
 							test="${message_board.bd_type==2 || message_board.bd_type==3 }">
@@ -372,11 +405,15 @@
 								<fmt:setLocale value="en_US" />
 								<fmt:formatDate value="${message_board.bd_upd_time}"
 									pattern="最後更新於 yyyy-MM-dd HH:mm" />
+									<img src='/BA102G4/front_end/board/images/plus.png' class='addPic' onclick='addPic();'/>
+								<input style='display:none' type="file" id='addPicInput' multiple >
 							</div>
-
+								
 						</div>
 						<div class="panel panel-default" style="margin-bottom: 0px;">
+						
 							<div class="panel-heading">
+							
 								<ul class="nav nav-pills">
 									<li role="presentation"><a href="#"
 										onclick="return false;"> <span
@@ -546,7 +583,7 @@
 		</div>
 	</div>
 
-
+	<button onclick='del();'>123</button>
 
 	<script src="https://code.jquery.com/jquery.js"></script>
 	<script
@@ -554,6 +591,19 @@
 	<script
 		src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
+	function addPic(){
+		$('#addPicInput').trigger('click');
+	}
+	function del(photo_no){
+		if($('.checkGroup'+photo_no).css('display')=='none'){
+			$('.checkGroup'+photo_no).css('display',"block");
+			$('#del'+photo_no).attr('checked','');
+		}else{
+			$('.checkGroup'+photo_no).css('display',"none");
+			$('#del'+photo_no).removeAttr('checked');
+		}
+		
+	}
 		var count = 0;
 		$(document)
 				.ready(
@@ -573,91 +623,57 @@
 												next.children(':first-child')
 														.clone().appendTo(
 																$(this));
-												$(this)
-														.children(':last-child')
+												var num = $(this).children(':last-child').children().children().attr('id');
+												
+												$(this)	.children(':last-child')
 														.children()
 														.children()
 														.prop("href", "#")
-														.removeAttr(
-																"data-fancybox")
-														.click(
-																function(event) {
-																	event
-																			.preventDefault();
-																	next
-																			.children(
-																					':first-child')
-																			.children()
-																			.children()
-																			.trigger(
-																					'click');
+														.removeAttr("data-fancybox")
+														.click(function(event) {
+																	event.preventDefault();
+																	next.children(':first-child')
+																		.children()
+																		.children()
+																		.trigger('click');
 																});
 
 												if (sibNum > 1) {
 													if (next.next().length > 0) {
-														next
-																.next()
-																.children(
-																		':first-child')
-																.clone()
-																.appendTo(
-																		$(this));
-														$(this)
-																.children(
-																		':last-child')
+														next.next()
+															.children(':first-child')
+															.clone()
+															.appendTo($(this));
+														$(this).children(':last-child')
 																.children()
 																.children()
-																.prop("href",
-																		"#")
-																.removeAttr(
-																		"data-fancybox")
-																.click(
-																		function(
-																				event) {
-																			event
-																					.preventDefault();
-																			next
-																					.next()
-																					.children(
-																							':first-child')
-																					.children()
-																					.children()
-																					.trigger(
-																							'click');
+																.prop("href","#")
+																.removeAttr("data-fancybox")
+																.click(function(event) {
+																			event.preventDefault();
+																			next.next()
+																				.children(':first-child')
+																				.children()
+																				.children()
+																				.trigger('click');
 																		});
 													} else {
-														$(this)
-																.siblings(
-																		':first')
-																.children(
-																		':first-child')
+														$(this).siblings(':first')
+																.children(':first-child')
 																.clone()
-																.appendTo(
-																		$(this));
-														$(this)
-																.children(
-																		':last-child')
+																.appendTo($(this));
+														$(this).children(':last-child')
 																.children()
 																.children()
-																.prop("href",
-																		"#")
-																.removeAttr(
-																		"data-fancybox")
-																.click(
-																		function(
-																				event) {
-																			event
-																					.preventDefault();
-																			$(
-																					this)
-																					.siblings(
-																							':first')
-																					.children(
-																							':first-child')
+																.prop("href","#")
+																.removeAttr("data-fancybox")
+																.click(function(event) {
+																			event.preventDefault();
+																			$(this).siblings(':first')
+																					.children(':first-child')
 																					.children()
 																					.children()
-																					.trigger(
-																							'click');
+																					.trigger('click');
 																		});
 													}
 												}
@@ -672,62 +688,56 @@
 								}
 							});
 						});
-		function deleteBoard(mem_no, bd_msg_no) {
+		function deleteBoard(path ,mem_no, bd_msg_no) {
+			alert( path + "/board/BoardActionCtrl?action=delete&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no);
 			if (confirm('將會把照片及內文完全刪除，確定不會捨不得，執意還要刪除？')) {
-// 				$.ajax({
-// 					type : "POST",
-// 					url : path + "/board/BoardActionCtrl?action=delete&mem_no="+mem_no+"&bd_msg_no=bd_msg_no="
-// 							+ bd_type + "&mem_no=" + mem_no,
-// 					dataType : 'text',
-// 					contentType : false,
-// 					processData : false, //不做任何處理，只上傳原始資料
-// 					data : data,
-// 					// 		            progress: function(e) {
-// 					// 		                //make sure we can compute the length
-// 					// 		                if(e.lengthComputable) {
-// 					// 		                	var intComplete = (e.loaded / e.total) * 100 | 0 ;                    
-// 					// 		                	upload_progress.html(intComplete + '%') ; // 控制進度條的顯示數字，例如65%
-// 					// 		                	upload_progress.css("width",intComplete + '%') ; // 控制進度條的長度                        
-// 					// 		                	upload_progress.attr('aria-valuenow', intComplete) ;
-// 					// 		                }
-// 					// 		                //this usually happens when Content-Length isn't set
-// 					// 		                else {
-// 					// 		                    console.warn('Content Length not reported!');
-// 					// 		                }
-// 					// 		            },
-// 					success : function(msg) {
+				$.ajax({
+					type : "POST",
+					url : path + "/board/BoardActionCtrl?action=delete&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no,
+					dataType : 'text',
+					contentType : false,
+					processData : false, //不做任何處理，只上傳原始資料					
+					success : function(msg) {
+	
+						if (msg.length != 0) {
+							// 							upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
+							// 		                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
+							// 		                	upload_progress.attr('aria-valuenow', 100) ;
 
-// 						if (msg.length != 0) {
-// 							// 							upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
-// 							// 		                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
-// 							// 		                	upload_progress.attr('aria-valuenow', 100) ;
+							alert('刪除成功');
+							// 			        		$('.progress').css('display','none');
+							// 			        		$('.progressCr').css('display','none');
+							// 		                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";
+						} else {
+							//報錯啊
+							alert('刪除失敗');
+						}
+					},
 
-// 							$('#picReset').trigger('click');
-// 							alert('上傳完成');
-// 							// 			        		$('.progress').css('display','none');
-// 							// 			        		$('.progressCr').css('display','none');
-// 							// 		                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";
-// 						} else {
-// 							//報錯啊
-// 							alert('上傳失敗');
-// 						}
-// 					},
+					error : function(xhr, ajaxOptions, thrownError) {
+						alert(xhr.status);
+						alert(thrownError);
+					}
 
-// 					error : function(xhr, ajaxOptions, thrownError) {
-// 						alert(xhr.status);
-// 						alert(thrownError);
-// 					}
-
-// 				});
+				});
 			}
 		}
-		function edit() {
+		
+		function edit(bd_msg_no) {
 			var btn = $(this);
 			var btnSpan = $(this).children();
 			var spanClass = $(this).children().attr('class');
 			var content = $(this).parents(".panel-default").find(".content");
 			var originText = content.text();
 			if (spanClass == "glyphicon glyphicon-pencil") {
+				$('.aLink').each(function() {					
+					var a = $(this).attr('href',"#").removeAttr("data-fancybox").unbind('click').click(function(event){
+						event.preventDefault();
+					});
+				});
+				$('.delete').each(function(){
+					$(this).css('display','block');
+				});
 				btn.removeClass('btn-info');
 				btn.addClass('btn-success');
 				btnSpan.removeClass(spanClass);
@@ -736,6 +746,55 @@
 				content.focus();
 				setCursorToEnd(content.get(0));
 			} else {
+				$('.fdi-Carousel .item').each(function() {
+					var id = $(this).children(':first-child').children().children().attr('id');
+					$(this).children(':first-child').children().children().attr('href',"/BA102G4/util/OutputPic?photo_no="+id+"&type=big");
+					$(this).children(':first-child').children().children().attr("data-fancybox","group"+id);
+					$('[data-fancybox]').fancybox({
+
+						clickSlide : false,
+						caption : function(instance, item) {
+							return $(this).find('figcaption').html();
+						}
+					});
+					var it = $(this).children(':first-child');
+					var next  = $(this).next();
+					var next2 = $(this).next().next();
+					
+					if(next2.length==0&&next.length==0){
+						next = $(this).siblings(':first').children(':first-child').children().children();
+						next2 =  $(this).siblings(':first').next().children(':first-child').children().children();
+						it.next().children().children().click(function(){
+							next.trigger('click');
+						})
+						it.next().next().children().children().click(function(){
+							next2.trigger('click');
+						})
+						
+					}else if(next2.length==0){
+						next = next.children(':first-child').children().children();
+						next2 = $(this).siblings(':first').children(':first-child').children().children();
+						it.next().children().children().click(function(){
+							next.trigger('click');
+						})
+						it.next().next().children().children().click(function(){
+							next2.trigger('click');
+						})
+						
+					}else{
+						next = next.children(':first-child').children().children();
+						next2 = next2.children(':first-child').children().children();
+						it.next().children().children().click(function(){
+							next.trigger('click');
+						})
+						it.next().next().children().children().click(function(){
+							next2.trigger('click');
+						})
+					}
+				});
+				$('.delete').each(function(){
+					$(this).css('display','none');
+				});
 				btn.removeClass('btn-success');
 				btn.addClass('btn-info');
 				btnSpan.removeClass(spanClass);
@@ -746,6 +805,7 @@
 
 		}
 		function setCursorToEnd(ele) {
+			
 			var range = document.createRange();
 			var sel = window.getSelection();
 			range.setStart(ele, 1);
@@ -1090,6 +1150,7 @@
 								});
 			}
 		}
+		
 	</script>
 </body>
 </html>

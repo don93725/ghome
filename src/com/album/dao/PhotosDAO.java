@@ -174,6 +174,33 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 
 		return result;
 	}
+	// 建置刪除
+	
+	public boolean executeDeleteForBoard(String[] photo_no ,Connection conn) {
+		SQLHelper helper = new SQLHelper();
+		Connection con = conn;
+		boolean result = true;
+		for (String s : photo_no) {
+			String sql = "delete from photos where photo_no=?";
+			Object[] param = { s };
+			String res = helper.executeUpdate(sql, param, null, con);
+			if (res == null) {
+				result = false;
+			}
+		}
+		try {
+			if(result){
+				con.commit();
+			}else{
+				con.rollback();
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
 	// 建置多重交易刪除
 
 	public boolean executeDelete(String[] al_no, Connection conn) {

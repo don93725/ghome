@@ -1,6 +1,7 @@
 package com.board.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
 
@@ -27,6 +28,7 @@ public class BoardActionCtrl extends HttpServlet {
 		res.setCharacterEncoding("utf-8");
 		String action = req.getParameter("action");
 		String mem_no = req.getParameter("mem_no");
+		PrintWriter out = res.getWriter();
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 //		if (!mem_no.equals(user.getMem_no())||action==null) {
 //			//非會員想做其他操作
@@ -57,6 +59,13 @@ public class BoardActionCtrl extends HttpServlet {
 		}
 		if ("delete".equals(action)) {
 			// 刪除
+			String bd_msg_no = req.getParameter("bd_msg_no");			
+			System.out.println(bd_msg_no);
+			Message_boardService message_boardService = new Message_boardService();
+			boolean result = message_boardService.executeDelete(bd_msg_no);
+			if(result){
+				out.write("ok");
+			}
 			return;
 		}
 

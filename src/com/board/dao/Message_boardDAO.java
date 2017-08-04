@@ -239,10 +239,12 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			Board_photoDAO board_photoDAO = new Board_photoDAO();
 			String sql = "select photo_no from board_photo where bd_msg_no=" + bd_msg_no;
 			String[] photo_no = board_photoDAO.getPhotosArrayBySQL(bd_msg_no);
+			for(String s : photo_no)
+			System.out.println(s);
 			result = board_photoDAO.executeDelete(bd_msg_no, con);
 			if (result) {
 				PhotosDAO photosDAO = new PhotosDAO();
-				result = photosDAO.executeDelete(photo_no, con);
+				result = photosDAO.executeDeleteForBoard(photo_no, con);
 				if (result) {
 					sql = "delete from message_board where bd_msg_no=" + bd_msg_no;
 					String res = new SQLHelper().executeUpdate(sql, null, null, con);
@@ -281,7 +283,6 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			sql = sql + " where " + where;
 		}
 		sql = sql + " order by " + order + ")) where rn between " + firstPage + " and " + lastPage;
-		System.out.println(sql);
 		List<Message_board> list = getVOBySQL(sql, null);
 
 		return list;
