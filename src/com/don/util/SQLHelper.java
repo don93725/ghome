@@ -280,5 +280,17 @@ public class SQLHelper {
 			}
 		}
 	}
+	// 關閉連線4
+	public static void close(Connection con) {
+		
+		if (con != null) {
+			try {
+				con.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
 }

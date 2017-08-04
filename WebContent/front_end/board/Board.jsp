@@ -235,7 +235,7 @@
 									</a>
 									<div class="col-xs-12 col-sm-9">
 										<div class="col-xs-12 col-sm-12 cmtInfo">
-											<a href="#">${message_board.mem_no }</a>
+											<a href="#">${message_board.mem_no.mem_nickname }${message_board.mem_no.mem_rank }</a>
 										</div>
 										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime">
 											<fmt:setLocale value="en_US" />
@@ -593,7 +593,7 @@
 																					'click');
 																});
 
-												if (sibNum > 2) {
+												if (sibNum > 1) {
 													if (next.next().length > 0) {
 														next
 																.next()
@@ -674,7 +674,51 @@
 						});
 		function deleteBoard(mem_no, bd_msg_no) {
 			if (confirm('將會把照片及內文完全刪除，確定不會捨不得，執意還要刪除？')) {
+// 				$.ajax({
+// 					type : "POST",
+// 					url : path + "/board/BoardActionCtrl?action=delete&mem_no="+mem_no+"&bd_msg_no=bd_msg_no="
+// 							+ bd_type + "&mem_no=" + mem_no,
+// 					dataType : 'text',
+// 					contentType : false,
+// 					processData : false, //不做任何處理，只上傳原始資料
+// 					data : data,
+// 					// 		            progress: function(e) {
+// 					// 		                //make sure we can compute the length
+// 					// 		                if(e.lengthComputable) {
+// 					// 		                	var intComplete = (e.loaded / e.total) * 100 | 0 ;                    
+// 					// 		                	upload_progress.html(intComplete + '%') ; // 控制進度條的顯示數字，例如65%
+// 					// 		                	upload_progress.css("width",intComplete + '%') ; // 控制進度條的長度                        
+// 					// 		                	upload_progress.attr('aria-valuenow', intComplete) ;
+// 					// 		                }
+// 					// 		                //this usually happens when Content-Length isn't set
+// 					// 		                else {
+// 					// 		                    console.warn('Content Length not reported!');
+// 					// 		                }
+// 					// 		            },
+// 					success : function(msg) {
 
+// 						if (msg.length != 0) {
+// 							// 							upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
+// 							// 		                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
+// 							// 		                	upload_progress.attr('aria-valuenow', 100) ;
+
+// 							$('#picReset').trigger('click');
+// 							alert('上傳完成');
+// 							// 			        		$('.progress').css('display','none');
+// 							// 			        		$('.progressCr').css('display','none');
+// 							// 		                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";
+// 						} else {
+// 							//報錯啊
+// 							alert('上傳失敗');
+// 						}
+// 					},
+
+// 					error : function(xhr, ajaxOptions, thrownError) {
+// 						alert(xhr.status);
+// 						alert(thrownError);
+// 					}
+
+// 				});
 			}
 		}
 		function edit() {

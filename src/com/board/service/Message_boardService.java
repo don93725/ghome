@@ -14,13 +14,16 @@ import com.board.domain.Message_board;
 import com.don.util.ResizeImage;
 import com.don.util.TransData;
 import com.friends.model.FriendsDAO;
+import com.members.model.MembersVO;
 
 public class Message_boardService {
 	// 封裝新增物件
 
 	public boolean add(String mem_no, String bd_type, String bd_msg_ctx, String bd_prvt, Collection<Part> parts) {
 		Message_board message_board = new Message_board();
-		message_board.setMem_no(mem_no);
+		MembersVO members = new MembersVO();
+		members.setMem_no(mem_no);
+		message_board.setMem_no(members);
 		message_board.setBd_type(bd_type);
 		message_board.setBd_msg_ctx(bd_msg_ctx);
 		message_board.setBd_prvt(bd_prvt);
@@ -55,6 +58,21 @@ public class Message_boardService {
 		boolean result = dao.executeInsert(message_board, photos);
 		return result;
 	}
+	public boolean executeDelete(String bd_msg_no){
+		Message_boardDAO dao = new Message_boardDAO();
+		boolean result = dao.executeDelete(bd_msg_no);
+		return result;
+	}
+	public boolean updateByVO(String bd_msg_no, String bd_msg_ctx, String bd_prvt,  List<Part> part, String[] delPhoto_no) {
+		Message_board message_board = new Message_board();
+		message_board.setBd_msg_no(bd_msg_no);
+		message_board.setBd_msg_ctx(bd_msg_ctx);
+		message_board.setBd_prvt(bd_prvt);
+		Message_boardDAO dao = new Message_boardDAO();
+		List<Photos> photos = new ArrayList<Photos>();		
+		return dao.updateByVO(message_board, photos, delPhoto_no);
+	}
+		
 
 	public List<Message_board> getPageAndRank(int thisPage, int pageSize, String mem_no, String condition) {
 		Message_boardDAO dao = new Message_boardDAO();

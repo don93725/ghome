@@ -12,7 +12,7 @@ import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
 
 public class Board_photoDAO extends BasicDAO {
-	// 建置查詢MAP
+	// 建置查詢String
 
 		public List<String> getPhotosListBySQL(String bd_msg_no) {
 			String sql = "select photo_no from board_photo where bd_msg_no="+bd_msg_no;
@@ -27,6 +27,22 @@ public class Board_photoDAO extends BasicDAO {
 				
 			}
 			return tempList;
+		}
+		// 建置查詢MAP
+
+		public String[] getPhotosArrayBySQL(String bd_msg_no) {
+			String sql = "select photo_no from board_photo where bd_msg_no="+bd_msg_no;
+			List<Object[]> list = new SQLHelper().executeQuery(sql, null);
+			String[] temp = new String[list.size()];
+			for (int i = 0; i < list.size(); i++) {
+				Object[] obj = (Object[]) list.get(i);
+				if (obj[0] != null) {
+					temp[i] = (String.valueOf(obj[0]));
+				}
+			
+				
+			}
+			return temp;
 		}
 	// 建置查詢
 
@@ -101,6 +117,18 @@ public class Board_photoDAO extends BasicDAO {
 		String sql = "delete from board_photo where bd_msg_no=" + bd_msg_no + " and photo_no=" + photo_no;
 		boolean insertResult = new SQLHelper().executeUpdate(sql, null);
 		return insertResult;
+
+	}
+	// 建置動態連動刪除
+
+	public boolean executeDelete(String bd_msg_no, Connection con) {
+		String sql = "delete from board_photo where bd_msg_no=" + bd_msg_no ;		
+		String insertResult = new SQLHelper().executeUpdate(sql, null, null, con);
+		if(insertResult.length()!=0){
+			return true;
+		}else{
+			return false;
+		}
 
 	}
 	// 建置分頁(彈性排序可設條件)
