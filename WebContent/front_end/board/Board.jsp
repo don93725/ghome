@@ -138,6 +138,22 @@
 	height: 90%;
 	display:none;
 }
+.filmDel img.check {
+	position: absolute;
+	top: 2.5%;
+	right: 5%;
+	width: 90%;
+	height: 95%;
+	display:none;
+}
+.filmDel img.delete {
+	position: absolute;
+	top: -5%;
+	right: 0%;
+	width: 100%;
+	height: 110%;
+	display:none;
+}
 .pic img.check {
 	position: absolute;
 	top: 5%;
@@ -146,14 +162,36 @@
 	height: 80%;
 	display:none;
 }
-
 .addPic{
+	margin-left:5px;
+	width: 50px;
+	height: 50px;
+}
+.picAndFilm{
+	display:none;
+}
+.picAndFilm .showAddFilmCtrl {
+	display:none;
+}
+.picAndFilm .showAddPicCtrl {
+	display:none;
+}
+.progressCr{
 	position: absolute;
-	bottom: 5%;
-	right: -5%;
-	width: 75px;
-	height: 75px;
-	z-index: 10;
+	height: 235px;
+	width:97%;
+	background-color:gray;
+	-webkit-filter:blur(80px);
+	opacity :0.8;
+	z-index: 1;
+	display:none;
+}
+.progress {
+	position: absolute;
+	top: 115px;
+	width:95%;
+	z-index: 2;
+	display:none;
 }
 </style>
 </head>
@@ -177,9 +215,16 @@
 						<h3 class="panel-title">新增動態</h3>
 					</div>
 					<div class="panel-body">
+					 		<div class='progressCr' >
+</div>
+<div class="progress text-center">
+<div id="upload_progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100">
+</div>
+</div>  
+  
 						<textarea class="form-control scrollable" id='bd_msg_ctx'
 							style="resize: none; background-color: transparent;" rows="8"
-							placeholder="李宗霖，在想些什麼呢？"></textarea>
+							placeholder="${user.mem_nickname }，在想些什麼呢？"></textarea>
 					</div>
 					<div class="row-fluid" id='media'></div>
 					<div class="row-fluid" id='filmContainer'></div>
@@ -278,9 +323,9 @@
 												<ul class="dropdown-menu" id='cmtPrvt'>
 													<li><a href="#">隱私設定</a></li>
 													<li role="separator" class="divider"></li>
-													<li><a href="#" onclick="setCmmtPrvt.call(this,'0');">朋友</a></li>
-													<li><a href="#" onclick="setCmmtPrvt.call(this,'1');">公開</a></li>
-													<li><a href="#" onclick="setCmmtPrvt.call(this,'2');">本人</a></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no }','0');">朋友</a></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no }','1');">公開</a></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no }','2');">本人</a></li>
 												</ul>
 
 											</div>
@@ -290,7 +335,7 @@
 
 									</div>
 									<div class="col-xs-12 col-sm-2 boardEdit">
-										<button class="btn btn-info" onclick='edit.call(this,${message_board.bd_msg_no });'>
+										<button class="btn btn-info" onclick='edit.call(this,"${pageContext.request.contextPath}","${message_board.bd_msg_no }","${param.mem_no }","${message_board.bd_type }");'>
 											<span class="glyphicon glyphicon-pencil"></span>
 										</button>
 										<button class="btn btn-danger"
@@ -304,14 +349,14 @@
 							</h3>
 						</div>
 						<div class="panel-body">
-							<div class='content'>${message_board.bd_msg_ctx}</div>
+							<div id='bd_msg_ctx${message_board.bd_msg_no }' class='content'>${message_board.bd_msg_ctx}</div>
 						</div>
 						<c:if
 							test="${message_board.bd_type==1 || message_board.bd_type==3 }">
 							<div class="panel-body">
 								<!-- 如果有照片  -->
 								<div class="well">			
-								<div id="myCarousel" class="carousel fdi-Carousel slide">	
+								<div <c:if	test="${list!= null || fn:length(message_board.board_photo) > 3}">id="myCarousel"</c:if> class="carousel fdi-Carousel slide">	
 										<!-- Carousel items -->
 										<div class="carousel fdi-Carousel slide"
 											id="eventCarousel${message_board.bd_msg_no }"											
@@ -328,7 +373,7 @@
 																	href="${pageContext.request.contextPath}/util/OutputPic?photo_no=${bd_photo}&type=big"
 																	data-fancybox="group${message_board.bd_msg_no }" class='aLink'> 
 																	<img src='/BA102G4/front_end/board/images/cancel.png' class='check checkGroup${bd_photo}'/>
-																	<img src='/BA102G4/front_end/board/images/select.png' class='delete delGroup${message_board.bd_msg_no }' onclick="del('${bd_photo}');"/>
+																	<img src='/BA102G4/front_end/board/images/select.png' class='delete delete${message_board.bd_msg_no } delGroup${message_board.bd_msg_no }' onclick="del('${bd_photo}');"/>
 																	
 																	<img
 																	style='height: 250px; width: 100%;'
@@ -355,7 +400,7 @@
 																	</figcaption>
 																</a>
 															</figure>
-															<input type="checkbox" id='del${bd_photo }' name='delPhoto_no' value='${bd_photo }' hidden/>
+															<input type="checkbox" id='del${bd_photo }' name='delPhoto_no${message_board.bd_msg_no }' value='${bd_photo }' hidden/>
 														</div>
 													</div>
 												</c:forEach>
@@ -388,7 +433,9 @@
 							<div class="panel-body text-center">
 								<div class="well">
 									<div class="row">
-										<div class="col-xs-12 col-sm-12">
+										<div class="col-xs-12 col-sm-12 filmDel">
+										<img src='/BA102G4/front_end/board/images/cancel.png' class='check' id='checkFilm${message_board.bd_msg_no }'/>
+										<img src='/BA102G4/front_end/board/images/select.png' class='delete delete${message_board.bd_msg_no }' id='deleteFilm${message_board.bd_msg_no }' onclick="delFilm('${message_board.bd_msg_no }');"/>
 											<video controls="controls">
 												<source
 													src="${pageContext.request.contextPath}/util/OutputPic?bd_msg_no=${message_board.bd_msg_no}">
@@ -397,16 +444,56 @@
 									</div>
 								</div>
 								<!--well -->
+								<input type="checkbox" id='delFilm${message_board.bd_msg_no }' name='delFilm' hidden/>
 							</div>
+							
 							<!--panel-body -->
 						</c:if>
+						<div class='panel panel-default picAndFilm'>
+						<div class="panel-heading text-center">
+						<h4>新增圖影專區
+								<img src='/BA102G4/front_end/board/images/plus.png' class='addPic' onclick="addPic('${message_board.bd_msg_no}','${message_board.bd_type }');"/>
+						
+									<input style='display:none' type="file" class='addPicInput' id="addPicInput${message_board.bd_msg_no}_${message_board.bd_type }" multiple ></h4></div>
+						<div class="panel-body">
+								
+							
+							<div class="panel-body text-center showAddPicCtrl">
+							<div class="well">
+									<div class="row">
+								<div class="col-xs-12 col-sm-12">
+									<div class="row row-fluid" id='addBdPic${message_board.bd_msg_no}'>									
+								</div>
+								<button class="btn btn-danger" onclick='BdPreview.removeAllPic.call(this);'>
+								清除所有新增圖片
+									</button>
+									</div>
+									</div>
+									</div>
+									</div>
+							<div class="panel-body text-center showAddFilmCtrl">
+								<div class="well">
+									<div class="row">
+									
+									<div class="col-xs-12 col-sm-12 text-center">
+									<div class="row" id='addBdFilm${message_board.bd_msg_no}'>
+									</div>
+									</div>
+									</div></div></div>
+									
+							
+								</div>
+							</div>
+								
 						<div class="panel-body updatTime">
-							<div class="col-xs-12 col-sm-4 col-sm-offset-8">
+						<div class="col-xs-12 col-sm-4">
+						<span id='likes${message_board.bd_msg_no}'>${message_board.bd_likes}</span>&nbsp個讚
+						</div>
+							<div class="col-xs-12 col-sm-4 col-sm-offset-4">
 								<fmt:setLocale value="en_US" />
 								<fmt:formatDate value="${message_board.bd_upd_time}"
 									pattern="最後更新於 yyyy-MM-dd HH:mm" />
-									<img src='/BA102G4/front_end/board/images/plus.png' class='addPic' onclick='addPic();'/>
-								<input style='display:none' type="file" id='addPicInput' multiple >
+									
 							</div>
 								
 						</div>
@@ -416,7 +503,7 @@
 							
 								<ul class="nav nav-pills">
 									<li role="presentation"><a href="#"
-										onclick="return false;"> <span
+										onclick="addLikes.call(this,event,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no}')"> <span
 											class="glyphicon glyphicon-thumbs-up">&nbsp讚</span>
 									</a></li>
 									<li role="presentation"><a href="#"
@@ -424,7 +511,7 @@
 											<span class="glyphicon glyphicon-comment">&nbsp留言</span>
 									</a></li>
 									<li role="presentation"><a href="#"
-										onclick="return false;"> <span
+										onclick="share.call(this,event);"> <span
 											class="glyphicon glyphicon-share-alt">&nbsp分享</span>
 									</a></li>
 								</ul>
@@ -586,28 +673,215 @@
 	<button onclick='del();'>123</button>
 
 	<script src="https://code.jquery.com/jquery.js"></script>
+	<script src='${pageContext.request.contextPath}/front_end/album/js/jquery.ajax-progress.js'></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
-	function addPic(){
-		$('#addPicInput').trigger('click');
+	function share(e){
+		e.preventDefault();
+		document.location.reload();
 	}
+	function addLikes(e,path,mem_no,bd_msg_no){
+		var likesBtn = $(this);
+		e.preventDefault();
+		if(likesBtn.parent().attr('disabled')!='disabled'){
+			$.ajax({
+				type : "POST",
+				url : path + "/board/BoardActionCtrl?action=addLikes&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no,
+				dataType : 'text',
+				contentType : false,
+				success : function(msg) {
+
+					if (msg.length != 0) {
+						likesBtn.parent().addClass('disabled');
+						likesBtn.parent().attr('disabled','');
+						var likes = $('#likes'+bd_msg_no).text();
+						$('#likes'+bd_msg_no).text(parseInt(likes,10)+1);
+					} else {						
+						
+						
+						
+					}
+				},
+				error : function(xhr, ajaxOptions, thrownError) {
+					alert(xhr.status);
+					alert(thrownError);
+				}
+
+			});
+		}
+		
+	}
+	function addPic(bd_msg_no,bd_type){
+		$('#addPicInput'+bd_msg_no+"_"+bd_type).trigger('click');
+	}
+
+	
+	
 	function del(photo_no){
 		if($('.checkGroup'+photo_no).css('display')=='none'){
 			$('.checkGroup'+photo_no).css('display',"block");
-			$('#del'+photo_no).attr('checked','');
+			$('#del'+photo_no).prop('checked','true');
 		}else{
 			$('.checkGroup'+photo_no).css('display',"none");
 			$('#del'+photo_no).removeAttr('checked');
 		}
 		
 	}
-		var count = 0;
+	function delFilm(bd_msg_no){
+		if($('#checkFilm'+bd_msg_no).css('display')=='none'){
+			$('#checkFilm'+bd_msg_no).css('display',"block");
+			$('#delFilm'+bd_msg_no).prop('checked','true');
+		}else{
+			$('#checkFilm'+bd_msg_no).css('display',"none");
+			$('#delFilm'+bd_msg_no).removeAttr('checked');
+		}
+		
+	}
+	var countBdPic = 0;
+	var bdPicList =[];
+	var bdFilm = null;
+	var isEditOpen = false;
+	BdPreview = new function() {
+		var fileInput = $('.addPicInput');
+		this.file_change = function() {
+			$('.addPicInput').each(function(){
+				$(this).on('change', function() {
+					var len = $(this).attr('id').length;
+					var tempStr = $(this).attr('id').substring(11,len).split("_");
+					show(this,tempStr[0],tempStr[1]);					
+				});
+			});
+		}
+		var show = function(input,bd_msg_no,bd_type) {
+			if (input.files && input.files[0]) {
+				each_img(input.files,bd_msg_no,bd_type);
+			}
+		}
+		this.removePic = function(bd_msg_no) {
+			var id = $(this).attr('id');
+			$(this).parent().parent().parent().remove();
+			delete bdPicList[id];
+			var res = false;
+			for(var count in bdPicList){
+				res = true;
+				break;	
+			}
+			if(!res){
+				$('#addBdPic'+bd_msg_no).parents('.showAddPicCtrl').css('display','none');					
+			}
+		}
+		this.removeFilm = function(bd_msg_no,bd_type) {
+			$(this).parent().parent().parent().remove();
+			bdFilm = null;
+			$('#addBdFilm'+bd_msg_no).parents('.showAddFilmCtrl').css('display','none');
+			if(bd_type==2||bd_type==3){
+				if($('#checkFilm'+bd_msg_no).css('display')=='none'){
+					
+				}else{
+					$('#checkFilm'+bd_msg_no).css('display',"none");
+					$('#delFilm'+bd_msg_no).removeAttr('checked');
+				}
+			}
+			
+		}
+		this.removeAllPic = function(){
+			$(this).prev().empty();
+			bdPicList =[];
+			$(this).parents('.showAddPicCtrl').css('display','none');
+			
+			
+		}
+		var each_img = function(files,bd_msg_no,bd_type) {
+			$.each(
+					files,
+					function(index, file) {
+						if (file.type.match('video')) {
+							var reader = new FileReader();
+							bdFilm = null;
+							reader.onload = function() {
+								var video = "<div class='col-xs-12 col-sm-12'>"
+										+ "<div class='list-group text-center'><div class='list-group-item imgDiv'>"
+										+ "<img class='delete' src='/BA102G4/front_end/board/images/cross1.png' "
+										+ "onclick='BdPreview.removeFilm.call(this,"+bd_msg_no+","+bd_type+");'/>"
+										+ "<video controls='conrtols'><source src="+
+										reader.result+" type='video/mp4'></video></div></div></div>";
+								$('#addBdFilm'+bd_msg_no).append(video);
+								$(".imgDiv").mouseenter(function() {
+									$(this).find(".delete").show();
+
+								});
+
+								$(".imgDiv").mouseleave(function() {
+									$(this).find(".delete").hide();
+								});
+								bdFilm = file;
+								if(bdFilm!=null){
+									$('#addBdFilm'+bd_msg_no).parents('.showAddFilmCtrl').css('display','block');
+									if(bd_type==2||bd_type==3){
+										if($('#checkFilm'+bd_msg_no).css('display')=='none'){
+											$('#checkFilm'+bd_msg_no).css('display',"block");
+											$('#delFilm'+bd_msg_no).prop('checked','true');
+										}else{
+											
+										}
+									}
+								}
+							}
+							if (file) {
+								reader.readAsDataURL(file);
+							}
+							return;
+						}
+						if (file.type.match('image')) {
+							var reader = new FileReader();
+							var img = new Image();
+							img.onload = function() {
+								bdPicList[countBdPic] = [file,countBdPic];
+								if(bdPicList.length>0){
+									$('#addBdPic'+bd_msg_no).parents('.showAddPicCtrl').css('display','block');
+								}
+								var pic = "<div class='col-xs-12 col-sm-2 pic'>"
+										+ "<div class='list-group'><div class='list-group-item imgDiv'>"
+										+ "<img src='/BA102G4/front_end/board/images/cross1.png' id='"
+										+ (countBdPic++)
+										+ "' class='delete' onclick='BdPreview.removePic.call(this,\""+bd_msg_no+"\");'/>"
+										+ "<div align='center'><img alumb='true' class='pics' style='width:100%;' height=100  src='"
+										+ img.src
+										+ "'>"
+										+ "</div></div></div>";
+								$("#addBdPic"+bd_msg_no).append(pic);
+								$(".imgDiv").mouseenter(function() {
+									$(this).find(".delete").show();
+
+								});
+
+								$(".imgDiv").mouseleave(function() {
+									$(this).find(".delete").hide();
+								});
+
+							};
+							reader.onload = function() {
+								img.src = reader.result;
+							}
+							if (file) {
+								reader.readAsDataURL(file);
+							}
+							return;
+						}
+						alert('這是什麼格式..?');
+					});
+					
+					
+		}
+
+	}
 		$(document)
 				.ready(
-						function() {
+						
+						function() {							
 							$('#myCarousel').carousel({
 								interval : 5000
 							});
@@ -676,7 +950,7 @@
 																					.trigger('click');
 																		});
 													}
-												}
+						 						}
 
 											});
 
@@ -687,6 +961,34 @@
 									return $(this).find('figcaption').html();
 								}
 							});
+							$('#uploadTrigger').click(function() {
+								$('#uploadPhoto').trigger('click');
+							})
+							$('#uploadFilmTrigger').click(function() {
+								$('#uploadFilm').trigger('click');
+							})
+							BdPreview.file_change();
+							Preview.file_change();
+							ShowFilm.file_change();
+							$(window).scroll(function(){
+								  var window_height = $( window ).height();								  
+								  var window_scrollTop = $(window).scrollTop();								 
+								  var document_height = $( document ).height();
+								  
+								  console.log(window_height);
+								  console.log(window_scrollTop);
+								  console.log(document_height);
+								  var ifLoad = false;
+								  if(!ifLoad){
+									  if(window_height + window_scrollTop > (document_height-100)){
+										  ifLoad=true;
+										  
+										     
+									}
+								  }
+								   
+
+								});
 						});
 		function deleteBoard(path ,mem_no, bd_msg_no) {
 			alert( path + "/board/BoardActionCtrl?action=delete&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no);
@@ -707,7 +1009,7 @@
 							alert('刪除成功');
 							// 			        		$('.progress').css('display','none');
 							// 			        		$('.progressCr').css('display','none');
-							// 		                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";
+							location.reload();
 						} else {
 							//報錯啊
 							alert('刪除失敗');
@@ -723,85 +1025,100 @@
 			}
 		}
 		
-		function edit(bd_msg_no) {
+		function edit(path,bd_msg_no,mem_no,bd_type) {
 			var btn = $(this);
 			var btnSpan = $(this).children();
 			var spanClass = $(this).children().attr('class');
+			var createArea = $(this).parents(".panel-default").children('.picAndFilm');
 			var content = $(this).parents(".panel-default").find(".content");
 			var originText = content.text();
 			if (spanClass == "glyphicon glyphicon-pencil") {
-				$('.aLink').each(function() {					
-					var a = $(this).attr('href',"#").removeAttr("data-fancybox").unbind('click').click(function(event){
-						event.preventDefault();
+				if(!isEditOpen){					
+					$('.aLink').each(function() {					
+						var a = $(this).attr('href',"#").removeAttr("data-fancybox").unbind('click').click(function(event){
+							event.preventDefault();
+						});
 					});
-				});
-				$('.delete').each(function(){
-					$(this).css('display','block');
-				});
-				btn.removeClass('btn-info');
-				btn.addClass('btn-success');
-				btnSpan.removeClass(spanClass);
-				btnSpan.addClass('glyphicon glyphicon-ok');
-				content.attr("contenteditable", "true");
-				content.focus();
-				setCursorToEnd(content.get(0));
-			} else {
-				$('.fdi-Carousel .item').each(function() {
-					var id = $(this).children(':first-child').children().children().attr('id');
-					$(this).children(':first-child').children().children().attr('href',"/BA102G4/util/OutputPic?photo_no="+id+"&type=big");
-					$(this).children(':first-child').children().children().attr("data-fancybox","group"+id);
-					$('[data-fancybox]').fancybox({
-
-						clickSlide : false,
-						caption : function(instance, item) {
-							return $(this).find('figcaption').html();
-						}
+					$('.delete'+bd_msg_no).each(function(){
+						$(this).css('display','block');
 					});
-					var it = $(this).children(':first-child');
-					var next  = $(this).next();
-					var next2 = $(this).next().next();
+					createArea.css('display','block');
+					btn.removeClass('btn-info');
+					btn.addClass('btn-success');
+					btnSpan.removeClass(spanClass);
+					btnSpan.addClass('glyphicon glyphicon-ok');
+					content.attr("contenteditable", "true");
+					content.focus();
+					isEditOpen=true;
+					setCursorToEnd(content.get(0));
 					
-					if(next2.length==0&&next.length==0){
-						next = $(this).siblings(':first').children(':first-child').children().children();
-						next2 =  $(this).siblings(':first').next().children(':first-child').children().children();
-						it.next().children().children().click(function(){
-							next.trigger('click');
-						})
-						it.next().next().children().children().click(function(){
-							next2.trigger('click');
-						})
+				}
+			} else {
+				if(isEditOpen){	
+					if(confirm('此舉將會完成編輯，可能會改動貼問內容，很危險低，確定要繼續？')){						
+						if(submitBd(path,bd_msg_no,mem_no,bd_type)){
+							$('.fdi-Carousel .item').each(function() {
+								var id = $(this).children(':first-child').children().children().attr('id');
+								$(this).children(':first-child').children().children().attr('href',"/BA102G4/util/OutputPic?photo_no="+id+"&type=big");
+								$(this).children(':first-child').children().children().attr("data-fancybox","group"+id);
+								$('[data-fancybox]').fancybox({
+			
+									clickSlide : false,
+									caption : function(instance, item) {
+										return $(this).find('figcaption').html();
+									}
+								});
+								var it = $(this).children(':first-child');
+								var next  = $(this).next();
+								var next2 = $(this).next().next();
+								
+								if(next2.length==0&&next.length==0){
+									next = $(this).siblings(':first').children(':first-child').children().children();
+									next2 =  $(this).siblings(':first').next().children(':first-child').children().children();
+									it.next().children().children().click(function(){
+										next.trigger('click');
+									})
+									it.next().next().children().children().click(function(){
+										next2.trigger('click');
+									})
+									
+								}else if(next2.length==0){
+									next = next.children(':first-child').children().children();
+									next2 = $(this).siblings(':first').children(':first-child').children().children();
+									it.next().children().children().click(function(){
+										next.trigger('click');
+									})
+									it.next().next().children().children().click(function(){
+										next2.trigger('click');
+									})
+									
+								}else{
+									next = next.children(':first-child').children().children();
+									next2 = next2.children(':first-child').children().children();
+									it.next().children().children().click(function(){
+										next.trigger('click');
+									})
+									it.next().next().children().children().click(function(){
+										next2.trigger('click');
+									})
+								}
+							});
+							$('.delete'+bd_msg_no).each(function(){
+								$(this).css('display','none');
+							});
+							createArea.css('display','none');
+							btn.removeClass('btn-success');
+							btn.addClass('btn-info');
+							btnSpan.removeClass(spanClass);
+							btnSpan.addClass('glyphicon glyphicon-pencil');
+							content.attr("contenteditable", "false");
+							isEditOpen=false;
+						}
 						
-					}else if(next2.length==0){
-						next = next.children(':first-child').children().children();
-						next2 = $(this).siblings(':first').children(':first-child').children().children();
-						it.next().children().children().click(function(){
-							next.trigger('click');
-						})
-						it.next().next().children().children().click(function(){
-							next2.trigger('click');
-						})
-						
-					}else{
-						next = next.children(':first-child').children().children();
-						next2 = next2.children(':first-child').children().children();
-						it.next().children().children().click(function(){
-							next.trigger('click');
-						})
-						it.next().next().children().children().click(function(){
-							next2.trigger('click');
-						})
 					}
-				});
-				$('.delete').each(function(){
-					$(this).css('display','none');
-				});
-				btn.removeClass('btn-success');
-				btn.addClass('btn-info');
-				btnSpan.removeClass(spanClass);
-				btnSpan.addClass('glyphicon glyphicon-pencil');
-				content.attr("contenteditable", "false");
-				//ajax
+				}
 			}
+			
 
 		}
 		function setCursorToEnd(ele) {
@@ -814,14 +1131,81 @@
 			sel.addRange(range);
 			ele.focus();
 		}
+		function submitBd(path,bd_msg_no,mem_no,bd_type){
+			
+			var data = new FormData();
+			var bd_msg_ctx = $('#bd_msg_ctx'+bd_msg_no).text();
+			data.append("bd_msg_ctx",bd_msg_ctx);
+			$.each($('input[name=delPhoto_no'+bd_msg_no+"]:checked"),function(){
+				data.append('delPhoto_no',$(this).val());
+			});		
+			var ifDelFilm =$('input[name=delFilm]:checked').length;
+			
+			$.each(bdPicList, function() {
+				data.append("image", $(this)[0]);
+			});
+			var delStat;
+			if(bdFilm!=null&&bdFilm.length!=0){
+				delStat=1;
+				data.append("film", bdFilm);				
+			}else if(ifDelFilm==1){
+				delStat=4;
+			}else if(ifDelFilm==0&&bd_type==2){
+				delStat=2;
+			}else if(ifDelFilm==0&&bd_type==3){
+				delStat=3;
+			}else if(ifDelFilm==0&&bd_type==0){
+				delStat=0;
+			}else if(ifDelFilm==0&&bd_type==1){
+				delStat=0;
+			}else{
+				alert('怎麼可能有意外');
+			}
+			$.ajax({
+				type : "POST",
+				url : path+"/board/BoardActionCtrl?action=update&bd_msg_no="+bd_msg_no+"&mem_no="+mem_no+"&delStat="+delStat,
+				dataType : 'text',
+				contentType : false,
+				processData : false, //不做任何處理，只上傳原始資料	
+				data : data,
+				success : function(msg) {
+
+					if (msg.length != 0) {
+						// 							upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
+						// 		                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
+						// 		                	upload_progress.attr('aria-valuenow', 100) ;
+
+						alert('刪除成功');
+						// 			        		$('.progress').css('display','none');
+						// 			        		$('.progressCr').css('display','none');
+// 						location.href =path+"/board/BoardShowCtrl?mem_no="+mem_no+"&thisPage=1";
+						location.reload();
+					} else {
+						//報錯啊
+						alert('刪除失敗');
+					}
+				},
+
+				error : function(xhr, ajaxOptions, thrownError) {
+					alert(xhr.status);
+					alert(thrownError);
+				}
+
+			});
+			
+		}
 		function submit(path, mem_no) {
+			var upload_progress = $('#upload_progress');
+			$('.progress').css('display','block');
+			$('.progressCr').css('display','block');
+			upload_progress.html('') ; 
+	    	upload_progress.css("width",'') ;                 
+	    	upload_progress.attr('aria-valuenow', '') ;
 			var bd_prvt = $('#dropdownMenu1').val()
 			var bd_msg_ctx = $('#bd_msg_ctx').val()
 			var num = 0;
 			var data = new FormData();
 			var bd_type = 0;
-			alert(film);
-
 			if (!fileList.length == 0 && film != undefined) {
 				bd_type = 3;
 			} else if (film != undefined) {
@@ -829,7 +1213,6 @@
 			} else if (!fileList.length == 0) {
 				bd_type = 1;
 			}
-
 			$.each(fileList, function() {
 
 				data.append("image", $(this)[0]);
@@ -847,34 +1230,37 @@
 				contentType : false,
 				processData : false, //不做任何處理，只上傳原始資料
 				data : data,
-				// 		            progress: function(e) {
-				// 		                //make sure we can compute the length
-				// 		                if(e.lengthComputable) {
-				// 		                	var intComplete = (e.loaded / e.total) * 100 | 0 ;                    
-				// 		                	upload_progress.html(intComplete + '%') ; // 控制進度條的顯示數字，例如65%
-				// 		                	upload_progress.css("width",intComplete + '%') ; // 控制進度條的長度                        
-				// 		                	upload_progress.attr('aria-valuenow', intComplete) ;
-				// 		                }
-				// 		                //this usually happens when Content-Length isn't set
-				// 		                else {
-				// 		                    console.warn('Content Length not reported!');
-				// 		                }
-				// 		            },
+	            progress: function(e) {
+	                //make sure we can compute the length
+	                if(e.lengthComputable) {
+	                	var intComplete = (e.loaded / e.total) * 100 | 0 ;  
+	                	console.log(intComplete);
+	                	upload_progress.html(intComplete + '%') ; // 控制進度條的顯示數字，例如65%
+	                	upload_progress.css("width",intComplete + '%') ; // 控制進度條的長度                        
+	                	upload_progress.attr('aria-valuenow', intComplete) ;
+	                }
+	                //this usually happens when Content-Length isn't set
+	                else {
+	                    console.warn('Content Length not reported!');
+	                }
+	            },
 				success : function(msg) {
 
 					if (msg.length != 0) {
-						// 							upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
-						// 		                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
-						// 		                	upload_progress.attr('aria-valuenow', 100) ;
+						upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
+	                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
+	                	upload_progress.attr('aria-valuenow', 100) ;
 
 						$('#picReset').trigger('click');
 						alert('上傳完成');
-						// 			        		$('.progress').css('display','none');
-						// 			        		$('.progressCr').css('display','none');
-						// 		                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";
+		        		$('.progress').css('display','none');
+		        		$('.progressCr').css('display','none');
+						location.href =path+"/board/BoardShowCtrl?mem_no="+mem_no+"&thisPage=1";
 					} else {
 						//報錯啊
 						alert('上傳失敗');
+						$('.progress').css('display','none');
+		        		$('.progressCr').css('display','none');
 					}
 				},
 
@@ -885,30 +1271,24 @@
 
 			});
 		}
-		function setCmmtPrvt(bd_prvt) {
+		function setCmmtPrvt(path,mem_no,bd_msg_no,bd_prvt) {
 
 			if (confirm("確定要更改隱私設定嗎？")) {
-
-				/*$.ajax({
-					url: path+"/board/MessageBoardCtrl?bd_msg_no="+bd_msg_no+"&bd_prvt="+bd_prvt;
+				var option = $(this).parents('ul').prev().find('img');
+				$.ajax({
+					url: path+"/board/BoardActionCtrl?action=setPrvt&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no+"&bd_prvt="+bd_prvt,
 					type: "POST",
 					dataType: "text",
 					success: function(msg){
-
+						option.attr('src','/BA102G4/front_end/board/images/cmmtPrvt' + bd_prvt + '.png');
 					},
 					error: function(xhr, ajaxOptions, thrownError){ 
-				            alert('更新失敗');
+				         alert('更新失敗');
 				    }
 
-				});*/
-				$(this).parents('ul').prev().find('img').attr(
-						'src',
-						'/BA102G4/front_end/board/images/cmmtPrvt' + bd_prvt
-								+ '.png');
-
-			} else {
-
-			}
+				});
+				
+			} 
 		}
 		function chooseCmmtPrvt(bd_prvt) {
 			$(this).parents('ul').prev().html(
@@ -931,17 +1311,7 @@
 		function showCmmt(board_msg_no, bd_cmmt_no) {
 			$('#b' + board_msg_no + '_commt' + bd_cmmt_no).toggle();
 		}
-		$(function() {
-			$('#uploadTrigger').click(function() {
-				$('#uploadPhoto').trigger('click');
-			})
-			$('#uploadFilmTrigger').click(function() {
-				$('#uploadFilm').trigger('click');
-			})
 
-			Preview.file_change();
-			ShowFilm.file_change();
-		})
 		var film;
 		var fileList = [];
 		var count = 0;
@@ -974,7 +1344,7 @@
 									var reader = new FileReader();
 									var img = new Image();
 									img.onload = function() {
-										fileList[count] = [ file, count ];
+										fileList[count] = [file,count];
 										var pic = "<div class='col-xs-12 col-sm-2 pic'>"
 												+ "<div class='list-group'><div class='list-group-item imgDiv'>"
 												+ "<img src='/BA102G4/front_end/board/images/cross1.png' id='"
@@ -1005,6 +1375,7 @@
 			}
 
 		}
+
 
 		ShowFilm = new function() {
 			var fileInput = $('#uploadFilm');
@@ -1043,7 +1414,6 @@
 													+ "onclick='ShowFilm.removeFilm.call(this);'/>"
 													+ "<video style='height:250px; width:100%;' controls='conrtols'><source src="+
 						reader.result+" type='video/mp4'></video></div></div></div>";
-											alert(video);
 											$("#filmContainer").append(video);
 											$(".imgDiv").mouseenter(function() {
 												$(this).find(".delete").show();
@@ -1095,7 +1465,6 @@
 													+ "onclick='ShowFilm.removeFilm.call(this);'/>"
 													+ "<video controls='conrtols'><source src="+
 						reader.result+" type='video/mp4'></video></div></div></div>";
-											alert(video);
 											$("#filmContainer").append(video);
 											$(".imgDiv").mouseenter(function() {
 												$(this).find(".delete").show();
@@ -1117,7 +1486,7 @@
 										var reader = new FileReader();
 										var img = new Image();
 										img.onload = function() {
-											fileList[count] = [ file, count ];
+											fileList[count] = [file,count];
 											var pic = "<div class='col-xs-12 col-sm-2 pic'>"
 													+ "<div class='list-group'><div class='list-group-item imgDiv'>"
 													+ "<img src='/BA102G4/front_end/board/images/cross1.png' id='"

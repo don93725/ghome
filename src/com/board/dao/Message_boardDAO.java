@@ -102,7 +102,7 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	}
 	// 建置修改
 
-	public boolean updateByVO(Message_board message_board, List<Photos> photos, String[] delPhoto_no) {
+	public boolean updateByVO(Message_board message_board, List<Photos> photos, String[] delPhoto_no, String delStat) {
 		SQLHelper helper = new SQLHelper();
 		Connection con = helper.getConnection();
 		boolean result = true;
@@ -112,55 +112,102 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			String bd_msg_no = message_board.getBd_msg_no();
 			String sql = "select count(*) from board_photo where bd_msg_no=" + bd_msg_no;
 			int oriPhotoNum = board_photoDAO.countBySQL(sql);
-			if (delPhoto_no.length != 0) {
-				if (message_board.getBd_film() == null && delPhoto_no.length == oriPhotoNum && photos.size() == 0) {
-					message_board.setBd_type("0");
-				} else if (message_board.getBd_film() != null && delPhoto_no.length == oriPhotoNum
-						&& photos.size() == 0) {
-					message_board.setBd_type("2");
-				} else if (message_board.getBd_film() == null && delPhoto_no.length < oriPhotoNum) {
-					message_board.setBd_type("1");
-				} else if(message_board.getBd_film() != null && delPhoto_no.length < oriPhotoNum){
-					message_board.setBd_type("3");
-				}else {
-					System.out.println("產生例外狀況1了 fuck");
+			if (delPhoto_no != null && delPhoto_no.length == oriPhotoNum) {
+				if (photos.size() == 0) {
+					if ("4".equals(delStat)) {
+						message_board.setBd_type("0");
+					} else if ("1".equals(delStat) || "3".equals(delStat)) {
+						message_board.setBd_type("2");
+					} else if ("2".equals(delStat) || "0".equals(delStat) ) {
+						message_board.setBd_type(delStat);
+					} else {
+						System.out.println("他媽的例外..太扯");
+					}
+				} else {
+					if ("4".equals(delStat) || "0".equals(delStat) ) {
+						message_board.setBd_type("1");
+					} else if ("1".equals(delStat)) {
+						message_board.setBd_type("3");
+					} else if ("2".equals(delStat) || "3".equals(delStat)) {
+						message_board.setBd_type("3");
+					} else {
+						System.out.println("他媽的例外1..太扯");
+					}
 				}
-			}else if(photos.size()!=0&&message_board.getBd_film()!=null){
-				message_board.setBd_type("3");
-			}else if(photos.size()==0&&message_board.getBd_film()!=null){
-				message_board.setBd_type("2");
-			}else if(photos.size()!=0&&message_board.getBd_film()==null){
-				message_board.setBd_type("1");
-			}else if(photos.size()==0&&message_board.getBd_film()==null){
-				message_board.setBd_type("0");
-			}else {
-				System.out.println("產生例外狀況2了 fuck");
+			} else {
+				if (photos.size() == 0) {
+					if (oriPhotoNum != 0) {
+						if ("4".equals(delStat)|| "0".equals(delStat)) {
+							message_board.setBd_type("1");
+						} else if ("1".equals(delStat)) {
+							message_board.setBd_type("3");
+						} else if ("2".equals(delStat) || "3".equals(delStat)) {
+							message_board.setBd_type("3");
+						} else {
+							System.out.println("他媽的例外3..太扯");
+						}
+					} else {
+						if ("0".equals(delStat) || "4".equals(delStat)) {
+							message_board.setBd_type("0");
+						} else if ("1".equals(delStat)) {
+							message_board.setBd_type("2");
+						} else if ("2".equals(delStat) ||  "3".equals(delStat)) {
+							message_board.setBd_type(delStat);
+						} else {
+							System.out.println("他媽的例外4..太扯");
+						}
+					}
+				} else {
+					if ("0".equals(delStat) || "4".equals(delStat)) {
+						message_board.setBd_type("1");
+					} else if ("1".equals(delStat)) {
+						message_board.setBd_type("3");
+					} else if ("2".equals(delStat) ||  "3".equals(delStat)) {
+						message_board.setBd_type("3");
+					} else {
+						System.out.println("他媽的例外5..太扯");
+					}
+				}
 			}
+
 			PhotosDAO photosDAO = new PhotosDAO();
 			if (delPhoto_no != null) {
 				// 刪圖片
-				
-				result = photosDAO.executeDelete(delPhoto_no, con);
+				result = board_photoDAO.executeDelete(delPhoto_no, con);
+				if(result){
+					result = photosDAO.executeDeleteForBoard(delPhoto_no, con);					
+				}
 			}
-			if(result){
+			if (result) {
 				if (photos != null) {
 					// 加圖片
-					List<String> photosKey = photosDAO.executeInsert(photos, message_board.getMem_no().getMem_no(), con);
+					List<String> photosKey = photosDAO.executeInsert(photos, message_board.getMem_no().getMem_no(),
+							con);
 					// 新增動態相片複合表
-					result = board_photoDAO.executeInsert(bd_msg_no, photosKey, con);					
-				}				
+					result = board_photoDAO.executeInsert(bd_msg_no, photosKey, con);
+				}
 			}
-			//正常都要更新這邊;
+			// 正常都要更新這邊;
 			String res = null;
-			if(result){
-				sql = "update message_board set bd_type=?,bd_msg_ctx=?,bd_prvt=?,bd_upd_time=sysdate,bd_film where bd_msg_no=?";
-				Object[] param = {message_board.getBd_type(), message_board.getBd_msg_ctx(), message_board.getBd_prvt(),
-						message_board.getBd_upd_time(),message_board.getBd_film() };
-				res = new SQLHelper().executeUpdate(sql, param,null,con);				
+			if (result) {
+				Object[] param = null;
+				if ("1".equals(delStat) || "4".equals(delStat)) {
+					sql = "update message_board set bd_type=?,bd_msg_ctx=?,bd_upd_time=sysdate,bd_film=? where bd_msg_no=?";
+					param = new Object[] { message_board.getBd_type(), message_board.getBd_msg_ctx(),
+							message_board.getBd_film(), message_board.getBd_msg_no() };
+
+				} else {
+					System.out.println(message_board.getBd_type());
+					sql = "update message_board set bd_type=?,bd_msg_ctx=?,bd_upd_time=sysdate where bd_msg_no=?";
+					param = new Object[] { message_board.getBd_type(), message_board.getBd_msg_ctx(),
+							message_board.getBd_msg_no() };
+
+				}
+				res = new SQLHelper().executeUpdate(sql, param, null, con);
 			}
-			if(res.length()!=0){
+			if (res.length() != 0) {
 				con.commit();
-			}else{
+			} else {
 				result = false;
 				con.rollback();
 			}
@@ -239,8 +286,8 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			Board_photoDAO board_photoDAO = new Board_photoDAO();
 			String sql = "select photo_no from board_photo where bd_msg_no=" + bd_msg_no;
 			String[] photo_no = board_photoDAO.getPhotosArrayBySQL(bd_msg_no);
-			for(String s : photo_no)
-			System.out.println(s);
+			for (String s : photo_no)
+				System.out.println(s);
 			result = board_photoDAO.executeDelete(bd_msg_no, con);
 			if (result) {
 				PhotosDAO photosDAO = new PhotosDAO();
@@ -314,7 +361,17 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 		String sql = "select " + col + " from message_board where bd_msg_no=" + bd_msg_no;
 		byte[] b = new SQLHelper().getPic(sql, null);
 		return b;
-		// Service層實作
 
 	}
+	public boolean setPrvt(String bd_msg_no, String bd_prvt){
+		String sql = "update message_board set bd_prvt="+bd_prvt+" where bd_msg_no="+bd_msg_no;
+		boolean result = executeUpdate(sql, null);
+		return result;
+	}
+	public boolean setBd_likes(String bd_msg_no){
+		String sql = "update message_board set bd_likes= (select bd_likes+1 from message_board where bd_msg_no="+bd_msg_no+") where bd_msg_no="+bd_msg_no ;
+		boolean result = executeUpdate(sql, null);
+		return result;
+	}
 }
+

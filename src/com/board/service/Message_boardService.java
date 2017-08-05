@@ -63,14 +63,53 @@ public class Message_boardService {
 		boolean result = dao.executeDelete(bd_msg_no);
 		return result;
 	}
-	public boolean updateByVO(String bd_msg_no, String bd_msg_ctx, String bd_prvt,  List<Part> part, String[] delPhoto_no) {
+	public boolean setBd_prvt(String bd_msg_no, String bd_prvt){
+		Message_boardDAO dao = new Message_boardDAO();
+		boolean result = dao.setPrvt(bd_msg_no,bd_prvt);
+		return result;
+	}
+	public boolean setBd_likes(String bd_msg_no){
+		Message_boardDAO dao = new Message_boardDAO();
+		boolean result = dao.setBd_likes(bd_msg_no);
+		return result;
+	}
+	public boolean updateByVO(String bd_msg_no,String mem_no ,String delStat, String bd_msg_ctx,  Collection<Part> parts, String[] delPhoto_no) {
 		Message_board message_board = new Message_board();
 		message_board.setBd_msg_no(bd_msg_no);
+		MembersVO members = new MembersVO();
+		members.setMem_no(mem_no);
+		message_board.setMem_no(members);
 		message_board.setBd_msg_ctx(bd_msg_ctx);
-		message_board.setBd_prvt(bd_prvt);
-		Message_boardDAO dao = new Message_boardDAO();
 		List<Photos> photos = new ArrayList<Photos>();		
-		return dao.updateByVO(message_board, photos, delPhoto_no);
+		try {
+			for (Part part : parts) {
+				
+				byte[] b = null;
+				byte[] sb = null;
+				String header = part.getHeader("Content-Disposition");
+				if (header.startsWith("form-data; name=\"image\";")) {
+					Photos photo = new Photos();
+					b = TransData.transBlob(part);
+					if (b.length > 150000) {
+						b = ResizeImage.resizeImageAsJPG(b, 800);
+					}
+					sb = ResizeImage.resizeImageAsJPG(b, 200);
+					photo.setPhoto(b);
+					photo.setSphoto(b);
+					photos.add(photo);
+				}
+				if (header.startsWith("form-data; name=\"film\";")) {
+					b = TransData.transBlob(part);
+					message_board.setBd_film(b);
+				}
+			}
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
+		Message_boardDAO dao = new Message_boardDAO();
+		
+		return dao.updateByVO(message_board, photos, delPhoto_no,delStat);
 	}
 		
 

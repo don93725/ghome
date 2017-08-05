@@ -28,7 +28,7 @@ public class BoardShowCtrl extends HttpServlet {
 		String mem_no = req.getParameter("mem_no");
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 		if (mem_no == null) {
-			// 沒選擇相簿
+			// 沒選擇個人版動態
 			String referer = (String) req.getSession().getAttribute("referer");
 			if (referer != null) {
 				res.sendRedirect(referer);

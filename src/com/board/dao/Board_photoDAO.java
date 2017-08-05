@@ -131,6 +131,22 @@ public class Board_photoDAO extends BasicDAO {
 		}
 
 	}
+	// 建置動態更新刪除
+	
+	public boolean executeDelete(String[] photo_no, Connection con) {
+		String insertResult =null;
+		for(String temp : photo_no){
+			String sql = "delete from board_photo where photo_no=" + temp ;		
+			insertResult = new SQLHelper().executeUpdate(sql, null, null, con);
+			
+		}
+		if(insertResult.length()!=0){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
 	// 建置分頁(彈性排序可設條件)
 
 	public List<Board_photo> pageAndRank(int page, int pageSize, String order, String where) {

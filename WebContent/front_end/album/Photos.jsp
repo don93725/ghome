@@ -259,9 +259,6 @@ div.addAlbum {
 <link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/album/css/colorbox.css" />
 
 	<script src="https://code.jquery.com/jquery.js"></script>
-	<script type="text/javascript">
-				
-		</script>
 	<script src='${pageContext.request.contextPath}/front_end/album/js/jquery.ajax-progress.js'></script>	
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -288,9 +285,9 @@ div.addAlbum {
 		$('.album img').css("height","120px");
 	}
 	function uploadPhotos(path,mem_no,al_no,thisPage){
-		var upload_progress = $('#upload_progress');
 		var num=0;
 		var data = new FormData();
+		var upload_progress = $('#upload_progress');
 		$('.progress').css('display','block');
 		$('.progressCr').css('display','block');
 		upload_progress.html('') ; 
