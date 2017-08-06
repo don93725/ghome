@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.comments.model.Board_cmt;
 import com.members.model.MembersVO;
 
 public class Message_board {
@@ -14,8 +15,14 @@ public class Message_board {
 	List<String> board_photo;	
 	MembersVO mem_no;
 	boolean ifClick;
+	List<Board_cmt> comments;
 	
-	
+	public List<Board_cmt> getComments() {
+		return comments;
+	}
+	public void setComments(List<Board_cmt> comments) {
+		this.comments = comments;
+	}
 	public boolean isIfClick() {
 		return ifClick;
 	}

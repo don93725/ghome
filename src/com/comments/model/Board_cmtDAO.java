@@ -1,5 +1,6 @@
-package com.commets.model;
+package com.comments.model;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,20 +68,17 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 	// 建置修改
 
 	public boolean updateByVO(Board_cmt board_cmt) {
-		String sql = "update board_cmt set mem_no=?,cmt_type=?,org_no=?,bd_cmt_ctx=?,cmt_likes=?,bd_cmt_time=? where bd_cmt_no=?";
-		Object[] param = { board_cmt.getBd_cmt_no(), board_cmt.getMem_no(), board_cmt.getCmt_type(),
-				board_cmt.getOrg_no(), board_cmt.getBd_cmt_ctx(), board_cmt.getCmt_likes(),
-				board_cmt.getBd_cmt_time() };
+		String sql = "update board_cmt set bd_cmt_ctx=? where bd_cmt_no=?";
+		Object[] param = { board_cmt.getBd_cmt_ctx(), board_cmt.getBd_cmt_no() };
 		boolean updateResult = new SQLHelper().executeUpdate(sql, param);
 		return updateResult;
 	}
 	// 建置新增
 
 	public boolean executeInsert(Board_cmt board_cmt) {
-		String sql = "insert into board_cmt values(?,?,?,?,?,?,?)";
-		Object[] param = { board_cmt.getBd_cmt_no(), board_cmt.getMem_no(), board_cmt.getCmt_type(),
-				board_cmt.getOrg_no(), board_cmt.getBd_cmt_ctx(), board_cmt.getCmt_likes(),
-				board_cmt.getBd_cmt_time() };
+		String sql = "insert into board_cmt values(board_cmt_pk_seq.nextval,?,?,?,?,default,default)";
+		Object[] param = { board_cmt.getMem_no(), board_cmt.getCmt_type(), board_cmt.getOrg_no(),
+				board_cmt.getBd_cmt_ctx() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 		return insertResult;
 	}
@@ -105,6 +103,16 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 		List<Board_cmt> list = getVOBySQL(sql, null);
 		return list;
 	}
+
+	public List<Board_cmt> pageAndRank(String cmt_type, String org_no) {
+		String sql = "select bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time from (select bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time, rownum rn from (select * from board_cmt";
+
+		sql = sql + " where cmt_type="+cmt_type+" and org_no="+org_no;
+
+		sql = sql + " order by cmt_likes desc, bd_cmt_time))";
+		List<Board_cmt> list = getVOBySQL(sql, null);
+		return list;
+	}
 	// 建置分頁(彈性排序不設條件)
 
 	public List<Board_cmt> pageAndRank(int page, int pageSize, String order) {
@@ -124,5 +132,15 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 		List<Object[]> list = new SQLHelper().executeQuery(sql, param);
 		Object[] colData = list.get(0);
 		return colData;
+		// Service層實作
+
 	}
+
+	public boolean setBd_likes(String bd_cmt_no) {
+		boolean result = true;
+		String sql = "update board_cmt set cmt_likes= (select cmt_likes+1 from board_cmt where bd_cmt_no=" + bd_cmt_no
+				+ ") where bd_cmt_no=" + bd_cmt_no;
+		return executeUpdate(sql, null);
+	}
+
 }

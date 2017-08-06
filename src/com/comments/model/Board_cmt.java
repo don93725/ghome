@@ -1,10 +1,10 @@
-package com.commets.model;
+package com.comments.model;
 
 import java.util.Date;
 
 public class Board_cmt {
 	Integer cmt_likes;
-	String bd_cmt_no, mem_no, cmt_type, org_no, bd_cmt_ctx;
+	String bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx;
 	Date bd_cmt_time;
 	public Integer getCmt_likes() {
 		return cmt_likes;
@@ -48,4 +48,5 @@ public class Board_cmt {
 	public void setBd_cmt_time(Date bd_cmt_time) {
 		this.bd_cmt_time = bd_cmt_time;
 	}
+	
 }

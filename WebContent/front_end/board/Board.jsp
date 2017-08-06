@@ -502,12 +502,16 @@
 							<div class="panel-heading">
 							
 								<ul class="nav nav-pills">
-									<li role="presentation"><a href="#"
-										onclick="addLikes.call(this,event,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no}')"> <span
+									<li role="presentation" ${(message_board.ifClick)? 'class="disabled"':''}>
+									<a href="#"
+										<c:if test='${!message_board.ifClick }' >onclick="addLikes.call(this,event,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no}')"</c:if>>
+									 
+									 <span
 											class="glyphicon glyphicon-thumbs-up">&nbsp讚</span>
 									</a></li>
 									<li role="presentation"><a href="#"
-										onclick="return showCmmt('1','1');"> <span class="badage">10</span>
+										onclick="return showCmmt('1','1');">
+										<c:if test="${not empty message_board.comments }"> <span class="badage">${fn:length(message_board.comments)}</span></c:if>
 											<span class="glyphicon glyphicon-comment">&nbsp留言</span>
 									</a></li>
 									<li role="presentation"><a href="#"
@@ -519,6 +523,9 @@
 						</div>
 
 						<ul id='b1_commt1' class="list-group" style="display: none;">
+						<c:forEach var="comment" items="${message_board.comments }" varStatus="cmt">
+						
+						<li class="list-group-item comments key_${message_board.bd_msg_no}_<fmt:formatNumber type="number" value="${(cmt.index-cmt.index%5)/5 }" />" ${(cmt.count>5)? 'style="display:none"':'' }>
 							<div class="row">
 								<div class="container">
 									<a href="#">
@@ -526,27 +533,36 @@
 
 											<img
 												src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg"
-												class="img-circle cmt_mem_pic">
+												class="img-circle cmt_mem_pic" alt="你好" style='z-index: 10;'>
 
 										</div>
 									</a>
-									<div class="col-xs-12 col-sm-11 cmt">
-										<div>hahaha</div>
+									<div class="col-xs-12 col-sm-8 cmt" >
+										<span class='a' style='padding:30px; padding-right: 0px;'>${comment.bd_cmt_ctx }</span>
+										<input type='text' class='b' value='${comment.bd_cmt_ctx }' style='display:none;' onfocus='this.value = this.value;'/>
+										<span class='c' ><a href="#" style='margin-left: 3px'>讚 &nbsp ${(comment.cmt_likes>0)? comment.cmt_likes:''  }</a></span>
 
 									</div>
-
+									<div class="col-xs-12 col-sm-3 cmt">
+									<a href='#' onclick='editCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");' style='color:black'>
+										<span class='glyphicon glyphicon-pencil'></span></a>
+										&nbsp&nbsp&nbsp&nbsp&nbsp
+									<a href='#' onclick='delCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");' style='color:black'>
+										<span class='glyphicon glyphicon-remove'></span></a>
+									</div>
 								</div>
-							</div>
-							<li class="list-group-item">Dapibus ac facilisis in</li>
-							<li class="list-group-item">Morbi leo risus</li>
-							<li class="list-group-item">Porta ac consectetur ac</li>
+							</div>	
+							</li>
+							</c:forEach>						
 							<li class="list-group-item"><a href="#"
-								onclick="return false;">顯示更多</a></li>
+								onclick="showMore.call(this,event,'${message_board.bd_msg_no}');">顯示更多</a>
+								<input type='hidden' id='count${message_board.bd_msg_no}' value=1>
+								</li>
 							<li class="list-group-item">
 								<div class="input-group">
 									<input type="text" class="form-control" placeholder="留些什麼吧">
 									<span class="input-group-btn">
-										<button class="btn btn-default" type="button">送出</button>
+										<button class="btn btn-default" type="button" onclick='sendComments.call(this,"${pageContext.request.contextPath}","${user.mem_no }","${message_board.bd_msg_no}");'>送出</button>
 									</span>
 								</div>
 							</li>
@@ -680,6 +696,70 @@
 	<script
 		src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
+	function delCmmt(event,path,bd_cmt_no){
+		event.preventDefault();
+		if(confirm('你確定要很獨裁的刪除此筆留言嗎？')){
+			
+		}
+	}
+	function editCmmt(event,path,bd_cmt_no){
+		event.preventDefault();
+		var val = $(this).parent().prev().children().text();
+		var clazz = $(this).children().attr('class');
+		var content = $(this).parent().prev();
+		if(clazz=='glyphicon glyphicon-pencil'){
+			$(this).children().removeClass();
+			$(this).children().addClass('glyphicon glyphicon-ok');
+			$(this).children().css("color","green");
+			content.find('.a').css("display", "none");
+			content.find('.b').css("display", "");
+			content.find('.b').focus();
+			
+		}else{
+			$(this).children().removeClass();
+			$(this).children().addClass('glyphicon glyphicon-pencil');
+			$(this).children().css("color","black");
+			content.find('.a').css("display", "");
+			content.find('.b').css("display","none");
+			content.find('.a').text(content.find('.b').val());
+		}
+	}
+	function cursor2last() { 
+		var r = event.srcElement.createTextRange(); 
+		r.collapse(false); 
+		r.select(); 
+	} 
+	function showMore(event,bd_msg_no){
+		event.preventDefault();
+		var cmt = $(this).parent().parent().children(".comments");
+		var count = $(this).next();
+		$(".key_"+bd_msg_no+"_"+count.val()).css('display','block');
+		$(this).next().val(parseInt(count.val(),10)+1);
+	}
+	function sendComments(path, mem_no, bd_msg_no){
+		var val = $(this).parent().prev().val();		 
+		$.ajax({
+			type : "POST",
+			url : path + "/board/CommentsCtrl?action=insert&mem_no="+mem_no,
+			dataType : 'text',
+			data: "cmt_type=0&org_no="+bd_msg_no+"&bd_cmt_ctx="+val,
+			success : function(msg) {
+
+				if (msg.length != 0) {
+					alert('去檢查吧');
+				} else {						
+					
+					
+					
+				}
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+			}
+
+		});
+	}
 	function share(e){
 		e.preventDefault();
 		document.location.reload();

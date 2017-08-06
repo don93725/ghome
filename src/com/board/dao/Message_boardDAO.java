@@ -10,6 +10,8 @@ import com.album.dao.PhotosDAO;
 import com.album.domain.Photos;
 import com.board.domain.Likes_record;
 import com.board.domain.Message_board;
+import com.comments.model.Board_cmt;
+import com.comments.model.Board_cmtDAO;
 import com.don.inteface.DAOInterface;
 import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
@@ -25,7 +27,10 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			Object[] obj = (Object[]) list.get(i);
 			Message_board message_board = new Message_board();
 			if (obj[0] != null) {
-				message_board.setBd_msg_no((String) obj[0]);
+				message_board.setBd_msg_no(String.valueOf( obj[0]));
+				Board_cmtDAO board_cmtDAO = new Board_cmtDAO();
+				List<Board_cmt> comments = board_cmtDAO.pageAndRank("0",String.valueOf( obj[0]));
+				message_board.setComments(comments);
 			}
 			if (obj[1] != null) {
 				MembersVO members = new MembersVO();
@@ -63,6 +68,12 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			if (obj[9] != null) {
 				message_board.setBd_ref_url(String.valueOf(obj[9]));
 			}
+			if (obj[12] != null) {
+				
+				message_board.setIfClick(true);
+			}
+			
+			
 
 			tempList.add(message_board);
 		}
@@ -326,7 +337,7 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	public List<Message_board> pageAndRank(int page, int pageSize, String order, String where) {
 		int firstPage = (page - 1) * pageSize + 1;
 		int lastPage = page * pageSize;
-		String sql = "select * from (select bd_msg_no,mem_no,bd_type,bd_likes,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_msg_time,bd_upd_time,bd_ref_url,mem_nickname,mem_rank, rownum rn from (select * from (select bd_msg_no,a.mem_no,bd_type,bd_likes,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_msg_time,bd_upd_time,bd_ref_url,mem_nickname,mem_rank from message_board a join (select mem_nickname,mem_rank,mem_no from members) b on a.mem_no=b.mem_no)";
+		String sql = "select * from (select bd_msg_no,mem_no,bd_type,bd_likes,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_msg_time,bd_upd_time,bd_ref_url,mem_nickname,mem_rank,if_click, rownum rn from (select * from (select a.bd_msg_no,a.mem_no,bd_type,bd_likes,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_msg_time,bd_upd_time,bd_ref_url,mem_nickname,mem_rank,if_click from message_board a join (select mem_nickname,mem_rank,mem_no from members)  b on a.mem_no=b.mem_no left outer join likes_record c on a.bd_msg_no=c.bd_msg_no )";
 		if (where != null) {
 			sql = sql + " where " + where;
 		}
@@ -374,18 +385,31 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 		SQLHelper helper = new SQLHelper();
 		Connection con = helper.getConnection();
 		boolean result = true;
-		String sql = "update message_board set bd_likes= (select bd_likes+1 from message_board where bd_msg_no="+bd_msg_no+") where bd_msg_no="+bd_msg_no ;
-		String res = helper.executeUpdate(sql, null, null, con);
-		if(res!=null){
-			Likes_recordDAO dao = new Likes_recordDAO();
-			Likes_record likes_record = new Likes_record();
-			likes_record.setBd_msg_no(bd_msg_no);
-			likes_record.setMem_no(mem_no);
-			return dao.executeInsert(likes_record);
-			 
-		}else{
-			return false;			
-		}
+			try {
+				String sql = "update message_board set bd_likes= (select bd_likes+1 from message_board where bd_msg_no="+bd_msg_no+") where bd_msg_no="+bd_msg_no ;
+				String res = helper.executeUpdate(sql, null, null, con);
+				if(res!=null){
+					Likes_recordDAO dao = new Likes_recordDAO();
+					Likes_record likes_record = new Likes_record();
+					likes_record.setBd_msg_no(bd_msg_no);
+					likes_record.setMem_no(mem_no);
+					result =  dao.executeInsert(likes_record,con);
+					con.commit();
+				}else{
+					con.rollback();
+					return false;			
+				}
+			} catch (SQLException e) {
+				try {
+					con.rollback();
+					result = false;
+				} catch (SQLException se) {
+					// TODO Auto-generated catch block
+					se.printStackTrace();
+				}
+				e.printStackTrace();
+			} 
+			return result;
 	}
 }
 
