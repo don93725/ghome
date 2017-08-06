@@ -95,7 +95,7 @@ public class BoardActionCtrl extends HttpServlet {
 		if("addLikes".equals(action)){
 			String bd_msg_no =req.getParameter("bd_msg_no");
 			Message_boardService message_boardService = new Message_boardService();
-			boolean result = message_boardService.setBd_likes(bd_msg_no);
+			boolean result = message_boardService.setBd_likes(bd_msg_no, user.getMem_no());
 			if (result) {
 				out.write("ok");
 			}

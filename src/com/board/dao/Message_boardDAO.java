@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.album.dao.PhotosDAO;
 import com.album.domain.Photos;
+import com.board.domain.Likes_record;
 import com.board.domain.Message_board;
 import com.don.inteface.DAOInterface;
 import com.don.util.BasicDAO;
@@ -334,6 +335,7 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 
 		return list;
 	}
+
 	// 建置分頁(彈性排序不設條件)
 
 	public List<Message_board> pageAndRank(int page, int pageSize, String order) {
@@ -368,10 +370,22 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 		boolean result = executeUpdate(sql, null);
 		return result;
 	}
-	public boolean setBd_likes(String bd_msg_no){
+	public boolean setBd_likes(String bd_msg_no, String mem_no ){
+		SQLHelper helper = new SQLHelper();
+		Connection con = helper.getConnection();
+		boolean result = true;
 		String sql = "update message_board set bd_likes= (select bd_likes+1 from message_board where bd_msg_no="+bd_msg_no+") where bd_msg_no="+bd_msg_no ;
-		boolean result = executeUpdate(sql, null);
-		return result;
+		String res = helper.executeUpdate(sql, null, null, con);
+		if(res!=null){
+			Likes_recordDAO dao = new Likes_recordDAO();
+			Likes_record likes_record = new Likes_record();
+			likes_record.setBd_msg_no(bd_msg_no);
+			likes_record.setMem_no(mem_no);
+			return dao.executeInsert(likes_record);
+			 
+		}else{
+			return false;			
+		}
 	}
 }
 

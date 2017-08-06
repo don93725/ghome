@@ -13,8 +13,15 @@ public class Message_board {
 	byte[] bd_film;
 	List<String> board_photo;	
 	MembersVO mem_no;
+	boolean ifClick;
 	
 	
+	public boolean isIfClick() {
+		return ifClick;
+	}
+	public void setIfClick(boolean ifClick) {
+		this.ifClick = ifClick;
+	}
 	public MembersVO getMem_no() {
 		return mem_no;
 	}

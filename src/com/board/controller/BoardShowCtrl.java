@@ -1,6 +1,7 @@
 package com.board.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import com.board.domain.Message_board;
 import com.board.service.Message_boardService;
 import com.friends.model.FriendsDAO;
 import com.friends.model.FriendsService;
+import com.google.gson.Gson;
 import com.members.model.MembersVO;
 
 /**
@@ -26,6 +28,7 @@ public class BoardShowCtrl extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
 		String mem_no = req.getParameter("mem_no");
+		String type = req.getParameter("type");
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 		if (mem_no == null) {
 			// 沒選擇個人版動態
@@ -65,7 +68,15 @@ public class BoardShowCtrl extends HttpServlet {
 		req.setAttribute("message_board", message_board);
 		req.setAttribute("thisPage", thisPage);
 		req.setAttribute("allPageCount", allPageCount);
-		req.getRequestDispatcher("/front_end/board/Board.jsp").forward(req, res);
+//		List<Message_board> message_board = message_boardService.getPageAndRank(thisPage, pageSize, mem_no, condition);
+//		req.setAttribute("message_board", message_board);
+		if("json".equals(type)){
+			res.setContentType("text/html ; charset=utf-8 ");
+			PrintWriter out = res.getWriter();
+			req.getRequestDispatcher("/front_end/board/Board2.jsp").forward(req, res);			
+		}else{
+			req.getRequestDispatcher("/front_end/board/Board.jsp").forward(req, res);			
+		}
 		return;
 
 	}

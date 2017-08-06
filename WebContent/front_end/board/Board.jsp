@@ -208,7 +208,7 @@
 					<div class="panel-body">Panel content</div>
 				</div>
 			</div>
-			<div class="col-xs-12 col-sm-10">
+			<div class="col-xs-12 col-sm-10" id="boardContainer">
 				<div class="panel panel-default opcityDiv" id='showBorder'
 					ondrop="javascript: drop_image(event);">
 					<div class="panel-heading">
@@ -290,8 +290,8 @@
 					</div>
 				</div>
 
-				<c:forEach var="message_board" items="${message_board}">
-					<div class="panel panel-default">
+				<c:forEach var="message_board" items="${message_board}" varStatus="number">
+					<div class="panel panel-default panel<fmt:formatNumber type="number" value="${number.count/8 }" maxFractionDigits="0" var="num" />${num}">
 						<div class="panel-heading">
 							<h3 class="panel-title">
 								<div class="row">
@@ -669,7 +669,8 @@
 			</div>
 		</div>
 	</div>
-
+	<input type='text' id='thisPage' value='${thisPage }'>
+	<input type='text' id='allPageCount' value='${allPageCount }'>
 	<button onclick='del();'>123</button>
 
 	<script src="https://code.jquery.com/jquery.js"></script>
@@ -967,6 +968,8 @@
 							$('#uploadFilmTrigger').click(function() {
 								$('#uploadFilm').trigger('click');
 							})
+							thisPage = $('#thisPage').val();
+							allPageCount = $('#allPageCount').val();							
 							BdPreview.file_change();
 							Preview.file_change();
 							ShowFilm.file_change();
@@ -975,21 +978,59 @@
 								  var window_scrollTop = $(window).scrollTop();								 
 								  var document_height = $( document ).height();
 								  
-								  console.log(window_height);
-								  console.log(window_scrollTop);
-								  console.log(document_height);
-								  var ifLoad = false;
-								  if(!ifLoad){
+								  if(!ifLoad&&(parseInt(thisPage,10)+1<allPageCount)){									  
 									  if(window_height + window_scrollTop > (document_height-100)){
 										  ifLoad=true;
-										  
+										  loadContent();
 										     
-									}
+										}
+									 
 								  }
 								   
 
 								});
 						});
+		var thisPage,allPageCount ;		
+		var ifLoad = false;;
+		function loadContent(){
+			var mem_no = QueryString("mem_no");
+			ifLoad=true;
+			thisPage = parseInt(thisPage,10)+1;	
+			$.ajax({
+				type : "POST",
+				url : "/BA102G4/board/BoardShowCtrl?type=json&mem_no="+mem_no+"&thisPage="+(thisPage+1),
+				dataType : 'text',
+				contentType : false,
+				success : function(msg) {
+					alert(msg);
+					alert(thisPage);
+					if (msg.length != 0) {
+						ifLoad=false;
+						$('#boardContainer').append(msg);
+						reload();
+					} else {
+						//報錯啊
+						alert('刪除失敗');
+					}
+				},
+
+				error : function(xhr, ajaxOptions, thrownError) {
+					alert(xhr.status);
+					alert(thrownError);
+				}
+
+			});
+		}
+		function QueryString(name) {
+			var AllVars = window.location.search.substring(1);
+			var Vars = AllVars.split("&");
+			for (i = 0; i < Vars.length; i++)
+			{
+				var Var = Vars[i].split("=");
+				if (Var[0] == name) return Var[1];
+			}
+			return "";
+		}
 		function deleteBoard(path ,mem_no, bd_msg_no) {
 			alert( path + "/board/BoardActionCtrl?action=delete&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no);
 			if (confirm('將會把照片及內文完全刪除，確定不會捨不得，執意還要刪除？')) {
@@ -1518,6 +1559,89 @@
 									alert('這是什麼格式..?');
 								});
 			}
+		}
+		function reload(){
+			$('#myCarousel').carousel({
+				interval : 5000
+			});
+			$('.fdi-Carousel .item').each(function(){
+				var img = $(this).children(':first-child');
+				img.next().remove();
+				img.next().remove();
+			})	
+			$('.fdi-Carousel .item').each(function() {
+								var sibNum = $(this).siblings().length;
+								var next = $(this).next();
+								if (!next.length) {
+									next = $(this).siblings(':first');
+								}
+								next.children(':first-child').clone().appendTo($(this));
+								var num = $(this).children(':last-child').children().children().attr('id');
+								$(this)	.children(':last-child')
+										.children()
+										.children()
+										.prop("href", "#")
+										.removeAttr("data-fancybox")
+										.click(function(event) {
+													event.preventDefault();
+													next.children(':first-child')
+														.children()
+														.children()
+														.trigger('click');
+												});
+								if (sibNum > 1) {
+									if (next.next().length > 0) {
+										next.next()
+											.children(':first-child')
+											.clone()
+											.appendTo($(this));
+										$(this).children(':last-child')
+												.children()
+												.children()
+												.prop("href","#")
+												.removeAttr("data-fancybox")
+												.click(function(event) {
+															event.preventDefault();
+															next.next()
+																.children(':first-child')
+																.children()
+																.children()
+																.trigger('click');
+														});
+									} else {
+										$(this).siblings(':first')
+												.children(':first-child')
+												.clone()
+												.appendTo($(this));
+										$(this).children(':last-child')
+												.children()
+												.children()
+												.prop("href","#")
+												.removeAttr("data-fancybox")
+												.click(function(event) {
+															event.preventDefault();
+															$(this).siblings(':first')
+																	.children(':first-child')
+																	.children()
+																	.children()
+																	.trigger('click');
+														});
+									}
+		 						}
+
+							});
+	
+			$('[data-fancybox]').fancybox({
+
+				clickSlide : false,
+				caption : function(instance, item) {
+					return $(this).find('figcaption').html();
+				}
+			});
+			BdPreview.file_change();
+			Preview.file_change();
+			ShowFilm.file_change();
+
 		}
 		
 	</script>

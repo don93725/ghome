@@ -68,9 +68,9 @@ public class Message_boardService {
 		boolean result = dao.setPrvt(bd_msg_no,bd_prvt);
 		return result;
 	}
-	public boolean setBd_likes(String bd_msg_no){
+	public boolean setBd_likes(String bd_msg_no, String mem_no){
 		Message_boardDAO dao = new Message_boardDAO();
-		boolean result = dao.setBd_likes(bd_msg_no);
+		boolean result = dao.setBd_likes(bd_msg_no, mem_no);
 		return result;
 	}
 	public boolean updateByVO(String bd_msg_no,String mem_no ,String delStat, String bd_msg_ctx,  Collection<Part> parts, String[] delPhoto_no) {
@@ -121,6 +121,7 @@ public class Message_boardService {
 		List<Message_board> message_board = dao.pageAndRank(thisPage, pageSize, order, where);
 		return message_board;
 	}
+
 
 	public int getBoardNum(String mem_no, String condition, int pageSize) {
 		Message_boardDAO dao = new Message_boardDAO();
