@@ -75,7 +75,7 @@ public class ForumsService {
 		boolean result = false;
 		ForumsDAO forumDAO = new ForumsDAO();
 		String SQL = "update forums set forum_stat=? where forum_no=?";
-		Object[] param = {forum_no,forum_stat};
+		Object[] param = {forum_stat,forum_no};
 		result = forumDAO.executeUpdate(SQL, param);
 		return result;
 	}
@@ -87,5 +87,10 @@ public class ForumsService {
 		Object[] param = {forum_no};
 		String mem_no = String.valueOf(forumDAO.getCol("mem_no", param)[0]);
 		return mem_no;
+	}
+	public int getApplyNum(int pageSize){
+		ForumsDAO forumDAO = new ForumsDAO();
+		String sql = "select count(*) from forums where forum_stat=0";
+		return (forumDAO.countBySQL(sql)-1)/pageSize+1;
 	}
 }

@@ -32,15 +32,32 @@ public class OutputPic extends HttpServlet {
 		String art_no = req.getParameter("art_no");
 		String al_no = req.getParameter("al_no");
 		String bd_msg_no = req.getParameter("bd_msg_no");
+		String mem_no = req.getParameter("mem_no");
 		byte[] bytes = null;
 		try {
+			// 判斷區請寫入B
 			if(bd_msg_no!=null){
 				res.setContentType("video/mp4");
 				bytes = new Message_boardDAO().getPic("bd_film",bd_msg_no);
 				out.write(bytes);
 				return ;
 			}
-			// 判斷區請寫入B
+			if(mem_no != null){
+				String mem_rank = req.getParameter("mem_rank");
+				if("0".equals(mem_rank)){
+					
+				}
+				if("1".equals(mem_rank)){
+					
+				}
+				if("2".equals(mem_rank)){
+					
+				}
+				if("3".equals(mem_rank)){
+					
+				}
+				
+			}
 			if (art_cmt_no != null) {
 				bytes = new Article_commentsDAO().getPic(art_cmt_no);
 			}

@@ -2,10 +2,13 @@ package com.comments.model;
 
 import java.util.Date;
 
+import com.members.model.MembersVO;
+
 public class Board_cmt {
 	Integer cmt_likes;
-	String bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx;
+	String bd_cmt_no,cmt_type,org_no,bd_cmt_ctx;
 	Date bd_cmt_time;
+	MembersVO mem_no;
 	public Integer getCmt_likes() {
 		return cmt_likes;
 	}
@@ -18,10 +21,11 @@ public class Board_cmt {
 	public void setBd_cmt_no(String bd_cmt_no) {
 		this.bd_cmt_no = bd_cmt_no;
 	}
-	public String getMem_no() {
+	
+	public MembersVO getMem_no() {
 		return mem_no;
 	}
-	public void setMem_no(String mem_no) {
+	public void setMem_no(MembersVO mem_no) {
 		this.mem_no = mem_no;
 	}
 	public String getCmt_type() {

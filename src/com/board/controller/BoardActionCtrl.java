@@ -73,7 +73,6 @@ public class BoardActionCtrl extends HttpServlet {
 		if ("delete".equals(action)) {
 			// 刪除
 			String bd_msg_no = req.getParameter("bd_msg_no");
-			System.out.println(bd_msg_no);
 			Message_boardService message_boardService = new Message_boardService();
 			boolean result = message_boardService.executeDelete(bd_msg_no);
 			if (result) {

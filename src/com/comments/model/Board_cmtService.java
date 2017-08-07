@@ -2,12 +2,16 @@ package com.comments.model;
 
 import java.util.Date;
 
+import com.members.model.MembersVO;
+
 public class Board_cmtService {
 	// 封裝新增物件
 
 	public boolean add( String mem_no, String cmt_type, String org_no, String bd_cmt_ctx) {
 		Board_cmt board_cmt = new Board_cmt();
-		board_cmt.setMem_no(mem_no);
+		MembersVO members = new MembersVO();
+		members.setMem_no(mem_no);
+		board_cmt.setMem_no(members);
 		board_cmt.setCmt_type(cmt_type);
 		board_cmt.setOrg_no(org_no);
 		board_cmt.setBd_cmt_ctx(bd_cmt_ctx);

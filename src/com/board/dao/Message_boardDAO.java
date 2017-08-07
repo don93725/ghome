@@ -209,7 +209,6 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 							message_board.getBd_film(), message_board.getBd_msg_no() };
 
 				} else {
-					System.out.println(message_board.getBd_type());
 					sql = "update message_board set bd_type=?,bd_msg_ctx=?,bd_upd_time=sysdate where bd_msg_no=?";
 					param = new Object[] { message_board.getBd_type(), message_board.getBd_msg_ctx(),
 							message_board.getBd_msg_no() };
@@ -261,7 +260,6 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 					message_board.getBd_film(), message_board.getBd_ref_url() };
 			String boardKey = new SQLHelper().executeUpdate(sql, param, "bd_msg_no", con);
 			boolean result = false;
-			System.out.println("哪阿" + message_board.getBd_type());
 			if (("1".equals(message_board.getBd_type()) || "3".equals(message_board.getBd_type()))
 					&& photos.size() != 0) {
 				// 動態相片(先找動態相片的主鍵)
@@ -298,8 +296,7 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			Board_photoDAO board_photoDAO = new Board_photoDAO();
 			String sql = "select photo_no from board_photo where bd_msg_no=" + bd_msg_no;
 			String[] photo_no = board_photoDAO.getPhotosArrayBySQL(bd_msg_no);
-			for (String s : photo_no)
-				System.out.println(s);
+							
 			result = board_photoDAO.executeDelete(bd_msg_no, con);
 			if (result) {
 				PhotosDAO photosDAO = new PhotosDAO();

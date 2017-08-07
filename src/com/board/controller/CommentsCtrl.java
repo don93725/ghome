@@ -43,7 +43,6 @@ public class CommentsCtrl extends HttpServlet {
 			String cmt_type = req.getParameter("cmt_type");
 			String org_no = req.getParameter("org_no");
 			String bd_cmt_ctx = req.getParameter("bd_cmt_ctx");
-			System.out.println(cmt_type+" "+org_no+" "+bd_cmt_ctx);
 			boolean result = dao.add(mem_no, cmt_type, org_no, bd_cmt_ctx);
 			if(result){
 				out.print("ok");

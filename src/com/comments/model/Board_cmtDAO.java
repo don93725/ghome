@@ -8,6 +8,7 @@ import java.util.List;
 import com.don.inteface.DAOInterface;
 import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
+import com.members.model.MembersVO;
 
 public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 	// 建置查詢
@@ -22,7 +23,11 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 				board_cmt.setBd_cmt_no((String) obj[0]);
 			}
 			if (obj[1] != null) {
-				board_cmt.setMem_no((String) obj[1]);
+				MembersVO members = new MembersVO();
+				members.setMem_no(String.valueOf( obj[1]));
+				members.setMem_nickname(String.valueOf( obj[7]));
+				members.setMem_rank(String.valueOf( obj[8]));
+				board_cmt.setMem_no(members);
 			}
 			if (obj[2] != null) {
 				board_cmt.setCmt_type((String) obj[2]);
@@ -77,7 +82,7 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 
 	public boolean executeInsert(Board_cmt board_cmt) {
 		String sql = "insert into board_cmt values(board_cmt_pk_seq.nextval,?,?,?,?,default,default)";
-		Object[] param = { board_cmt.getMem_no(), board_cmt.getCmt_type(), board_cmt.getOrg_no(),
+		Object[] param = { board_cmt.getMem_no().getMem_no(), board_cmt.getCmt_type(), board_cmt.getOrg_no(),
 				board_cmt.getBd_cmt_ctx() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 		return insertResult;
@@ -105,7 +110,7 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 	}
 
 	public List<Board_cmt> pageAndRank(String cmt_type, String org_no) {
-		String sql = "select bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time from (select bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time, rownum rn from (select * from board_cmt";
+		String sql = "select * from (select bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time,mem_nickname,mem_rank, rownum rn from (select bd_cmt_no,a.mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time,mem_nickname,mem_rank from board_cmt a join members b on a.mem_no=b.mem_no";
 
 		sql = sql + " where cmt_type="+cmt_type+" and org_no="+org_no;
 

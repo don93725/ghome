@@ -298,14 +298,14 @@
 									<div class="col-xs-12 col-sm-1">
 
 										<img
-											src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg"
-											class="img-circle cmt_mem_pic">
+											src="${pageContext.request.contextPath}/util/OutputPic?mem_no=${message_board.mem_no.mem_no }&mem_rank=${message_board.mem_no.mem_rank }"
+											class="img-circle cmt_mem_pic" title='${message_board.mem_no.mem_nickname }'>
 
 									</div>
 									</a>
 									<div class="col-xs-12 col-sm-9">
 										<div class="col-xs-12 col-sm-12 cmtInfo">
-											<a href="#">${message_board.mem_no.mem_nickname }${message_board.mem_no.mem_rank }</a>
+											<a href="#">${message_board.mem_no.mem_nickname }</a>
 										</div>
 										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime">
 											<fmt:setLocale value="en_US" />
@@ -372,8 +372,8 @@
 																<a id='${bd_photo}'
 																	href="${pageContext.request.contextPath}/util/OutputPic?photo_no=${bd_photo}&type=big"
 																	data-fancybox="group${message_board.bd_msg_no }" class='aLink'> 
-																	<img src='/BA102G4/front_end/board/images/cancel.png' class='check checkGroup${bd_photo}'/>
-																	<img src='/BA102G4/front_end/board/images/select.png' class='delete delete${message_board.bd_msg_no } delGroup${message_board.bd_msg_no }' onclick="del('${bd_photo}');"/>
+																	<img src='${pageContext.request.contextPath}/front_end/board/images/cancel.png' class='check checkGroup${bd_photo}'/>
+																	<img src='${pageContext.request.contextPath}/front_end/board/images/select.png' class='delete delete${message_board.bd_msg_no } delGroup${message_board.bd_msg_no }' onclick="del('${bd_photo}');"/>
 																	
 																	<img
 																	style='height: 250px; width: 100%;'
@@ -434,8 +434,8 @@
 								<div class="well">
 									<div class="row">
 										<div class="col-xs-12 col-sm-12 filmDel">
-										<img src='/BA102G4/front_end/board/images/cancel.png' class='check' id='checkFilm${message_board.bd_msg_no }'/>
-										<img src='/BA102G4/front_end/board/images/select.png' class='delete delete${message_board.bd_msg_no }' id='deleteFilm${message_board.bd_msg_no }' onclick="delFilm('${message_board.bd_msg_no }');"/>
+										<img src='${pageContext.request.contextPath}/front_end/board/images/cancel.png' class='check' id='checkFilm${message_board.bd_msg_no }'/>
+										<img src='${pageContext.request.contextPath}/front_end/board/images/select.png' class='delete delete${message_board.bd_msg_no }' id='deleteFilm${message_board.bd_msg_no }' onclick="delFilm('${message_board.bd_msg_no }');"/>
 											<video controls="controls">
 												<source
 													src="${pageContext.request.contextPath}/util/OutputPic?bd_msg_no=${message_board.bd_msg_no}">
@@ -452,7 +452,7 @@
 						<div class='panel panel-default picAndFilm'>
 						<div class="panel-heading text-center">
 						<h4>新增圖影專區
-								<img src='/BA102G4/front_end/board/images/plus.png' class='addPic' onclick="addPic('${message_board.bd_msg_no}','${message_board.bd_type }');"/>
+								<img src='${pageContext.request.contextPath}/front_end/board/images/plus.png' class='addPic' onclick="addPic('${message_board.bd_msg_no}','${message_board.bd_type }');"/>
 						
 									<input style='display:none' type="file" class='addPicInput' id="addPicInput${message_board.bd_msg_no}_${message_board.bd_type }" multiple ></h4></div>
 						<div class="panel-body">
@@ -532,8 +532,8 @@
 										<div class="col-xs-12 col-sm-1">
 
 											<img
-												src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg"
-												class="img-circle cmt_mem_pic" alt="你好" style='z-index: 10;'>
+												src="${pageContext.request.contextPath}/util/OutputPic?mem_no=${comment.mem_no.mem_no}&mem_rank=${comment.mem_no.mem_rank}"
+												class="img-circle cmt_mem_pic" title="${comment.mem_no.mem_nickname }" style='z-index: 10;'>
 
 										</div>
 									</a>
@@ -553,12 +553,14 @@
 								</div>
 							</div>	
 							</li>
-							</c:forEach>						
+							</c:forEach>
+							<c:if test="${not empty message_board.comments&& fn:length(message_board.comments)>5}">			
 							<li class="list-group-item"><a href="#"
-								onclick="showMore.call(this,event,'${message_board.bd_msg_no}');">顯示更多</a>
+								onclick="showMore.call(this,event,'${message_board.bd_msg_no}','${fn:length(message_board.comments)}');">顯示更多</a>
 								<input type='hidden' id='count${message_board.bd_msg_no}' value=1>
 								</li>
 							<li class="list-group-item">
+							</c:if>
 								<div class="input-group">
 									<input type="text" class="form-control" placeholder="留些什麼吧">
 									<span class="input-group-btn">
@@ -729,12 +731,17 @@
 		r.collapse(false); 
 		r.select(); 
 	} 
-	function showMore(event,bd_msg_no){
+	function showMore(event,bd_msg_no,size){
 		event.preventDefault();
 		var cmt = $(this).parent().parent().children(".comments");
-		var count = $(this).next();
-		$(".key_"+bd_msg_no+"_"+count.val()).css('display','block');
-		$(this).next().val(parseInt(count.val(),10)+1);
+		var count = parseInt( $(this).next().val(),10);
+		if(count+1>(size-size%5)/5){
+			$(this).hide();
+		}
+			$(".key_"+bd_msg_no+"_"+count).css('display','block');
+			
+			$(this).next().val(count+1);
+		
 	}
 	function sendComments(path, mem_no, bd_msg_no){
 		var val = $(this).parent().prev().val();		 
@@ -744,9 +751,8 @@
 			dataType : 'text',
 			data: "cmt_type=0&org_no="+bd_msg_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
-
 				if (msg.length != 0) {
-					alert('去檢查吧');
+					location.reload();
 				} else {						
 					
 					
@@ -885,7 +891,7 @@
 							reader.onload = function() {
 								var video = "<div class='col-xs-12 col-sm-12'>"
 										+ "<div class='list-group text-center'><div class='list-group-item imgDiv'>"
-										+ "<img class='delete' src='/BA102G4/front_end/board/images/cross1.png' "
+										+ "<img class='delete' src='"+webCtx+"/front_end/board/images/cross1.png' "
 										+ "onclick='BdPreview.removeFilm.call(this,"+bd_msg_no+","+bd_type+");'/>"
 										+ "<video controls='conrtols'><source src="+
 										reader.result+" type='video/mp4'></video></div></div></div>";
@@ -926,7 +932,7 @@
 								}
 								var pic = "<div class='col-xs-12 col-sm-2 pic'>"
 										+ "<div class='list-group'><div class='list-group-item imgDiv'>"
-										+ "<img src='/BA102G4/front_end/board/images/cross1.png' id='"
+										+ "<img src='"+webCtx+"/front_end/board/images/cross1.png' id='"
 										+ (countBdPic++)
 										+ "' class='delete' onclick='BdPreview.removePic.call(this,\""+bd_msg_no+"\");'/>"
 										+ "<div align='center'><img alumb='true' class='pics' style='width:100%;' height=100  src='"
@@ -1049,7 +1055,9 @@
 								$('#uploadFilm').trigger('click');
 							})
 							thisPage = $('#thisPage').val();
-							allPageCount = $('#allPageCount').val();							
+							allPageCount = $('#allPageCount').val();	
+							var path = window.location.pathname;
+						    webCtx = path.substring(0, path.indexOf('/', 1));
 							BdPreview.file_change();
 							Preview.file_change();
 							ShowFilm.file_change();
@@ -1070,7 +1078,8 @@
 
 								});
 						});
-		var thisPage,allPageCount ;		
+		var thisPage,allPageCount ;	
+		var webCtx;
 		var ifLoad = false;;
 		function loadContent(){
 			var mem_no = QueryString("mem_no");
@@ -1078,7 +1087,7 @@
 			thisPage = parseInt(thisPage,10)+1;	
 			$.ajax({
 				type : "POST",
-				url : "/BA102G4/board/BoardShowCtrl?type=json&mem_no="+mem_no+"&thisPage="+(thisPage+1),
+				url : webCtx+"/board/BoardShowCtrl?type=json&mem_no="+mem_no+"&thisPage="+(thisPage+1),
 				dataType : 'text',
 				contentType : false,
 				success : function(msg) {
@@ -1180,7 +1189,7 @@
 						if(submitBd(path,bd_msg_no,mem_no,bd_type)){
 							$('.fdi-Carousel .item').each(function() {
 								var id = $(this).children(':first-child').children().children().attr('id');
-								$(this).children(':first-child').children().children().attr('href',"/BA102G4/util/OutputPic?photo_no="+id+"&type=big");
+								$(this).children(':first-child').children().children().attr('href',webCtx+"/util/OutputPic?photo_no="+id+"&type=big");
 								$(this).children(':first-child').children().children().attr("data-fancybox","group"+id);
 								$('[data-fancybox]').fancybox({
 			
@@ -1401,7 +1410,7 @@
 					type: "POST",
 					dataType: "text",
 					success: function(msg){
-						option.attr('src','/BA102G4/front_end/board/images/cmmtPrvt' + bd_prvt + '.png');
+						option.attr('src',webCtx+'/front_end/board/images/cmmtPrvt' + bd_prvt + '.png');
 					},
 					error: function(xhr, ajaxOptions, thrownError){ 
 				         alert('更新失敗');
@@ -1468,7 +1477,7 @@
 										fileList[count] = [file,count];
 										var pic = "<div class='col-xs-12 col-sm-2 pic'>"
 												+ "<div class='list-group'><div class='list-group-item imgDiv'>"
-												+ "<img src='/BA102G4/front_end/board/images/cross1.png' id='"
+												+ "<img src='"+webCtx+"/front_end/board/images/cross1.png' id='"
 												+ (count++)
 												+ "' class='delete' onclick='Preview.removePic.call(this);'/>"
 												+ "<div align='center'><img alumb='true' class='pics' style='width:100%;' height=100  src='"
@@ -1531,7 +1540,7 @@
 										reader.onload = function() {
 											var video = "<div class='col-xs-12 col-sm-12'>"
 													+ "<div class='list-group text-center'><div class='list-group-item imgDiv'>"
-													+ "<img class='delete' src='/BA102G4/front_end/board/images/cross1.png' "
+													+ "<img class='delete' src='"+webCtx+"/front_end/board/images/cross1.png' "
 													+ "onclick='ShowFilm.removeFilm.call(this);'/>"
 													+ "<video style='height:250px; width:100%;' controls='conrtols'><source src="+
 						reader.result+" type='video/mp4'></video></div></div></div>";
@@ -1582,7 +1591,7 @@
 										reader.onload = function() {
 											var video = "<div class='col-xs-12 col-sm-12'>"
 													+ "<div class='list-group text-center'><div class='list-group-item imgDiv'>"
-													+ "<img class='delete' src='/BA102G4/front_end/board/images/cross1.png' "
+													+ "<img class='delete' src='"+webCtx+"/front_end/board/images/cross1.png' "
 													+ "onclick='ShowFilm.removeFilm.call(this);'/>"
 													+ "<video controls='conrtols'><source src="+
 						reader.result+" type='video/mp4'></video></div></div></div>";
@@ -1610,7 +1619,7 @@
 											fileList[count] = [file,count];
 											var pic = "<div class='col-xs-12 col-sm-2 pic'>"
 													+ "<div class='list-group'><div class='list-group-item imgDiv'>"
-													+ "<img src='/BA102G4/front_end/board/images/cross1.png' id='"
+													+ "<img src='"+webCtx+"/front_end/board/images/cross1.png' id='"
 													+ (count++)
 													+ "' class='delete' onclick='Preview.removePic.call(this);'/>"
 													+ "<div align='center'><img alumb='true' class='pics' style='width:100%;' height=100  src='"

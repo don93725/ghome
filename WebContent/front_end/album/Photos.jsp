@@ -400,7 +400,7 @@ div.addAlbum {
 					ph.onload = function(){
 					var pic="<div class='col-xs-12 col-sm-3 pic'>"+
 					"<div class='list-group'><div class='list-group-item imgDiv'>"+
-					"		<img src='/BA102G4/front_end/album/images/cross1.png' id='"+count+"' class='delete' onclick='Preview.removePic.call(this);'/>"+
+					"		<img src='"+webCtx+"/front_end/album/images/cross1.png' id='"+count+"' class='delete' onclick='Preview.removePic.call(this);'/>"+
 					"<div align='center'><img alumb='true' class='pics' style='width:100%;' height=100  src='"+ph.src+"'>"+"</div></div><div class='list-group-item'><div class='input-group col-lg-20' style='padding-right: 0px;' >"+	
 					"<span class='input-group-addon' style='paddin:0px;margin-left: 0px;' >描述"+
 					"</span><input type='text' class='form-control' id='"+(count-1)+"' name='photo_desc' >"+
@@ -584,7 +584,7 @@ div.addAlbum {
 							fileList[count] = [file,count];
 							var pic="<div class='col-xs-12 col-sm-3 pic'>"+
 							"<div class='list-group'><div class='list-group-item imgDiv'>"+
-							"		<img src='/BA102G4/front_end/album/images/cross1.png' id='"+(count++)+"' class='delete' onclick='Preview.removePic.call(this);'/>"+
+							"		<img src='"+webCtx+"/front_end/album/images/cross1.png' id='"+(count++)+"' class='delete' onclick='Preview.removePic.call(this);'/>"+
 							"<div align='center'><img alumb='true' class='pics' style='width:100%;' height=100  src='"+ph.src+"'>"+"</div></div><div class='list-group-item'><div class='input-group col-lg-20' style='padding-right: 0px;' >"+	
 							"<span class='input-group-addon' style='paddin:0px;margin-left: 0px;' >描述"+
 							"</span><input type='text' class='form-control' id='"+(count-1)+"' name='photo_desc' >"+
@@ -638,11 +638,12 @@ div.addAlbum {
 					$('#photo').trigger('click');
 				});
 				Preview.change_file();
+				var path = window.location.pathname;
+			    webCtx = path.substring(0, path.indexOf('/', 1));
 			})
-			var root;
-			var count;
+			var root,count,webCtx;
 			var fileList = [];
-
+			
 			
 		</script>
 </body>
