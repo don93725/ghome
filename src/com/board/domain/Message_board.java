@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.album.domain.Photos;
 import com.comments.model.Board_cmt;
 import com.members.model.MembersVO;
 
@@ -12,7 +13,7 @@ public class Message_board {
 	String bd_msg_no,bd_type,bd_msg_ctx,bd_ref_ctx,bd_prvt,bd_ref_url;
 	Date bd_msg_time,bd_upd_time;
 	byte[] bd_film;
-	List<String> board_photo;	
+	List<Photos> photos;	
 	MembersVO mem_no;
 	boolean ifClick;
 	List<Board_cmt> comments;
@@ -35,11 +36,12 @@ public class Message_board {
 	public void setMem_no(MembersVO mem_no) {
 		this.mem_no = mem_no;
 	}
-	public List<String> getBoard_photo() {
-		return board_photo;
+	
+	public List<Photos> getPhotos() {
+		return photos;
 	}
-	public void setBoard_photo(List<String> board_photo) {
-		this.board_photo = board_photo;
+	public void setPhotos(List<Photos> photos) {
+		this.photos = photos;
 	}
 	public String getBd_ref_url() {
 		return bd_ref_url;

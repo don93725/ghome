@@ -4,7 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
-<html lang="">
+<html lang="zh-ch-en">
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -97,7 +97,7 @@ div.addAlbum {
   right: 0;
   width: 30%;
   height: 100%;
-  z-index: 99993;
+  z-index: 99991;
   background-color:blue;
   -webkit-tap-highlight-color: transparent;
   -webkit-backface-visibility: hidden;
@@ -172,16 +172,22 @@ div.addAlbum {
 				</div>	
 			</div>			
 			<div id='picCmt${photo.photo_no}' style='display:none;'>
-						<div class="panel panel-default" style='max-height:100%; height:100%;'>
+						<div class="panel panel-default" style='font-size: 20px;max-height:103%; height:103%;'>
 							  <div class="panel-heading" >留言</div>
-								<div class="panel-body pre-scrollable" style='max-height:80%; height:80%;  vertical-align:middle;'>
-							     <ul class="list-group">
+							     <ul class="list-group pre-scrollable" style=' vertical-align:middle;max-height:88%; height:88%;'>
+								    <c:if test="${empty photo.comments }">
+								    	<li class="list-group-item text-center" style='height: 100%; font-size: 20px;'>							    		
+								    	<div>目前尚無留言</div>
+								    	</li>
+								    	</c:if>
 								    <c:forEach var="comment" items="${photo.comments }" varStatus="cmt">
+								    
+								    	
 										<li class="list-group-item comments photo_key_${photo.photo_no}_<fmt:formatNumber type="number" value="${(cmt.index-cmt.index%8)/8 }" />" ${(cmt.count>8)? 'style="display:none"':'' }>
 										<div class="row">
 												
 												<div class="col-xs-12 col-sm-2">
-													<a href="#">
+													<a href="${pageContext.request.contextPath}/PersonalPageCtrl?mem_no=${comment.mem_no.mem_no}&mem_rank=${comment.mem_no.mem_rank}">
 													<img
 														src="${pageContext.request.contextPath}/util/OutputPic?mem_no=${comment.mem_no.mem_no}&mem_rank=${comment.mem_no.mem_rank}"
 														class="img-circle cmt_mem_pic" title="${comment.mem_no.mem_nickname }" style='z-index: 10;'>
@@ -189,38 +195,38 @@ div.addAlbum {
 												</div>
 												
 												<div class="col-xs-12 col-sm-8 cmt" >
-													<span class='a' style='padding:30px; padding-right: 0px;'>${comment.bd_cmt_ctx }</span>
+													<span class='a' style='padding:50px; margin-top:50px; padding-right: 0px;'>${comment.bd_cmt_ctx }</span>
 													<input type='text' class='b' value='${comment.bd_cmt_ctx }' style='display:none;' onfocus='this.value = this.value;'/>
 													<span class='c' ><a href="#" style='margin-left: 3px' onclick='addPhotoCmtLikes.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");'><span class='cmtLikes'>${(comment.ifClick)?'收回讚':'讚'}</span><span style='margin-left: 5px;'>${(comment.cmt_likes>0)? comment.cmt_likes:''  }</span></a></span>
 										
 												</div>
 												<div class="col-xs-12 col-sm-2 cmt">
+												<c:if test="${user.mem_no==comment.mem_no.mem_no }">
 												<a href='#' onclick='editPhotoCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");' style='color:black'>
 													<span class='glyphicon glyphicon-pencil'></span></a>
 													&nbsp&nbsp&nbsp&nbsp&nbsp
 												<a href='#' onclick='delPhotoCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${comment.mem_no.mem_no}");' style='color:black'>
 													<span class='glyphicon glyphicon-remove'></span></a>
-											
+												</c:if>
 												
 											</div>
 										</div>	
 										</li>
 										</c:forEach>
 										<c:if test="${not empty photo.comments&& fn:length(photo.comments)>7}">			
-										<li class="list-group-item"><a href="#"
+										<li class="list-group-item text-center" style='height: 60px;'><a href="#"
 											onclick="showMore.call(this,event,'${photo.photo_no}','${fn:length(photo.comments)}');">顯示更多</a>
 											<input type='hidden' id='count${photo.photo_no}' value=1>
 											</li>
 										</c:if>
 																	    
 								  </ul>
-								  </div>  
 								  <div>
 								 		 <li class="list-group-item">
 											<div class="input-group">
-												<input type="text" class="form-control" placeholder="留些什麼吧">
+												<input type="text" class="form-control" placeholder="${(not empty user)? "留些什麼吧":"請先登入會員" }" ${(not empty user)?"":"disabled"}>
 												<span class="input-group-btn">
-													<button class="btn btn-default" type="button" onclick='sendPhotoComments.call(this,"${pageContext.request.contextPath}","${user.mem_no }","${message_board.bd_msg_no}");'>送出</button>
+													<button class="btn btn-default ${(not empty user)?"":"disabled"}" ${(not empty user)?"":"disabled"} type="button" onclick='sendPhotoComments.call(this,"${pageContext.request.contextPath}","${user.mem_no }","${photo.photo_no}");'>送出</button>
 												</span>
 											</div>
 										</li>
@@ -300,7 +306,7 @@ div.addAlbum {
 				
 		</div>
 		</div>
-<div id='cmt-container'></div>
+
 
    <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='rptBtn' class="btn">Open demo</a>
   <div style="display: none;" id="hidden-content-b">
@@ -377,7 +383,6 @@ div.addAlbum {
 		event.preventDefault();
 		var _self = $(this).parents('.comments');
 		var _CommtNum = $(this).parents('.list-group').prev().find('.badage');
-		alert(_CommtNum.html());
 		if(confirm('你確定要很獨裁的刪除此筆留言嗎？')){
 			$.ajax({
 				type : "POST",
@@ -421,16 +426,12 @@ div.addAlbum {
 			content.find('.b').focus();
 			
 		}else{
-			if(submitEditCmt(path,mem_no,bd_cmt_no,content.find('.b').val()))
-			$(this).children().removeClass();
-			$(this).children().addClass('glyphicon glyphicon-pencil');
-			$(this).children().css("color","black");
-			content.find('.a').css("display", "");
-			content.find('.b').css("display","none");
-			content.find('.a').text(content.find('.b').val());
+			submitEditCmt(path,mem_no,bd_cmt_no,content.find('.b').val(),$(this).children(),content);
+			
 		}
 	}
-	function submitEditCmt(path,mem_no,bd_cmt_no,val){
+	function submitEditCmt(path,mem_no,bd_cmt_no,val,ch,content){
+		var result;
 		$.ajax({
 			type : "POST",
 			url : path + "/all/CommentsCtrl?action=update&mem_no="+mem_no,
@@ -438,20 +439,26 @@ div.addAlbum {
 			data: "bd_cmt_no="+bd_cmt_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
 				if (msg.length != 0) {
-					return true;
+					ch.removeClass();
+					ch.addClass('glyphicon glyphicon-pencil');
+					ch.css("color","black");
+					content.find('.a').css("display", "");
+					content.find('.b').css("display","none");
+					content.find('.a').text(content.find('.b').val());
 				} else {						
 					
-					return false;
+					result = false;
 					
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
 				alert(xhr.status);
 				alert(thrownError);
-				return false;
+				result = false;
 			}
 
 		});
+		return result;
 	}
 	function showMore(event,bd_msg_no,size){
 		event.preventDefault();
@@ -465,13 +472,13 @@ div.addAlbum {
 			$(this).next().val(count+1);
 		
 	}
-	function sendPhotoComments(path, mem_no, bd_msg_no){
+	function sendPhotoComments(path, mem_no, photo_no){
 		var val = $(this).parent().prev().val();	
 		$.ajax({
 			type : "POST",
 			url : path + "/all/CommentsCtrl?action=insert&mem_no="+mem_no,
 			dataType : 'text',
-			data: "cmt_type=1&org_no="+bd_msg_no+"&bd_cmt_ctx="+val,
+			data: "cmt_type=1&org_no="+photo_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
 				if (msg.length != 0) {
 					location.reload();

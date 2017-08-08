@@ -43,8 +43,9 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 				message_board.setBd_type((String) obj[2]);
 				if ("1".equals(String.valueOf(obj[2])) || "3".equals(String.valueOf(obj[2]))) {
 					Board_photoDAO board_photoDAO = new Board_photoDAO();
-					List<String> board_photo = board_photoDAO.getPhotosListBySQL(String.valueOf(obj[0]));
-					message_board.setBoard_photo(board_photo);
+					String sql2 = "select * from photos where photo_no in (select photo_no from board_photo where bd_msg_no="+String.valueOf(obj[0])+")";
+					List<Photos> photos = new PhotosDAO().getVOBySQL(sql2, null);
+					message_board.setPhotos(photos);
 				}
 			}
 			if (obj[3] != null) {

@@ -172,7 +172,8 @@
                         '</div>' +
                         '<button data-fancybox-next title="{{NEXT}}" class="fancybox-button fancybox-button--right"></button>' +
                     '</div>' +
-                    '<div class="fancybox-toolbar">' +                    
+                    '<div class="fancybox-toolbar">' + 
+                    "<div id='cmt-container'></div>"+
                         '{{BUTTONS}}' +                        
                     '</div>' +
                     '<div class="fancybox-navigation">' +

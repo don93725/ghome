@@ -1,4 +1,4 @@
-package com.board.controller;
+package com.comments.model;
 
 import java.io.IOException;
 import java.io.PrintWriter;
