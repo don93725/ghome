@@ -16,7 +16,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 70%;
   height: 100%;
   z-index: 99993;
   -webkit-tap-highlight-color: transparent;
@@ -174,9 +174,9 @@
 .fancybox-slide .fancybox-image-wrap {
   position: absolute;
   top: 0;
-  left: -15%;
+  left: 0%;
   margin: 0;
-  width:70%;
+  width:100%;
   padding: 0;
   border: 0;
   z-index: 99995;
@@ -458,7 +458,7 @@
   background-size: 24px 24px; }
 
 .fancybox-arrow--right {
-  right: 30%; }
+  right: 0%; }
 
 .fancybox-arrow--left {
   left: 0;

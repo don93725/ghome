@@ -29,7 +29,7 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			if (obj[0] != null) {
 				message_board.setBd_msg_no(String.valueOf( obj[0]));
 				Board_cmtDAO board_cmtDAO = new Board_cmtDAO();
-				List<Board_cmt> comments = board_cmtDAO.pageAndRank("1",String.valueOf( obj[0]));
+				List<Board_cmt> comments = board_cmtDAO.pageAndRank("0",String.valueOf( obj[0]));
 				message_board.setComments(comments);
 			}
 			if (obj[1] != null) {

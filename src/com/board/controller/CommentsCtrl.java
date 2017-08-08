@@ -15,7 +15,7 @@ import com.members.model.MembersVO;
 /**
  * Servlet implementation class BoardCommentsCtrl
  */
-@WebServlet("/board/CommentsCtrl")
+@WebServlet("/all/CommentsCtrl")
 public class CommentsCtrl extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -24,6 +24,7 @@ public class CommentsCtrl extends HttpServlet {
 		String action = req.getParameter("action");
 		String mem_no = req.getParameter("mem_no");
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
+		String user_no = user.getMem_no();
 		PrintWriter out = res.getWriter();
 //		if (!mem_no.equals(user.getMem_no()) || action == null) {
 //			// 非會員想做其他操作
@@ -73,10 +74,9 @@ public class CommentsCtrl extends HttpServlet {
 		if ("addCmtLikes".equals(action)) {
 			// 刪除
 			String bd_cmt_no = req.getParameter("bd_cmt_no");
-			String user_no = user.getMem_no();
-			System.out.println(bd_cmt_no+" "+user.getMem_no());
+			String cmt_type = req.getParameter("cmt_type");
 			Board_cmtService dao = new Board_cmtService();
-			boolean result = dao.addCmt_likes(bd_cmt_no,user_no);
+			boolean result = dao.addCmt_likes(bd_cmt_no,user_no,cmt_type);
 			if(result){
 				out.print("ok");
 			}
@@ -85,9 +85,9 @@ public class CommentsCtrl extends HttpServlet {
 		if ("negativeCmtLikes".equals(action)) {
 			// 刪除
 			String bd_cmt_no = req.getParameter("bd_cmt_no");
-			String user_no = user.getMem_no();
+			String cmt_type = req.getParameter("cmt_type");
 			Board_cmtService dao = new Board_cmtService();
-			boolean result = dao.negativeCmt_likes(bd_cmt_no,user_no);
+			boolean result = dao.negativeCmt_likes(bd_cmt_no,user_no,cmt_type);
 			if(result){
 				out.print("ok");
 			}

@@ -710,7 +710,7 @@
 		}
 		$.ajax({
 			type : "POST",
-			url : path + "/board/CommentsCtrl?action="+action+"&mem_no="+mem_no,
+			url : path + "/all/CommentsCtrl?action="+action+"&mem_no="+mem_no,
 			dataType : 'text',
 			data: "cmt_type=0&bd_cmt_no="+bd_cmt_no,
 			success : function(msg) {
@@ -755,7 +755,7 @@
 		if(confirm('你確定要很獨裁的刪除此筆留言嗎？')){
 			$.ajax({
 				type : "POST",
-				url : path + "/board/CommentsCtrl?action=delete&mem_no="+mem_no,
+				url : path + "/all/CommentsCtrl?action=delete&mem_no="+mem_no,
 				dataType : 'text',
 				data: "cmt_type=0&bd_cmt_no="+bd_cmt_no,
 				success : function(msg) {
@@ -807,7 +807,7 @@
 	function submitEditCmt(path,mem_no,bd_cmt_no,val){
 		$.ajax({
 			type : "POST",
-			url : path + "/board/CommentsCtrl?action=update&mem_no="+mem_no,
+			url : path + "/all/CommentsCtrl?action=update&mem_no="+mem_no,
 			dataType : 'text',
 			data: "bd_cmt_no="+bd_cmt_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
@@ -827,11 +827,6 @@
 
 		});
 	}
-	function cursor2last() { 
-		var r = event.srcElement.createTextRange(); 
-		r.collapse(false); 
-		r.select(); 
-	} 
 	function showMore(event,bd_msg_no,size){
 		event.preventDefault();
 		var cmt = $(this).parent().parent().children(".comments");
@@ -848,7 +843,7 @@
 		var val = $(this).parent().prev().val();	
 		$.ajax({
 			type : "POST",
-			url : path + "/board/CommentsCtrl?action=insert&mem_no="+mem_no,
+			url : path + "/all/CommentsCtrl?action=insert&mem_no="+mem_no,
 			dataType : 'text',
 			data: "cmt_type=0&org_no="+bd_msg_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {

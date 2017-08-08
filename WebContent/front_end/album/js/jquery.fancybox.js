@@ -172,8 +172,7 @@
                         '</div>' +
                         '<button data-fancybox-next title="{{NEXT}}" class="fancybox-button fancybox-button--right"></button>' +
                     '</div>' +
-                    '<div class="fancybox-toolbar">' +
-                    "<div class='panel-footer fancybox-toolbar pht_cmt' id='pht_cmt'><input type='text'><button onclick='report();'>Open demo</button></div>"+
+                    '<div class="fancybox-toolbar">' +                    
                         '{{BUTTONS}}' +                        
                     '</div>' +
                     '<div class="fancybox-navigation">' +
@@ -560,7 +559,7 @@
 
         translate : function( obj, str ) {
             var arr = obj.opts.i18n[ obj.opts.lang ];
-
+            
             return str.replace(/\{\{(\w+)\}\}/g, function(match, n) {
                 var value = arr[n];
 
@@ -954,6 +953,7 @@
         // ===========================
 
         next : function( duration ) {
+        	
             return this.jumpTo( this.currPos + 1, duration );
         },
 
@@ -997,7 +997,10 @@
 
             // Create slides
             current = self.createSlide( pos );
-
+            var pic = current.src;
+            pic = pic.substring(pic.indexOf("=")+1,pic.indexOf("&"));
+            $('#cmt-container').css("display","block");
+            $('#cmt-container').html($('#picCmt'+pic).html());
             if ( groupLen > 1 ) {
                 if ( loop || current.index > 0 ) {
                     self.createSlide( pos - 1 );
@@ -1071,7 +1074,7 @@
                         top  : 0,
                         left : ( pos * canvasWidth ) + ( pos * slide.opts.gutter )
                     }, duration, function() {
-
+                    	
                         slide.$slide.removeAttr('style').removeClass( 'fancybox-slide--next fancybox-slide--previous' );
 
                         if ( slide.pos === self.currPos ) {
@@ -2357,7 +2360,7 @@
         // =================================================================================
 
         close : function( e, d ) {
-
+        	$('#cmt-container').css('display',"none");
             var self    = this;
             var current = self.current;
 

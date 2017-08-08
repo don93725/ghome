@@ -36,21 +36,21 @@ public class Board_cmtService {
 		boolean result = dao.executeDelete(bd_cmt_no);
 		return result;
 	}
-	public boolean addCmt_likes(String bd_cmt_no,String user_no) {
+	public boolean addCmt_likes(String bd_cmt_no,String user_no, String cmt_type) {
 		Board_cmtDAO dao = new Board_cmtDAO();
 		Cmt_likes_record cmt_likes_record = new Cmt_likes_record();
 		cmt_likes_record.setCmt_pk(bd_cmt_no);
 		cmt_likes_record.setMem_no(user_no);
-		cmt_likes_record.setCmt_type("1");
+		cmt_likes_record.setCmt_type(cmt_type);
 		boolean result = dao.setBd_likes(bd_cmt_no,cmt_likes_record);
 		return result;
 	}
-	public boolean negativeCmt_likes(String bd_cmt_no,String user_no) {
+	public boolean negativeCmt_likes(String bd_cmt_no,String user_no, String cmt_type) {
 		Board_cmtDAO dao = new Board_cmtDAO();
 		Cmt_likes_record cmt_likes_record = new Cmt_likes_record();
 		cmt_likes_record.setCmt_pk(bd_cmt_no);
 		cmt_likes_record.setMem_no(user_no);
-		cmt_likes_record.setCmt_type("1");
+		cmt_likes_record.setCmt_type(cmt_type);
 		boolean result = dao.negativeBd_likes(bd_cmt_no,cmt_likes_record);
 		return result;
 	}

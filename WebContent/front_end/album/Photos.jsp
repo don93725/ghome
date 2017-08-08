@@ -91,7 +91,25 @@ div.addAlbum {
 .fancybox-slide--current #hidden-content-b {
   transform: translateY(0);
 }
-
+#cmt-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 30%;
+  height: 100%;
+  z-index: 99993;
+  background-color:blue;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display:none;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0); 
+ }
+#cmt-container .list-group-item{
+	width:100%;
+	
+}
 </style>
 
 </head>
@@ -128,49 +146,10 @@ div.addAlbum {
 				<figure>
 					<a href="${pageContext.request.contextPath}/util/OutputPic?photo_no=${photo.photo_no }&type=big" class='try' data-fancybox="group" >
 					
-					<div class="list-group-item">						
-						<div class="row">
-							 						
-							<figcaption style='display:none;' class='dialog'>
-							<div class="panel panel-default">
-							  <div class="panel-heading">留言<input style='cursor:pointer;'type='text'><button>hi</button></div>
-								<div class="panel-body" style="z-index: 50000000;"></div>  
-							     <ul class="list-group">
-								    <c:forEach var="comment" items="${photo.comments }" varStatus="cmt">
-										<li class="list-group-item comments key_photo_${photo.photo_no}_<fmt:formatNumber type="number" value="${(cmt.index-cmt.index%5)/5 }" />" ${(cmt.count>5)? 'style="display:none"':'' }>
-										<div class="row">
-											<div class="container">
-												<a href="#">
-													<div class="col-xs-12 col-sm-1">
-										
-														<img
-															src="${pageContext.request.contextPath}/util/OutputPic?mem_no=${comment.mem_no.mem_no}&mem_rank=${comment.mem_no.mem_rank}"
-															class="img-circle cmt_mem_pic" title="${comment.mem_no.mem_nickname }" style='z-index: 10;'>
-										
-													</div>
-												</a>
-												<div class="col-xs-12 col-sm-8 cmt" >
-													<span class='a' style='padding:30px; padding-right: 0px;'>${comment.bd_cmt_ctx }</span>
-													<input type='text' class='b' value='${comment.bd_cmt_ctx }' style='display:none;' onfocus='this.value = this.value;'/>
-													<span class='c' ><a href="#" style='margin-left: 3px' onclick='addPhotoCmtLikes.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");'><span class='cmtLikes'>${(comment.ifClick)?'收回讚':'讚'}</span><span style='margin-left: 5px;'>${(comment.cmt_likes>0)? comment.cmt_likes:''  }</span></a></span>
-										
-												</div>
-												<div class="col-xs-12 col-sm-3 cmt">
-												<a href='#' onclick='editPhotoCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");' style='color:black'>
-													<span class='glyphicon glyphicon-pencil'></span></a>
-													&nbsp&nbsp&nbsp&nbsp&nbsp
-												<a href='#' onclick='delPhotoCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${comment.mem_no.mem_no}");' style='color:black'>
-													<span class='glyphicon glyphicon-remove'></span></a>
-												</div>
-												
-											</div>
-										</div>	
-										</li>
-										</c:forEach>							    
-								  </ul>
-							</div>
+					<div class="list-group-item">			
+						<div class="row">						 						
+				
 							
-							</figcaption>
 							<img style="height:200px; width:100%" src="${pageContext.request.contextPath}/util/OutputPic?photo_no=${photo.photo_no }">									
 						</div>						
 					</div>
@@ -191,7 +170,63 @@ div.addAlbum {
 								
 
 				</div>	
-			</div>
+			</div>			
+			<div id='picCmt${photo.photo_no}' style='display:none;'>
+						<div class="panel panel-default" style='max-height:100%; height:100%;'>
+							  <div class="panel-heading" >留言</div>
+								<div class="panel-body pre-scrollable" style='max-height:80%; height:80%;  vertical-align:middle;'>
+							     <ul class="list-group">
+								    <c:forEach var="comment" items="${photo.comments }" varStatus="cmt">
+										<li class="list-group-item comments photo_key_${photo.photo_no}_<fmt:formatNumber type="number" value="${(cmt.index-cmt.index%8)/8 }" />" ${(cmt.count>8)? 'style="display:none"':'' }>
+										<div class="row">
+												
+												<div class="col-xs-12 col-sm-2">
+													<a href="#">
+													<img
+														src="${pageContext.request.contextPath}/util/OutputPic?mem_no=${comment.mem_no.mem_no}&mem_rank=${comment.mem_no.mem_rank}"
+														class="img-circle cmt_mem_pic" title="${comment.mem_no.mem_nickname }" style='z-index: 10;'>
+													</a>
+												</div>
+												
+												<div class="col-xs-12 col-sm-8 cmt" >
+													<span class='a' style='padding:30px; padding-right: 0px;'>${comment.bd_cmt_ctx }</span>
+													<input type='text' class='b' value='${comment.bd_cmt_ctx }' style='display:none;' onfocus='this.value = this.value;'/>
+													<span class='c' ><a href="#" style='margin-left: 3px' onclick='addPhotoCmtLikes.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");'><span class='cmtLikes'>${(comment.ifClick)?'收回讚':'讚'}</span><span style='margin-left: 5px;'>${(comment.cmt_likes>0)? comment.cmt_likes:''  }</span></a></span>
+										
+												</div>
+												<div class="col-xs-12 col-sm-2 cmt">
+												<a href='#' onclick='editPhotoCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");' style='color:black'>
+													<span class='glyphicon glyphicon-pencil'></span></a>
+													&nbsp&nbsp&nbsp&nbsp&nbsp
+												<a href='#' onclick='delPhotoCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${comment.mem_no.mem_no}");' style='color:black'>
+													<span class='glyphicon glyphicon-remove'></span></a>
+											
+												
+											</div>
+										</div>	
+										</li>
+										</c:forEach>
+										<c:if test="${not empty photo.comments&& fn:length(photo.comments)>7}">			
+										<li class="list-group-item"><a href="#"
+											onclick="showMore.call(this,event,'${photo.photo_no}','${fn:length(photo.comments)}');">顯示更多</a>
+											<input type='hidden' id='count${photo.photo_no}' value=1>
+											</li>
+										</c:if>
+																	    
+								  </ul>
+								  </div>  
+								  <div>
+								 		 <li class="list-group-item">
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="留些什麼吧">
+												<span class="input-group-btn">
+													<button class="btn btn-default" type="button" onclick='sendPhotoComments.call(this,"${pageContext.request.contextPath}","${user.mem_no }","${message_board.bd_msg_no}");'>送出</button>
+												</span>
+											</div>
+										</li>
+								  </div>
+							</div>
+							</div>
 				</c:forEach>		
 		
 
@@ -259,13 +294,13 @@ div.addAlbum {
   </div>
 </div>
 
-
 			
 			
 			
 				
 		</div>
 		</div>
+<div id='cmt-container'></div>
 
    <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='rptBtn' class="btn">Open demo</a>
   <div style="display: none;" id="hidden-content-b">
@@ -289,6 +324,170 @@ div.addAlbum {
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
+	function addPhotoCmtLikes(event,path,bd_cmt_no,mem_no){
+		event.preventDefault();
+		var span = $(this).find('.cmtLikes');
+		var action ;
+		if(span.text()=='讚'){
+			action = 'addCmtLikes';
+		}else{
+			action = 'negativeCmtLikes';
+			
+		}
+		$.ajax({
+			type : "POST",
+			url : path + "/all/CommentsCtrl?action="+action+"&mem_no="+mem_no,
+			dataType : 'text',
+			data: "cmt_type=1&bd_cmt_no="+bd_cmt_no,
+			success : function(msg) {
+				if (msg.length != 0) {
+					var num = parseInt(span.next().text(),10);
+					if(num==undefined||num==null||span.next().text().length==0){
+						num=0;
+					}
+					
+					if(span.text()=='讚'){
+						span.text('收回讚');
+						span.next().text(num+1);
+					}else{
+						span.text('讚');	
+						if(num-1>0){
+							span.next().text(num-1);
+							
+						}else{
+							span.next().text('');
+						}
+					}
+					
+				} else {						
+					
+					
+					
+				}
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+			}
+
+		});
+		
+	}
+	function delPhotoCmmt(event,path,bd_cmt_no,mem_no){
+		event.preventDefault();
+		var _self = $(this).parents('.comments');
+		var _CommtNum = $(this).parents('.list-group').prev().find('.badage');
+		alert(_CommtNum.html());
+		if(confirm('你確定要很獨裁的刪除此筆留言嗎？')){
+			$.ajax({
+				type : "POST",
+				url : path + "/all/CommentsCtrl?action=delete&mem_no="+mem_no,
+				dataType : 'text',
+				data: "cmt_type=1&bd_cmt_no="+bd_cmt_no,
+				success : function(msg) {
+					if (msg.length != 0) {
+						_self.remove();
+						var num = parseInt(_CommtNum.text(),10);
+						if(num-1!=0){
+							_CommtNum.text(num-1);							
+						}else{
+							_CommtNum.text('');
+						}
+					} else {						
+						
+						
+						
+					}
+				},
+				error : function(xhr, ajaxOptions, thrownError) {
+					alert(xhr.status);
+					alert(thrownError);
+				}
+
+			});
+		}
+	}
+	function editPhotoCmmt(event,path,bd_cmt_no,mem_no){
+		event.preventDefault();
+		var val = $(this).parent().prev().children().text();
+		var clazz = $(this).children().attr('class');
+		var content = $(this).parent().prev();
+		if(clazz=='glyphicon glyphicon-pencil'){
+			$(this).children().removeClass();
+			$(this).children().addClass('glyphicon glyphicon-ok');
+			$(this).children().css("color","green");
+			content.find('.a').css("display", "none");
+			content.find('.b').css("display", "");
+			content.find('.b').focus();
+			
+		}else{
+			if(submitEditCmt(path,mem_no,bd_cmt_no,content.find('.b').val()))
+			$(this).children().removeClass();
+			$(this).children().addClass('glyphicon glyphicon-pencil');
+			$(this).children().css("color","black");
+			content.find('.a').css("display", "");
+			content.find('.b').css("display","none");
+			content.find('.a').text(content.find('.b').val());
+		}
+	}
+	function submitEditCmt(path,mem_no,bd_cmt_no,val){
+		$.ajax({
+			type : "POST",
+			url : path + "/all/CommentsCtrl?action=update&mem_no="+mem_no,
+			dataType : 'text',
+			data: "bd_cmt_no="+bd_cmt_no+"&bd_cmt_ctx="+val,
+			success : function(msg) {
+				if (msg.length != 0) {
+					return true;
+				} else {						
+					
+					return false;
+					
+				}
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+				return false;
+			}
+
+		});
+	}
+	function showMore(event,bd_msg_no,size){
+		event.preventDefault();
+		var cmt = $(this).parent().parent().children(".comments");
+		var count = parseInt( $(this).next().val(),10);
+		if(count+1>(size-size%5)/5){
+			$(this).hide();
+		}
+			$(".photo_key_"+bd_msg_no+"_"+count).css('display','block');
+			
+			$(this).next().val(count+1);
+		
+	}
+	function sendPhotoComments(path, mem_no, bd_msg_no){
+		var val = $(this).parent().prev().val();	
+		$.ajax({
+			type : "POST",
+			url : path + "/all/CommentsCtrl?action=insert&mem_no="+mem_no,
+			dataType : 'text',
+			data: "cmt_type=1&org_no="+bd_msg_no+"&bd_cmt_ctx="+val,
+			success : function(msg) {
+				if (msg.length != 0) {
+					location.reload();
+				} else {						
+					
+					
+					
+				}
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+			}
+
+		});
+	}
 	function report(){
 		$('#rptBtn').trigger('click');
 	}
@@ -652,13 +851,13 @@ div.addAlbum {
 
 			$(function(){
 				
-				$( '[data-fancybox=group]' ).fancybox({
+// 				$( '[data-fancybox=group]' ).fancybox({
 					 
-					clickSlide : false,				    
-						caption : function( instance, item ) {
-						  return $(this).find('figcaption').html();
-				 }
-				});
+// 					clickSlide : false,				    
+// 						caption : function( instance, item ) {
+// 						  return $(this).find('figcaption').html();
+// 				 }
+// 				});
 				$('#upload').click(function(){
 					$('#photo').trigger('click');
 				});
