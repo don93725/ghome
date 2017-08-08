@@ -29,7 +29,7 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			if (obj[0] != null) {
 				message_board.setBd_msg_no(String.valueOf( obj[0]));
 				Board_cmtDAO board_cmtDAO = new Board_cmtDAO();
-				List<Board_cmt> comments = board_cmtDAO.pageAndRank("0",String.valueOf( obj[0]));
+				List<Board_cmt> comments = board_cmtDAO.pageAndRank("1",String.valueOf( obj[0]));
 				message_board.setComments(comments);
 			}
 			if (obj[1] != null) {
@@ -231,6 +231,8 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 			}
 			se.printStackTrace();
 			throw new RuntimeException("A database error occured. " + se.getMessage());
+		} finally {
+			helper.close(con);
 		}
 		return result;
 	}
@@ -282,9 +284,11 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 				e1.printStackTrace();
 			}
 			e.printStackTrace();
+		}finally {
+			helper.close(con);
 		}
 		return insertResult;
-	}
+	} 
 	// 建置刪除
 
 	public boolean executeDelete(String bd_msg_no) {
@@ -294,10 +298,16 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 		try {
 			con.setAutoCommit(false);
 			Board_photoDAO board_photoDAO = new Board_photoDAO();
+			
 			String sql = "select photo_no from board_photo where bd_msg_no=" + bd_msg_no;
 			String[] photo_no = board_photoDAO.getPhotosArrayBySQL(bd_msg_no);
 							
 			result = board_photoDAO.executeDelete(bd_msg_no, con);
+			if(result){
+				Likes_recordDAO likes_recordDAO = new Likes_recordDAO();
+				result = likes_recordDAO.executeDelete(bd_msg_no,con);
+			}
+			
 			if (result) {
 				PhotosDAO photosDAO = new PhotosDAO();
 				result = photosDAO.executeDeleteForBoard(photo_no, con);
@@ -405,7 +415,9 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 					se.printStackTrace();
 				}
 				e.printStackTrace();
-			} 
+			} finally {
+				helper.close(con);
+			}
 			return result;
 	}
 }

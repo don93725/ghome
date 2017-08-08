@@ -1,7 +1,10 @@
-package com.comments.model;
+package com.board.service;
 
 import java.util.Date;
 
+import com.comments.model.Board_cmt;
+import com.comments.model.Board_cmtDAO;
+import com.comments.model.Cmt_likes_record;
 import com.members.model.MembersVO;
 
 public class Board_cmtService {
@@ -33,12 +36,22 @@ public class Board_cmtService {
 		boolean result = dao.executeDelete(bd_cmt_no);
 		return result;
 	}
-	public boolean addCmt_likes(String bd_cmt_no,String bd_cmt_ctx) {
-		Board_cmt board_cmt = new Board_cmt();
-		board_cmt.setBd_cmt_no(bd_cmt_no);
-		board_cmt.setBd_cmt_ctx(bd_cmt_ctx);
+	public boolean addCmt_likes(String bd_cmt_no,String user_no) {
 		Board_cmtDAO dao = new Board_cmtDAO();
-		boolean result = dao.updateByVO(board_cmt);
+		Cmt_likes_record cmt_likes_record = new Cmt_likes_record();
+		cmt_likes_record.setCmt_pk(bd_cmt_no);
+		cmt_likes_record.setMem_no(user_no);
+		cmt_likes_record.setCmt_type("1");
+		boolean result = dao.setBd_likes(bd_cmt_no,cmt_likes_record);
+		return result;
+	}
+	public boolean negativeCmt_likes(String bd_cmt_no,String user_no) {
+		Board_cmtDAO dao = new Board_cmtDAO();
+		Cmt_likes_record cmt_likes_record = new Cmt_likes_record();
+		cmt_likes_record.setCmt_pk(bd_cmt_no);
+		cmt_likes_record.setMem_no(user_no);
+		cmt_likes_record.setCmt_type("1");
+		boolean result = dao.negativeBd_likes(bd_cmt_no,cmt_likes_record);
 		return result;
 	}
 }

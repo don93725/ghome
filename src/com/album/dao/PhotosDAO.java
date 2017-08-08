@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.album.domain.Photos;
+import com.comments.model.Board_cmt;
+import com.comments.model.Board_cmtDAO;
 import com.don.inteface.DAOInterface;
 import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
@@ -26,6 +28,9 @@ public class PhotosDAO extends BasicDAO implements DAOInterface<Photos> {
 			Photos photos = new Photos();
 			if (obj[0] != null) {
 				photos.setPhoto_no((String) obj[0]);
+				Board_cmtDAO board_cmtDAO = new Board_cmtDAO();
+				List<Board_cmt> comments = board_cmtDAO.pageAndRank("1",String.valueOf( obj[0]));
+				photos.setComments(comments);
 			}
 			if (obj[1] != null) {
 				photos.setAl_no((String) obj[1]);

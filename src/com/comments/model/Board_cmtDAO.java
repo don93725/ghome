@@ -1,6 +1,7 @@
 package com.comments.model;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,6 +44,10 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 			}
 			if (obj[6] != null) {
 				board_cmt.setBd_cmt_time((Date) obj[6]);
+			}
+			if (obj[9] != null) {
+				
+				board_cmt.setIfClick(true);
 			}
 			tempList.add(board_cmt);
 		}
@@ -110,11 +115,11 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 	}
 
 	public List<Board_cmt> pageAndRank(String cmt_type, String org_no) {
-		String sql = "select * from (select bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time,mem_nickname,mem_rank, rownum rn from (select bd_cmt_no,a.mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time,mem_nickname,mem_rank from board_cmt a join members b on a.mem_no=b.mem_no";
+		String sql = "select * from (select bd_cmt_no,mem_no,cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time,mem_nickname,mem_rank,if_click, rownum rn from (select bd_cmt_no,a.mem_no,a.cmt_type,org_no,bd_cmt_ctx,cmt_likes,bd_cmt_time,mem_nickname,mem_rank,if_click from board_cmt a join members b on a.mem_no=b.mem_no left outer join cmt_likes_record c on a.bd_cmt_no=c.cmt_pk and a.cmt_type = c.cmt_type and a.mem_no = c.mem_no)";
 
 		sql = sql + " where cmt_type="+cmt_type+" and org_no="+org_no;
 
-		sql = sql + " order by cmt_likes desc, bd_cmt_time))";
+		sql = sql + " order by cmt_likes desc, bd_cmt_time)";
 		List<Board_cmt> list = getVOBySQL(sql, null);
 		return list;
 	}
@@ -141,11 +146,79 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 
 	}
 
-	public boolean setBd_likes(String bd_cmt_no) {
+	public boolean setBd_likes(String bd_cmt_no, Cmt_likes_record cmt_likes_record) {
 		boolean result = true;
-		String sql = "update board_cmt set cmt_likes= (select cmt_likes+1 from board_cmt where bd_cmt_no=" + bd_cmt_no
-				+ ") where bd_cmt_no=" + bd_cmt_no;
-		return executeUpdate(sql, null);
+		SQLHelper helper = new SQLHelper();
+		Connection con = helper.getConnection();
+		try {
+			con.setAutoCommit(false);
+			Cmt_likes_recordDAO cmt_likes_recordDAO = new Cmt_likes_recordDAO();
+			result = cmt_likes_recordDAO.executeInsert(cmt_likes_record, con);
+			String res =null;
+			if(result){			
+				String sql = "update board_cmt set cmt_likes= (select cmt_likes+1 from board_cmt where bd_cmt_no=" + bd_cmt_no
+						+ ") where bd_cmt_no=" + bd_cmt_no;
+				res = helper.executeUpdate(sql, null,null, con);
+			}
+			if(res!=null){
+				con.commit();
+				return true;
+			}else{
+				con.rollback();
+				return false;			
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			helper.close(con);
+		}
+		return result;
+		
+		
+	}
+	public boolean negativeBd_likes(String bd_cmt_no, Cmt_likes_record cmt_likes_record) {
+		boolean result = true;
+		SQLHelper helper = new SQLHelper();
+		Connection con = helper.getConnection();
+		try {
+			con.setAutoCommit(false);
+			Cmt_likes_recordDAO cmt_likes_recordDAO = new Cmt_likes_recordDAO();
+			result = cmt_likes_recordDAO.executeDelete(cmt_likes_record, con);
+			String res =null;
+			if(result){			
+				String sql = "update board_cmt set cmt_likes= (select cmt_likes-1 from board_cmt where bd_cmt_no=" + bd_cmt_no
+						+ ") where bd_cmt_no=" + bd_cmt_no;
+				res = helper.executeUpdate(sql, null,null, con);
+			}
+			if(res!=null){
+				con.commit();
+				return true;
+			}else{
+				con.rollback();
+				return false;			
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			try {
+				con.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			helper.close(con);
+		}
+		return result;
+		
+		
 	}
 
 }

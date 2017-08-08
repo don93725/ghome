@@ -9,6 +9,14 @@ public class Board_cmt {
 	String bd_cmt_no,cmt_type,org_no,bd_cmt_ctx;
 	Date bd_cmt_time;
 	MembersVO mem_no;
+	boolean ifClick;
+	
+	public boolean isIfClick() {
+		return ifClick;
+	}
+	public void setIfClick(boolean ifClick) {
+		this.ifClick = ifClick;
+	}
 	public Integer getCmt_likes() {
 		return cmt_likes;
 	}

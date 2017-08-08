@@ -510,7 +510,7 @@
 											class="glyphicon glyphicon-thumbs-up">&nbsp讚</span>
 									</a></li>
 									<li role="presentation"><a href="#"
-										onclick="return showCmmt('1','1');">
+										onclick="return showCmmt.call(this,event,'${message_board.bd_msg_no }');">
 										<c:if test="${not empty message_board.comments }"> <span class="badage">${fn:length(message_board.comments)}</span></c:if>
 											<span class="glyphicon glyphicon-comment">&nbsp留言</span>
 									</a></li>
@@ -522,7 +522,7 @@
 							</div>
 						</div>
 
-						<ul id='b1_commt1' class="list-group" style="display: none;">
+						<ul id='commt${message_board.bd_msg_no }' class="list-group" style="display: none;">
 						<c:forEach var="comment" items="${message_board.comments }" varStatus="cmt">
 						
 						<li class="list-group-item comments key_${message_board.bd_msg_no}_<fmt:formatNumber type="number" value="${(cmt.index-cmt.index%5)/5 }" />" ${(cmt.count>5)? 'style="display:none"':'' }>
@@ -540,14 +540,14 @@
 									<div class="col-xs-12 col-sm-8 cmt" >
 										<span class='a' style='padding:30px; padding-right: 0px;'>${comment.bd_cmt_ctx }</span>
 										<input type='text' class='b' value='${comment.bd_cmt_ctx }' style='display:none;' onfocus='this.value = this.value;'/>
-										<span class='c' ><a href="#" style='margin-left: 3px'>讚 &nbsp ${(comment.cmt_likes>0)? comment.cmt_likes:''  }</a></span>
+										<span class='c' ><a href="#" style='margin-left: 3px' onclick='addCmtLikes.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${param.mem_no }");'><span class='cmtLikes'>${(comment.ifClick)?'收回讚':'讚'}</span><span style='margin-left: 5px;'>${(comment.cmt_likes>0)? comment.cmt_likes:''  }</span></a></span>
 
 									</div>
 									<div class="col-xs-12 col-sm-3 cmt">
 									<a href='#' onclick='editCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");' style='color:black'>
 										<span class='glyphicon glyphicon-pencil'></span></a>
 										&nbsp&nbsp&nbsp&nbsp&nbsp
-									<a href='#' onclick='delCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");' style='color:black'>
+									<a href='#' onclick='delCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${comment.mem_no.mem_no}");' style='color:black'>
 										<span class='glyphicon glyphicon-remove'></span></a>
 									</div>
 								</div>
@@ -559,8 +559,8 @@
 								onclick="showMore.call(this,event,'${message_board.bd_msg_no}','${fn:length(message_board.comments)}');">顯示更多</a>
 								<input type='hidden' id='count${message_board.bd_msg_no}' value=1>
 								</li>
-							<li class="list-group-item">
 							</c:if>
+							<li class="list-group-item">
 								<div class="input-group">
 									<input type="text" class="form-control" placeholder="留些什麼吧">
 									<span class="input-group-btn">
@@ -698,13 +698,90 @@
 	<script
 		src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
-	function delCmmt(event,path,bd_cmt_no){
+	function addCmtLikes(event,path,bd_cmt_no,mem_no){
 		event.preventDefault();
-		if(confirm('你確定要很獨裁的刪除此筆留言嗎？')){
+		var span = $(this).find('.cmtLikes');
+		var action ;
+		if(span.text()=='讚'){
+			action = 'addCmtLikes';
+		}else{
+			action = 'negativeCmtLikes';
 			
 		}
+		$.ajax({
+			type : "POST",
+			url : path + "/board/CommentsCtrl?action="+action+"&mem_no="+mem_no,
+			dataType : 'text',
+			data: "cmt_type=0&bd_cmt_no="+bd_cmt_no,
+			success : function(msg) {
+				if (msg.length != 0) {
+					var num = parseInt(span.next().text(),10);
+					if(num==undefined||num==null||span.next().text().length==0){
+						num=0;
+					}
+					
+					if(span.text()=='讚'){
+						span.text('收回讚');
+						span.next().text(num+1);
+					}else{
+						span.text('讚');	
+						if(num-1>0){
+							span.next().text(num-1);
+							
+						}else{
+							span.next().text('');
+						}
+					}
+					
+				} else {						
+					
+					
+					
+				}
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+			}
+
+		});
+		
 	}
-	function editCmmt(event,path,bd_cmt_no){
+	function delCmmt(event,path,bd_cmt_no,mem_no){
+		event.preventDefault();
+		var _self = $(this).parents('.comments');
+		var _CommtNum = $(this).parents('.list-group').prev().find('.badage');
+		alert(_CommtNum.html());
+		if(confirm('你確定要很獨裁的刪除此筆留言嗎？')){
+			$.ajax({
+				type : "POST",
+				url : path + "/board/CommentsCtrl?action=delete&mem_no="+mem_no,
+				dataType : 'text',
+				data: "cmt_type=0&bd_cmt_no="+bd_cmt_no,
+				success : function(msg) {
+					if (msg.length != 0) {
+						_self.remove();
+						var num = parseInt(_CommtNum.text(),10);
+						if(num-1!=0){
+							_CommtNum.text(num-1);							
+						}else{
+							_CommtNum.text('');
+						}
+					} else {						
+						
+						
+						
+					}
+				},
+				error : function(xhr, ajaxOptions, thrownError) {
+					alert(xhr.status);
+					alert(thrownError);
+				}
+
+			});
+		}
+	}
+	function editCmmt(event,path,bd_cmt_no,mem_no){
 		event.preventDefault();
 		var val = $(this).parent().prev().children().text();
 		var clazz = $(this).children().attr('class');
@@ -718,6 +795,7 @@
 			content.find('.b').focus();
 			
 		}else{
+			if(submitEditCmt(path,mem_no,bd_cmt_no,content.find('.b').val()))
 			$(this).children().removeClass();
 			$(this).children().addClass('glyphicon glyphicon-pencil');
 			$(this).children().css("color","black");
@@ -725,6 +803,29 @@
 			content.find('.b').css("display","none");
 			content.find('.a').text(content.find('.b').val());
 		}
+	}
+	function submitEditCmt(path,mem_no,bd_cmt_no,val){
+		$.ajax({
+			type : "POST",
+			url : path + "/board/CommentsCtrl?action=update&mem_no="+mem_no,
+			dataType : 'text',
+			data: "bd_cmt_no="+bd_cmt_no+"&bd_cmt_ctx="+val,
+			success : function(msg) {
+				if (msg.length != 0) {
+					return true;
+				} else {						
+					
+					return false;
+					
+				}
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+				return false;
+			}
+
+		});
 	}
 	function cursor2last() { 
 		var r = event.srcElement.createTextRange(); 
@@ -744,7 +845,7 @@
 		
 	}
 	function sendComments(path, mem_no, bd_msg_no){
-		var val = $(this).parent().prev().val();		 
+		var val = $(this).parent().prev().val();	
 		$.ajax({
 			type : "POST",
 			url : path + "/board/CommentsCtrl?action=insert&mem_no="+mem_no,
@@ -1438,8 +1539,9 @@
 			});*/
 
 		}
-		function showCmmt(board_msg_no, bd_cmmt_no) {
-			$('#b' + board_msg_no + '_commt' + bd_cmmt_no).toggle();
+		function showCmmt(event,bd_msg_no) {
+			event.preventDefault();
+			$('#commt' + bd_msg_no).toggle();
 		}
 
 		var film;

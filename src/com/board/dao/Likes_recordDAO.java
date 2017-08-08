@@ -59,6 +59,16 @@ public class Likes_recordDAO extends BasicDAO {
 		List<Likes_record> list = getVOBySQL(sql, null);
 		return list;
 	}
+	//刪除
+	public boolean executeDelete(String bd_msg_no,Connection con) {
+		String sql = "delete from likes_record where bd_msg_no="+bd_msg_no;
+		String res = new SQLHelper().executeUpdate(sql, null,null,con);
+		if(res!=null){
+			return true;
+		}else{
+			return false;			
+		}
+	}
 	// 建置分頁(彈性排序不設條件)
 
 	public List<Likes_record> pageAndRank(int page, int pageSize, String order) {

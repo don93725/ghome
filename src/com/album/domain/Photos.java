@@ -1,6 +1,9 @@
 package com.album.domain;
 
 import java.util.Date;
+import java.util.List;
+
+import com.comments.model.Board_cmt;
 
 public class Photos {
 
@@ -8,7 +11,16 @@ public class Photos {
 	byte[] photo, sphoto;
 	Date ul_Date;
 	String src;
+	List<Board_cmt> comments;
 	
+	public List<Board_cmt> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Board_cmt> comments) {
+		this.comments = comments;
+	}
+
 	public Date getUl_Date() {
 		return ul_Date;
 	}

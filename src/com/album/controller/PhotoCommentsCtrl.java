@@ -1,4 +1,4 @@
-package com.board.controller;
+package com.album.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,14 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.board.service.Board_cmtService;
+import com.album.service.Photo_cmtService;
 import com.members.model.MembersVO;
 
 /**
- * Servlet implementation class BoardCommentsCtrl
+ * Servlet implementation class CommentsCtrl
  */
-@WebServlet("/board/CommentsCtrl")
-public class CommentsCtrl extends HttpServlet {
+@WebServlet( "/album/CommentsCtrl" )
+public class PhotoCommentsCtrl extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		req.setCharacterEncoding("utf-8");
@@ -39,7 +39,7 @@ public class CommentsCtrl extends HttpServlet {
 
 		if ("insert".equals(action)) {
 			// 新增
-			Board_cmtService dao = new Board_cmtService();
+			Photo_cmtService dao = new Photo_cmtService();
 			String cmt_type = req.getParameter("cmt_type");
 			String org_no = req.getParameter("org_no");
 			String bd_cmt_ctx = req.getParameter("bd_cmt_ctx");
@@ -51,7 +51,7 @@ public class CommentsCtrl extends HttpServlet {
 		}
 		if ("update".equals(action)) {
 			// 修改
-			Board_cmtService dao = new Board_cmtService();
+			Photo_cmtService dao = new Photo_cmtService();
 			String bd_cmt_no = req.getParameter("bd_cmt_no");
 			String bd_cmt_ctx = req.getParameter("bd_cmt_ctx");
 			boolean result = dao.update(bd_cmt_no, bd_cmt_ctx);
@@ -63,7 +63,7 @@ public class CommentsCtrl extends HttpServlet {
 		if ("delete".equals(action)) {
 			// 刪除
 			String bd_cmt_no = req.getParameter("bd_cmt_no");
-			Board_cmtService dao = new Board_cmtService();
+			Photo_cmtService dao = new Photo_cmtService();
 			boolean result = dao.delete(bd_cmt_no);
 			if(result){
 				out.print("ok");
@@ -75,7 +75,7 @@ public class CommentsCtrl extends HttpServlet {
 			String bd_cmt_no = req.getParameter("bd_cmt_no");
 			String user_no = user.getMem_no();
 			System.out.println(bd_cmt_no+" "+user.getMem_no());
-			Board_cmtService dao = new Board_cmtService();
+			Photo_cmtService dao = new Photo_cmtService();
 			boolean result = dao.addCmt_likes(bd_cmt_no,user_no);
 			if(result){
 				out.print("ok");
@@ -86,7 +86,7 @@ public class CommentsCtrl extends HttpServlet {
 			// 刪除
 			String bd_cmt_no = req.getParameter("bd_cmt_no");
 			String user_no = user.getMem_no();
-			Board_cmtService dao = new Board_cmtService();
+			Photo_cmtService dao = new Photo_cmtService();
 			boolean result = dao.negativeCmt_likes(bd_cmt_no,user_no);
 			if(result){
 				out.print("ok");
