@@ -1000,11 +1000,8 @@
             current = self.createSlide( pos );
             var pic = current.src;
             pic = pic.substring(pic.indexOf("=")+1,pic.indexOf("&"));
+            $('#cmt-container').css("display","block");
             $('#cmt-container').html($('#picCmt'+pic).html());
-            $('#textInput').click(function(){
-            	alert('hi');
-            	$(this).focus();
-            })
             if ( groupLen > 1 ) {
                 if ( loop || current.index > 0 ) {
                     self.createSlide( pos - 1 );
@@ -2364,6 +2361,7 @@
         // =================================================================================
 
         close : function( e, d ) {
+        	$('#cmt-container').css('display',"none");
             var self    = this;
             var current = self.current;
 
