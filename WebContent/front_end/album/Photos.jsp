@@ -97,14 +97,30 @@ div.addAlbum {
   right: 0;
   width: 30%;
   height: 100%;
-  z-index: 99993;
+  z-index: 1000000;
   background-color:blue;
-  -webkit-tap-highlight-color: transparent;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  display:none;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0); 
+  
+ }
+#photo-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 70%;
+  height: 100%;
+  z-index: 1000000;
+  opacity:0.8;
+  background-color:#1e1e1e;
+  
+
+  
+ }
+ #photo-container img{
+ 	margin : 0 auto;
+ 	margin-top :10%; 	
+ 	margin-bottom:2.5%; 	
+ 	height: auto;
+ 	max-width: 80%;
+ 	display:block;
  }
 #cmt-container .list-group-item{
 	width:100%;
@@ -218,7 +234,7 @@ div.addAlbum {
 								  <div>
 								 		 <li class="list-group-item">
 											<div class="input-group">
-												<input type="text" class="form-control" placeholder="留些什麼吧">
+												<div id='textInput' class="form-control" contenteditable="true" placeholder="留些什麼吧">bbddssss</div>
 												<span class="input-group-btn">
 													<button class="btn btn-default" type="button" onclick='sendPhotoComments.call(this,"${pageContext.request.contextPath}","${user.mem_no }","${message_board.bd_msg_no}");'>送出</button>
 												</span>
@@ -300,7 +316,7 @@ div.addAlbum {
 				
 		</div>
 		</div>
-<div id='cmt-container'></div>
+
 
    <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='rptBtn' class="btn">Open demo</a>
   <div style="display: none;" id="hidden-content-b">
@@ -313,8 +329,8 @@ div.addAlbum {
     <p>previeShare</p>
   </div>
 
-
-
+<div id='photo-container'><img src='/BA102G4/util/OutputPic?photo_no=1&type=big'></div>
+<div id='cmt-container'></div>
 
 <link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/album/css/colorbox.css" />
 
@@ -851,13 +867,16 @@ div.addAlbum {
 
 			$(function(){
 				
-// 				$( '[data-fancybox=group]' ).fancybox({
-					 
-// 					clickSlide : false,				    
-// 						caption : function( instance, item ) {
-// 						  return $(this).find('figcaption').html();
-// 				 }
-// 				});
+				$( '[data-fancybox=group]' ).fancybox({
+					'type':'iframe', 
+					clickSlide : false,	
+					closeClick  : false,
+					
+						
+				});
+				$('#textInput').on('click', function(e){
+				    e.stopPropagation();
+				});
 				$('#upload').click(function(){
 					$('#photo').trigger('click');
 				});
