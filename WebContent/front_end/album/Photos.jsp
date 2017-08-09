@@ -111,8 +111,18 @@ div.addAlbum {
   transform: translateY(-50px);
   transition: all .33s;
 }
+#hidden-content-a {
+  /* Custom styling */
+  max-width: 60%;
+  width: 50%;
+  height: auto;
+  border-radius: 4px;
+  /* Custom transition - slide from top*/
+  transform: translateY(-50px);
+  transition: all .33s;
+}
 
-.fancybox-slide--current #hidden-content-b {
+.fancybox-slide--current #hidden-content-a {
   transform: translateY(0);
 }
 #cmt-container {
@@ -390,7 +400,7 @@ div.addAlbum {
       </a>
       </div>
       <div class="modal-footer">
-      	<div class="col-xs-12 col-sm-1 col-sm-offset-9" style="padding-left: 40px;" >
+      	<div class="col-xs-12 col-sm-2 col-sm-offset-9" style="padding-left: 100px;" >
       		<div class="dropup">
 					<button class="btn btn-default btn-lg dropdown-toggle" type="button"
 						id="dropdownMenu2" data-toggle="dropdown"
@@ -407,17 +417,42 @@ div.addAlbum {
 					</ul>
 				</div>
       	</div>
-      	<div class="col-xs-12 col-sm-2" style="padding-left: 0px;">
-        <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">關閉</button>
+      	<div class="col-xs-12 col-sm-1" style="padding-left: 0px;">
         <button type="button" class="btn btn-primary btn-lg">分享</button></div>
       	
       </div>
     </div>
   </div>
-     <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='shareBtn' class="btn">Open demo</a>
-  <div style="display: none;" id="hidden-content-b">
-    <h2>Hello!</h2>
-    <p>previeShare</p>
+  
+  
+  
+  <!-- 123 -->
+     <a data-fancybox data-src="#hidden-content-a" href="javascript:;" id='shareBtn' class="btn">Open demo</a>
+  <div style="display: none;" id="hidden-content-a">
+		<div class="modal-content" >
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">檢舉照片</h4>
+      </div>
+      <div class="modal-body">
+       <label class="col-sm-2 control-label">檢舉類型</label>
+      <select class="form-control">
+			<option value="0">涉及歧視</option>				
+			<option value="1">含十八禁</option>
+			<option value="2">人身攻擊</option>
+			<option value="3">政治問題</option>
+			<option value="4">其他</option>
+	 </select>
+	 	<label class="col-sm-2 control-label">檢舉原因</label>
+        <textarea class="form-control" rows="3" style="resize: none;">
+        	
+        </textarea>
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-primary btn-lg">送出</button></div>
+      
+    </div>
   </div>
 
 
