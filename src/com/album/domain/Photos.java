@@ -1,4 +1,4 @@
-package com.album.domain;
+	package com.album.domain;
 
 import java.util.Date;
 import java.util.List;

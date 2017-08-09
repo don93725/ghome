@@ -23,7 +23,8 @@
 		<![endif]-->
 <style type="text/css">
 .shareContent img{
-				width: 100%;
+	width: 50%;
+	height: 300px;
 }
 .cmt {
 	height: 60px;
@@ -103,7 +104,8 @@ div.addAlbum {
 }
 #hidden-content-b {
   /* Custom styling */
-  max-width: 60%;
+  max-width: 50%;
+  width: 50%;
   height: auto;
   border-radius: 4px;
 
@@ -207,7 +209,7 @@ div.addAlbum {
 			</div>			
 			<div id='picCmt${photo.photo_no}' style='display:none;'>
 						<div class="panel panel-default" style='font-size: 20px;max-height:103%; height:103%;'>
-							  <div class="panel-heading" >留言  <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='rptBtn' class="btn">Open demo</a></div>
+							  <div class="panel-heading" >留言 <button onclick='sharePhoto("${pageContext.request.contextPath}","${album.mem_no.mem_no}","${album.mem_no.mem_rank}","${album.mem_no.mem_nickname}","<fmt:setLocale value="en_US" /><fmt:formatDate value="${photo.ul_Date}" pattern="yyyy-MM-dd HH:mm" />","${photo.photo_no}");'>分享</button>  </div>
 							     <ul class="list-group pre-scrollable" style=' vertical-align:middle;max-height:88%; height:88%;'>
 								    <c:if test="${empty photo.comments }">
 								    	<li class="list-group-item text-center" style='height: 100%; font-size: 20px;'>							    		
@@ -343,38 +345,36 @@ div.addAlbum {
 
 
 <!-- 分享 -->
-
+<a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='shareBtn'>Open demo</a>
  <div style="display: none;" id="hidden-content-b">
-<div class="modal-content">
+<div class="modal-content" id='shareContainer' style='width:100%;'>
       <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">分享XX至動態</h4>
       </div>
       <div class="modal-body">
-        <textarea class="form-control" rows="3" style="resize: none;">
+        <textarea class="form-control" id='shareText' rows="3" style="resize: none;">
         	
         </textarea>
       </div>
       <div class="modal-footer">
       
-      <a href="#" target="XX動態牆" >
+      <a href="#" target="_blank" >
         <div class="panel panel-default">
 		  <div class="panel-heading text-left">
 		 		<div class="row">
 									<div class="col-xs-12 col-sm-1">
 
-										<img
-											src="${pageContext.request.contextPath}/util/OutputPic?mem_no=${message_board.mem_no.mem_no }&mem_rank=${message_board.mem_no.mem_rank }"
-											class="img-circle cmt_mem_pic" title='${message_board.mem_no.mem_nickname }'>
+										<img id='sharePic'
+											src=""
+											class="img-circle cmt_mem_pic">
 
 									</div>
 									<div class="col-xs-12 col-sm-11">
-										<div class="col-xs-12 col-sm-12 cmtInfo">
-											<a href="#">名字${message_board.mem_no.mem_nickname }</a>
+										<div class="col-xs-12 col-sm-12 cmtInfo" id='shareNickname'>
+											名字
 										</div>
-										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime">
-											時間<fmt:setLocale value="en_US" />
-											<fmt:formatDate value="${message_board.bd_msg_time}"
-												pattern="yyyy-MM-dd HH:mm" />										
+										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime" id='shareTime'>
+											時間									
 
 										</div>
 
@@ -382,25 +382,18 @@ div.addAlbum {
 									</div>
 		  </div>
 		  <div class="panel-body shareContent">
-		  		<div class="col-xs-12 col-sm-12 text-left" style="margin-bottom: 10px;">
-		  			內容?
-		  		</div>
-		    	<div class="col-xs-12 col-sm-4">
-		    		<img src="https://api.fnkr.net/testimg/350x200/00CED1/FFF/?text=img+placeholder">
+		  		
+		    	<div class="col-xs-12 col-sm-12 text-left">
+		    		<img  id='shareIMG' src="">
 		    	</div>
-		    	<div class="col-xs-12 col-sm-4">
-		    		<img src="https://api.fnkr.net/testimg/350x200/00CED1/FFF/?text=img+placeholder">
-		    	</div>
-		    	<div class="col-xs-12 col-sm-4">
-		    		<img src="https://api.fnkr.net/testimg/350x200/00CED1/FFF/?text=img+placeholder">
-		    	</div>
+		    	
 		  
 		  </div>
 		</div>
       </a>
       </div>
       <div class="modal-footer">
-      	<div class="col-xs-12 col-sm-2 col-sm-offset-9" style="padding-left: 100px;" >
+      	<div class="col-xs-12 col-sm-2 col-sm-offset-9" style="padding-left: 80px;" >
       		<div class="dropup">
 					<button class="btn btn-default btn-lg dropdown-toggle" type="button"
 						id="dropdownMenu2" data-toggle="dropdown"
@@ -418,7 +411,7 @@ div.addAlbum {
 				</div>
       	</div>
       	<div class="col-xs-12 col-sm-1" style="padding-left: 0px;">
-        <button type="button" class="btn btn-primary btn-lg">分享</button></div>
+        <button type="button" class="btn btn-primary btn-lg" onclick='shareSubmit("${pageContext.request.contextPath}","${param.mem_no }");'>分享</button></div>
       	
       </div>
     </div>
@@ -464,6 +457,49 @@ div.addAlbum {
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
+	function sharePhoto(path,mem_no,mem_rank,mem_nickname,ul_date,photo_no){
+		$('#sharePic').attr('src',path+'/util/OutputPic?mem_no='+mem_no+"&mem_rank="+mem_rank);
+		$('#shareIMG').attr('src',path+'/util/OutputPic?photo_no='+photo_no);
+		$('#shareNickname').text(mem_nickname+" 發佈的相片");
+		$('#shareTime').text(ul_date);
+		$('#shareBtn').trigger('click');
+		
+		
+	}
+	function shareSubmit(path,mem_no){
+		var content = $('#shareContainer').find('.modal-footer').html();
+		var bd_msg_ctx = $('#shareText').val();
+		var bd_prvt = $('#dropdownMenu2').val();
+		alert(bd_msg_ctx);
+		$.ajax({
+			type : "POST",
+			url : path + "/board/BoardActionCtrl?action=ref_board&mem_no="+mem_no,
+			dataType : 'text',
+			data: {
+				bd_ref_ctx : content,
+				bd_type:"2",
+				bd_msg_ctx: bd_msg_ctx,
+				bd_prvt: bd_prvt
+				
+			},
+			success : function(msg) {
+				if (msg.length != 0) {
+					alert('ok');
+				
+					
+				} else {						
+					
+					
+					
+				}
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+			}
+
+		});
+	}
 	function chooseCmmtPrvt(bd_prvt) {
 		$(this).parents('ul').prev().html(
 				$(this).text() + '<span class="caret"></span>');
@@ -641,9 +677,7 @@ div.addAlbum {
 	function makePhotoCmmt(){
 		$(this).prev().val();
 	}
-	function sharePhoto(){
-		
-	}
+
 	function four(){
 		$('.album').removeClass('col-sm-1');
 		$('.album').addClass('col-sm-2');	

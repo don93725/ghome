@@ -50,7 +50,21 @@ public class BoardActionCtrl extends HttpServlet {
 			String bd_prvt = req.getParameter("bd_prvt");
 			Collection<Part> parts = req.getParts();
 			Message_boardService message_boardService = new Message_boardService();
-			boolean result = message_boardService.add(mem_no, bd_type, bd_msg_ctx, bd_prvt, parts);
+			boolean result = message_boardService.add(user.getMem_no(), bd_type, bd_msg_ctx, bd_prvt, parts);
+			if(result){
+				out.print("ok");
+			}
+			return;
+		}
+		if ("ref_board".equals(action)) {
+			// 新增
+			String bd_type = req.getParameter("bd_type");
+			String bd_msg_ctx = req.getParameter("bd_msg_ctx");
+			String bd_ref_ctx = req.getParameter("bd_ref_ctx");
+			String bd_prvt = req.getParameter("bd_prvt");
+			System.out.println(bd_type+" "+bd_msg_ctx+" "+bd_ref_ctx+" "+bd_prvt);
+			Message_boardService message_boardService = new Message_boardService();
+			boolean result = message_boardService.addRefBoard(user.getMem_no(), bd_type, bd_msg_ctx, bd_prvt, bd_ref_ctx);
 			if(result){
 				out.print("ok");
 			}

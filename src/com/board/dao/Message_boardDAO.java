@@ -240,11 +240,9 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	// 建置新增
 
 	public boolean executeInsert(Message_board message_board) {
-		String sql = "insert into message_board values(?,?,?,?,?,?,?,?,?,?)";
-		Object[] param = { message_board.getBd_msg_no(), message_board.getMem_no(), message_board.getBd_type(),
-				message_board.getBd_likes(), message_board.getBd_msg_ctx(), message_board.getBd_ref_ctx(),
-				message_board.getBd_prvt(), message_board.getBd_msg_time(), message_board.getBd_upd_time(),
-				message_board.getBd_film(), message_board.getBd_ref_url() };
+		String sql = "insert into message_board values(message_board_pk_seq.nextval,?,?,default,?,?,?,default,null,null,null)";
+		Object[] param = {message_board.getMem_no().getMem_no(), message_board.getBd_type(), message_board.getBd_msg_ctx(), message_board.getBd_ref_ctx(),
+				message_board.getBd_prvt()};
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 		return insertResult;
 	}

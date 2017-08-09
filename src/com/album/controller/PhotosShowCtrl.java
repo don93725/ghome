@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.album.domain.Albums;
 import com.album.domain.Photos;
 import com.album.service.AlbumsService;
 import com.album.service.PhotosService;
@@ -48,6 +49,8 @@ public class PhotosShowCtrl extends HttpServlet {
 					thisPage = allPageCount;
 				}
 				List<Photos> photos = photosService.pageAndRank(thisPage, pageSize, al_no);
+				Albums album = albumsService.getVO(al_no);
+				req.setAttribute("album", album);
 				req.setAttribute("photos", photos);
 				req.setAttribute("thisPage", thisPage);
 				req.setAttribute("allPageCount", allPageCount);
@@ -82,6 +85,9 @@ public class PhotosShowCtrl extends HttpServlet {
 				thisPage = allPageCount;
 			}
 			List<Photos> photos = photosService.pageAndRank(thisPage, pageSize, al_no);
+			AlbumsService albumsService = new AlbumsService();
+			Albums album = albumsService.getVO(al_no);
+			req.setAttribute("album", album);
 			req.setAttribute("photos", photos);
 			req.setAttribute("thisPage", thisPage);
 			req.setAttribute("allPageCount", allPageCount);

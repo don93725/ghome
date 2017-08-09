@@ -2,9 +2,12 @@ package com.album.domain;
 
 import java.util.Date;
 
+import com.members.model.MembersVO;
+
 public class Albums {
 	Integer al_views;
-	String al_no,mem_no,al_name,al_prvt,al_board;
+	String al_no,al_name,al_prvt,al_board;
+	MembersVO mem_no;
 	Date al_date;
 	public Integer getAl_views() {
 		return al_views;
@@ -18,10 +21,11 @@ public class Albums {
 	public void setAl_no(String al_no) {
 		this.al_no = al_no;
 	}
-	public String getMem_no() {
+	
+	public MembersVO getMem_no() {
 		return mem_no;
 	}
-	public void setMem_no(String mem_no) {
+	public void setMem_no(MembersVO mem_no) {
 		this.mem_no = mem_no;
 	}
 	public String getAl_name() {

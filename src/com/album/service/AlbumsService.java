@@ -11,13 +11,16 @@ import com.album.domain.Albums;
 import com.don.inteface.DAOInterface;
 import com.don.inteface.ServiceIntface;
 import com.forum.domain.Article_comments;
+import com.members.model.MembersVO;
 
 public class AlbumsService {
 	// 封裝新增物件
 
 	public boolean add(String mem_no, String al_name, String al_prvt) {
 		Albums albums = new Albums();
-		albums.setMem_no(mem_no);
+		MembersVO members = new MembersVO();
+		members.setMem_no(mem_no);
+		albums.setMem_no(members);
 		albums.setAl_name(al_name);
 		albums.setAl_prvt(al_prvt);
 		DAOInterface dao = new AlbumsDAO();
@@ -47,6 +50,11 @@ public class AlbumsService {
 		String order = "al_board,al_date desc";
 		Object[] param = { mem_no };
 		List<Albums> albums = albumsDAO.pageAndRank(page, pageSize, order, where);
+		return albums;
+	}
+	public Albums getVO(String al_no) {
+		AlbumsDAO albumsDAO = new AlbumsDAO();		
+		Albums albums = albumsDAO.getVOByPK(al_no);
 		return albums;
 	}
 

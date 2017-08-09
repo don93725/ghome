@@ -12,6 +12,7 @@ import com.album.domain.Albums;
 import com.don.inteface.DAOInterface;
 import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
+import com.members.model.MembersVO;
 
 public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 	// 建置查詢
@@ -26,7 +27,12 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 				albums.setAl_no((String) obj[0]);
 			}
 			if (obj[1] != null) {
-				albums.setMem_no((String) obj[1]);
+				MembersVO member = new MembersVO();
+				
+				member.setMem_no(String.valueOf(obj[1]));
+				member.setMem_rank(String.valueOf(obj[7]));
+				member.setMem_nickname(String.valueOf(obj[8]));
+				albums.setMem_no(member );
 			}
 			if (obj[2] != null) {
 				albums.setAl_date((Date) obj[2]);
@@ -50,7 +56,7 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 	// 建置查詢單筆
 
 	public Albums getVOByPK(String al_no) {
-		String sql = "Select * from albums where al_no=?";
+		String sql = "select * from (Select al_no,a.mem_no,al_date,al_name,al_views,al_prvt,al_board,mem_rank,mem_nickname from albums a join members b on a.mem_no=b.mem_no)  where al_no=?";
 		Object[] param = { al_no };
 		List<Albums> list = getVOBySQL(sql, param);
 		Albums albums = list.get(0);
@@ -81,7 +87,7 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 
 	public boolean executeInsert(Albums albums) {
 		String sql = "insert into albums values(albums_pk_seq.nextval,?,default,?,default,?,default)";
-		Object[] param = {albums.getMem_no(), albums.getAl_name(), albums.getAl_prvt() };
+		Object[] param = {albums.getMem_no().getMem_no(), albums.getAl_name(), albums.getAl_prvt() };
 		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
 		return insertResult;
 	}
@@ -145,11 +151,12 @@ public class AlbumsDAO extends BasicDAO implements DAOInterface<Albums> {
 	public List<Albums> pageAndRank(int page, int pageSize, String order, String where) {
 		int firstPage = (page - 1) * pageSize + 1;
 		int lastPage = page * pageSize;
-		String sql = "select al_no,mem_no,al_date,al_name,al_views,al_prvt,al_board from (select al_no,mem_no,al_date,al_name,al_views,al_prvt,al_board, rownum rn from (select * from albums";
+		String sql = "select * from (select al_no,mem_no,al_date,al_name,al_views,al_prvt,al_board,mem_rank,mem_nickname, rownum rn from (select al_no,a.mem_no,al_date,al_name,al_views,al_prvt,al_board,mem_rank,mem_nickname from albums a join members b on a.mem_no=b.mem_no)";
 		if (where != null) {
 			sql = sql + " where " + where;
 		}
-		sql = sql + " order by " + order + ")) where rn between " + firstPage + " and " + lastPage;
+		sql = sql + " order by " + order + ") where rn between " + firstPage + " and " + lastPage;
+		System.out.println(sql);
 		List<Albums> list = getVOBySQL(sql, null);
 		return list;
 	}

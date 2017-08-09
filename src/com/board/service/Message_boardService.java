@@ -58,6 +58,19 @@ public class Message_boardService {
 		boolean result = dao.executeInsert(message_board, photos);
 		return result;
 	}
+	public boolean addRefBoard(String mem_no, String bd_type, String bd_msg_ctx, String bd_prvt, String bd_ref_ctx) {
+		Message_board message_board = new Message_board();
+		MembersVO members = new MembersVO();
+		members.setMem_no(mem_no);
+		message_board.setMem_no(members);
+		message_board.setBd_type(bd_type);
+		message_board.setBd_msg_ctx(bd_msg_ctx);
+		message_board.setBd_prvt(bd_prvt);
+		message_board.setBd_ref_ctx(bd_ref_ctx);		
+		Message_boardDAO dao = new Message_boardDAO();
+		boolean result = dao.executeInsert(message_board);
+		return result;
+	}
 	public boolean executeDelete(String bd_msg_no){
 		Message_boardDAO dao = new Message_boardDAO();
 		boolean result = dao.executeDelete(bd_msg_no);
