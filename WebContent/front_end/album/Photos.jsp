@@ -22,6 +22,29 @@
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
 <style type="text/css">
+.shareContent img{
+				width: 100%;
+}
+.cmt {
+	height: 60px;
+	padding-top: 20px;
+	padding-left: 0px;
+}
+
+.cmt_mem_pic {
+	height: 60px;
+	width: 60px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+
+.cmtInfo {
+	margin-top: 10px;
+}
+
+.cmtTime {
+	color: gray;
+}
 div.album img {
 	width: 100%;
 	
@@ -80,7 +103,8 @@ div.addAlbum {
 }
 #hidden-content-b {
   /* Custom styling */
-  max-width: 550px;
+  max-width: 60%;
+  height: auto;
   border-radius: 4px;
 
   /* Custom transition - slide from top*/
@@ -173,7 +197,7 @@ div.addAlbum {
 			</div>			
 			<div id='picCmt${photo.photo_no}' style='display:none;'>
 						<div class="panel panel-default" style='font-size: 20px;max-height:103%; height:103%;'>
-							  <div class="panel-heading" >留言</div>
+							  <div class="panel-heading" >留言  <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='rptBtn' class="btn">Open demo</a></div>
 							     <ul class="list-group pre-scrollable" style=' vertical-align:middle;max-height:88%; height:88%;'>
 								    <c:if test="${empty photo.comments }">
 								    	<li class="list-group-item text-center" style='height: 100%; font-size: 20px;'>							    		
@@ -305,13 +329,90 @@ div.addAlbum {
 			
 				
 		</div>
+
+
+
+<!-- 分享 -->
+
+ <div style="display: none;" id="hidden-content-b">
+<div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">分享XX至動態</h4>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" rows="3" style="resize: none;">
+        	
+        </textarea>
+      </div>
+      <div class="modal-footer">
+      
+      <a href="#" target="XX動態牆" >
+        <div class="panel panel-default">
+		  <div class="panel-heading text-left">
+		 		<div class="row">
+									<div class="col-xs-12 col-sm-1">
+
+										<img
+											src="${pageContext.request.contextPath}/util/OutputPic?mem_no=${message_board.mem_no.mem_no }&mem_rank=${message_board.mem_no.mem_rank }"
+											class="img-circle cmt_mem_pic" title='${message_board.mem_no.mem_nickname }'>
+
+									</div>
+									<div class="col-xs-12 col-sm-11">
+										<div class="col-xs-12 col-sm-12 cmtInfo">
+											<a href="#">名字${message_board.mem_no.mem_nickname }</a>
+										</div>
+										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime">
+											時間<fmt:setLocale value="en_US" />
+											<fmt:formatDate value="${message_board.bd_msg_time}"
+												pattern="yyyy-MM-dd HH:mm" />										
+
+										</div>
+
+									</div>
+									</div>
+		  </div>
+		  <div class="panel-body shareContent">
+		  		<div class="col-xs-12 col-sm-12 text-left" style="margin-bottom: 10px;">
+		  			內容?
+		  		</div>
+		    	<div class="col-xs-12 col-sm-4">
+		    		<img src="https://api.fnkr.net/testimg/350x200/00CED1/FFF/?text=img+placeholder">
+		    	</div>
+		    	<div class="col-xs-12 col-sm-4">
+		    		<img src="https://api.fnkr.net/testimg/350x200/00CED1/FFF/?text=img+placeholder">
+		    	</div>
+		    	<div class="col-xs-12 col-sm-4">
+		    		<img src="https://api.fnkr.net/testimg/350x200/00CED1/FFF/?text=img+placeholder">
+		    	</div>
+		  
+		  </div>
 		</div>
-
-
-   <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='rptBtn' class="btn">Open demo</a>
-  <div style="display: none;" id="hidden-content-b">
-    <h2>Hello!</h2>
-    <p>rpt</p>
+      </a>
+      </div>
+      <div class="modal-footer">
+      	<div class="col-xs-12 col-sm-1 col-sm-offset-9" style="padding-left: 40px;" >
+      		<div class="dropup">
+					<button class="btn btn-default btn-lg dropdown-toggle" type="button"
+						id="dropdownMenu2" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="true" value="0">
+						隱私 <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'0');">朋友&nbsp</a></li>
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'1');">公開&nbsp</a></li>
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'2');">本人&nbsp</a></li>
+					</ul>
+				</div>
+      	</div>
+      	<div class="col-xs-12 col-sm-2" style="padding-left: 0px;">
+        <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">關閉</button>
+        <button type="button" class="btn btn-primary btn-lg">分享</button></div>
+      	
+      </div>
+    </div>
   </div>
      <a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='shareBtn' class="btn">Open demo</a>
   <div style="display: none;" id="hidden-content-b">
@@ -320,9 +421,7 @@ div.addAlbum {
   </div>
 
 
-
-
-<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/album/css/colorbox.css" />
+<!-- test -->
 
 	<script src="https://code.jquery.com/jquery.js"></script>
 	<script src='${pageContext.request.contextPath}/front_end/album/js/jquery.ajax-progress.js'></script>	
@@ -330,6 +429,12 @@ div.addAlbum {
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
+	function chooseCmmtPrvt(bd_prvt) {
+		$(this).parents('ul').prev().html(
+				$(this).text() + '<span class="caret"></span>');
+		$(this).parents('ul').prev().val(bd_prvt);
+
+	}
 	function addPhotoCmtLikes(event,path,bd_cmt_no,mem_no){
 		event.preventDefault();
 		var span = $(this).find('.cmtLikes');
@@ -661,8 +766,9 @@ div.addAlbum {
 	    }		
 	$(function (){	
 										
-			
-					var flag = 1;
+					$('#dropdownMenu2').click(function(){
+						$(this).parent().addClass('open');
+					});
 					$('#choosePic').click(function(){
 						
 							$('input[name=photo_no]').toggle();

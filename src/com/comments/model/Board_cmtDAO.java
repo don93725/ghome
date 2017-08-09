@@ -121,7 +121,6 @@ public class Board_cmtDAO extends BasicDAO implements DAOInterface<Board_cmt> {
 
 		sql = sql + " order by cmt_likes desc, bd_cmt_time)";
 		List<Board_cmt> list = getVOBySQL(sql, null);
-		System.out.println(sql);
 		return list;
 	}
 	// 建置分頁(彈性排序不設條件)

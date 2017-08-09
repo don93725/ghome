@@ -321,7 +321,6 @@
 											class="img-circle cmt_mem_pic" title='${message_board.mem_no.mem_nickname }'>
 
 									</div>
-									</a>
 									<div class="col-xs-12 col-sm-9">
 										<div class="col-xs-12 col-sm-12 cmtInfo">
 											<a href="#">${message_board.mem_no.mem_nickname }</a>

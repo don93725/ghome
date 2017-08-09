@@ -2361,10 +2361,11 @@
         // =================================================================================
 
         close : function( e, d ) {
-        	$('#cmt-container').css('display',"none");
             var self    = this;
             var current = self.current;
-
+            if(current.type=='image'){
+            	$('#cmt-container').css('display',"none");            	
+            }
             var effect, duration;
             var $what, opacity, start, end;
 
