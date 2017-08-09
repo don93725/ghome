@@ -477,7 +477,7 @@ div.addAlbum {
 			dataType : 'text',
 			data: {
 				bd_ref_ctx : content,
-				bd_type:"2",
+				bd_type:"4",
 				bd_msg_ctx: bd_msg_ctx,
 				bd_prvt: bd_prvt
 				
