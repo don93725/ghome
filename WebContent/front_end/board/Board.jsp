@@ -428,7 +428,7 @@
 
 							</div>
 							<!--/panel-body  -->
-								<!-- 1111111111 -->
+								<!-- 相片留言  -->
 								<c:forEach var="bd_photo" 
 													items="${message_board.photos }" varStatus="loop">
 							<c:forEach var="comment" items="bd_photo.comments">
@@ -523,6 +523,8 @@
 							
 							<!--panel-body -->
 						</c:if>
+						<c:if
+							test="${message_board.bd_type==2 || message_board.bd_type==3 ||message_board.bd_type==0 ||message_board.bd_type==1}">
 						<div class='panel panel-default picAndFilm'>
 						<div class="panel-heading text-center">
 						<h4>新增圖影專區
@@ -557,8 +559,16 @@
 									
 							
 								</div>
+							</div></c:if>
+						<!-- 相片分享 -->	
+						<c:if test="${message_board.bd_type=='4' }">
+							<div class="panel-body">
+							${message_board.bd_ref_ctx}
 							</div>
-								
+						</c:if>
+						
+							
+						<!-- 相片分享end -->		
 						<div class="panel-body updatTime">
 						<div class="col-xs-12 col-sm-4">
 						<span id='likes${message_board.bd_msg_no}'>${message_board.bd_likes}</span>&nbsp個讚
