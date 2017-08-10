@@ -212,6 +212,27 @@
 	width:100%;
 	
 }
+#hidden-content-b {
+  /* Custom styling */
+  max-width: 50%;
+  width: 50%;
+  height: auto;
+  border-radius: 4px;
+
+  /* Custom transition - slide from top*/
+  transform: translateY(-50px);
+  transition: all .33s;
+}
+#hidden-content-a {
+  /* Custom styling */
+  max-width: 60%;
+  width: 50%;
+  height: auto;
+  border-radius: 4px;
+  /* Custom transition - slide from top*/
+  transform: translateY(-50px);
+  transition: all .33s;
+}
 </style>
 </head>
 <body ondragover="javascript: dragHandler(event);"
@@ -598,8 +619,9 @@
 										<c:if test="${not empty message_board.comments }"> <span class="badage">${fn:length(message_board.comments)}</span></c:if>
 											<span class="glyphicon glyphicon-comment">&nbsp留言</span>
 									</a></li>
-									<li role="presentation" ${(not empty user)?"":"class='disabled'"} ${(not empty user)?"":"disabled"}><a href="#"
-										onclick="${(empty user)?"return false":"share.call(this,event)"};" > 
+									<li role="presentation" ${(not empty user)?"":"class='disabled'"} ${(not empty user)?"":"disabled"}>
+									<c:if test='${empty user}'><a href="#" onclick="return false;"></c:if>
+										<c:if test='${!empty user}'><a href="#" onclick="sharePhoto.call(this,event,"${pageContext.request.contextPath}","${message_board.bd_msg_no}","${message_board.mem_no.mem_no}","${message_board.mem_no.mem_rank}","${message_board.mem_no.mem_nickname}","<fmt:setLocale value="en_US" /><fmt:formatDate value="${message_board.bd_msg_time}" pattern="yyyy-MM-dd HH:mm" />","${message_board.bd_msg_ctx}","${message_board.bd_type}","${message_board.bd_film }","${message_board.photos[0].photo_no},${message_board.photos[1].photo_no},${message_board.photos[2].photo_no}");"></c:if> 
 										<span class="glyphicon glyphicon-share-alt">&nbsp分享</span>
 									</a></li>
 								</ul>
@@ -771,6 +793,117 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- 分享 -->
+<a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='shareBtn' >share</a>
+ <div style="display: none;" id="hidden-content-b">
+<div class="modal-content" id='shareContainer' style='width:100%;'>
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">分享相片至動態</h4>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" id='shareText' rows="3" style="resize: none;">
+        	
+        </textarea>
+      </div>
+      <div class="modal-footer">
+      
+      <a href="#" id='shareLink' target="_blank" >
+        <div class="panel panel-default">
+		  <div class="panel-heading text-left">
+		 		<div class="row">
+									<div class="col-xs-12 col-sm-1">
+
+										<img id='sharePic'
+											src=""
+											class="img-circle cmt_mem_pic">
+
+									</div>
+									<div class="col-xs-12 col-sm-11">
+										<div class="col-xs-12 col-sm-12 cmtInfo" id='shareNickname'>
+											名字
+										</div>
+										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime" id='shareTime'>
+											時間									
+
+										</div>
+
+									</div>
+									</div>
+		  </div>
+		  <div class="panel-body shareContent">
+		  		<div id='bd_msg_ctx' class="col-xs-12 col-sm-12 text-left">
+		  		內文
+		  		</div>
+		    	<div class="col-xs-12 col-sm-12 text-left" id='shareMedia'>
+		    		
+		    	</div>
+		    	
+		  
+		  </div>
+		</div>
+      </a>
+      </div>
+      <div class="modal-footer">
+      	<div class="col-xs-12 col-sm-2 col-sm-offset-9" style="padding-left: 80px;" >
+      		<div class="dropup">
+					<button class="btn btn-default btn-lg dropdown-toggle" type="button"
+						id="dropdownMenu2" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="true" value="0">
+						隱私 <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'0');">朋友&nbsp</a></li>
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'1');">公開&nbsp</a></li>
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'2');">本人&nbsp</a></li>
+					</ul>
+				</div>
+      	</div>
+      	<div class="col-xs-12 col-sm-1" style="padding-left: 0px;">
+        <button type="button" class="btn btn-primary btn-lg" onclick='shareSubmit("${pageContext.request.contextPath}","${param.mem_no }");'>分享</button></div>
+      	
+      </div>
+    </div>
+  </div>
+  
+  
+<!-- 分享 end -->
+  
+     <a data-fancybox data-src="#hidden-content-a" href="javascript:;" id='shareBtn2' class="btn">Open demo</a>
+  <div style="display: none;" id="hidden-content-a">
+		<div class="modal-content" >
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">檢舉照片</h4>
+      </div>
+      <div class="modal-body">
+       <label class="col-sm-2 control-label">檢舉類型</label>
+      <select class="form-control">
+			<option value="0">涉及歧視</option>				
+			<option value="1">含十八禁</option>
+			<option value="2">人身攻擊</option>
+			<option value="3">政治問題</option>
+			<option value="4">其他</option>
+	 </select>
+	 	<label class="col-sm-2 control-label">檢舉原因</label>
+        <textarea class="form-control" rows="3" style="resize: none;">
+        	
+        </textarea>
+      </div>
+
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-primary btn-lg">送出</button></div>
+      
+    </div>
+  </div>
+
+	
+  <!-- 123 -->
+	
+	
 	<input type='text' id='thisPage' value='${thisPage }'>
 	<input type='text' id='allPageCount' value='${allPageCount }'>
 	<button onclick='del();'>123</button>
@@ -782,6 +915,70 @@
 	<script
 		src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
+	function sharePhoto(event,path,bd_msg_no,mem_no,mem_rank,mem_nickname,bd_msg_time,bd_msg_ctx,bd_type,bd_film,photo_no){
+		event.preventDefault();
+		$('#sharePic').attr('src',path+'/util/OutputPic?mem_no='+mem_no+"&mem_rank="+mem_rank);
+		$('#bd_msg_ctx').text(bd_msg_ctx);
+		var media;
+		
+		if(bd_type=='2'||bd_type=='3'){
+			media ="<div class='col-xs-12 col-sm-12'>"+
+				"<video controls='controls'>"+
+			"<source src='"+path+"/util/OutputPic?bd_msg_no="+bd_msg_no+"'></video></div>";
+		}
+		if(bd_type=='1'||bd_type=='3'){
+			//補多張格式 要加foreach
+			for(var i =0 ; i< photo_no ; i++){
+				if(photo_no[0].length!=0){
+					media +="<div class='col-xs-12 col-sm-4'>"+
+					"<img  src='"+path+"'/util/OutputPic?photo_no='"+photo_no[0]+"'></div>";					
+				}
+			}
+		}
+
+		
+		$('#shareMedia').append(media);		
+		$('#shareNickname').text(mem_nickname+" 發佈的相片");
+		$('#shareTime').text(ul_date);
+		$('#shareLink').attr('href',path+'/album/PhotosShowCtrl?al_no='+al_no+"&mem_no="+mem_no);
+		$('#shareBtn').trigger('click');
+		
+		
+	}
+	function shareSubmit(path,mem_no){
+		var content = $('#shareContainer').find('.modal-footer').html();
+		var bd_msg_ctx = $('#shareText').val();
+		var bd_prvt = $('#dropdownMenu2').val();
+		alert(bd_msg_ctx);
+		$.ajax({
+			type : "POST",
+			url : path + "/board/BoardActionCtrl?action=ref_board&mem_no="+mem_no,
+			dataType : 'text',
+			data: {
+				bd_ref_ctx : content,
+				bd_type:"4",
+				bd_msg_ctx: bd_msg_ctx,
+				bd_prvt: bd_prvt
+				
+			},
+			success : function(msg) {
+				if (msg.length != 0) {
+					alert('ok');
+				
+					
+				} else {						
+					
+					
+					
+				}
+			},
+			error : function(xhr, ajaxOptions, thrownError) {
+				alert(xhr.status);
+				alert(thrownError);
+			}
+
+		});
+	}
 	function addPhotoCmtLikes(event,path,bd_cmt_no,mem_no){
 		event.preventDefault();
 		var span = $(this).find('.cmtLikes');
@@ -1330,19 +1527,21 @@
 														.clone().appendTo(
 																$(this));
 												var num = $(this).children(':last-child').children().children().attr('id');
-												
-												$(this)	.children(':last-child')
-														.children()
-														.children()
-														.prop("href", "#")
-														.removeAttr("data-fancybox")
-														.click(function(event) {
-																	event.preventDefault();
-																	next.children(':first-child')
-																		.children()
-																		.children()
-																		.trigger('click');
-																});
+												if(sibNum>1){
+													
+													$(this)	.children(':last-child')
+															.children()
+															.children()
+															.prop("href", "#")
+															.removeAttr("data-fancybox")
+															.click(function(event) {
+																		event.preventDefault();
+																		next.children(':first-child')
+																			.children()
+																			.children()
+																			.trigger('click');
+																	});
+												}
 
 												if (sibNum > 1) {
 													if (next.next().length > 0) {
@@ -1463,7 +1662,6 @@
 			return "";
 		}
 		function deleteBoard(path ,mem_no, bd_msg_no) {
-			alert( path + "/board/BoardActionCtrl?action=delete&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no);
 			if (confirm('將會把照片及內文完全刪除，確定不會捨不得，執意還要刪除？')) {
 				$.ajax({
 					type : "POST",
@@ -2006,18 +2204,20 @@
 								}
 								next.children(':first-child').clone().appendTo($(this));
 								var num = $(this).children(':last-child').children().children().attr('id');
-								$(this)	.children(':last-child')
-										.children()
-										.children()
-										.prop("href", "#")
-										.removeAttr("data-fancybox")
-										.click(function(event) {
-													event.preventDefault();
-													next.children(':first-child')
-														.children()
-														.children()
-														.trigger('click');
-												});
+								if (sibNum > 1) {
+									$(this)	.children(':last-child')
+											.children()
+											.children()
+											.prop("href", "#")
+											.removeAttr("data-fancybox")
+											.click(function(event) {
+														event.preventDefault();
+														next.children(':first-child')
+															.children()
+															.children()
+															.trigger('click');
+													});									
+								}
 								if (sibNum > 1) {
 									if (next.next().length > 0) {
 										next.next()

@@ -72,6 +72,15 @@ div.addAlbum {
 	display: none;
 	
 }
+#realShareBtn{
+position: fixed;
+top:0;
+left:-138%;
+width:350px;
+height:150px;
+size: 50px;
+font-size:50px;
+}
 .progressCr{
 	position: fixed;
 	height: 340px;
@@ -209,7 +218,7 @@ div.addAlbum {
 			</div>			
 			<div id='picCmt${photo.photo_no}' style='display:none;'>
 						<div class="panel panel-default" style='font-size: 20px;max-height:103%; height:103%;'>
-							  <div class="panel-heading" >留言 <button onclick='sharePhoto("${pageContext.request.contextPath}","${album.mem_no.mem_no}","${album.mem_no.mem_rank}","${album.mem_no.mem_nickname}","<fmt:setLocale value="en_US" /><fmt:formatDate value="${photo.ul_Date}" pattern="yyyy-MM-dd HH:mm" />","${photo.photo_no}");'>分享</button>  </div>
+							  <div class="panel-heading" >留言 <button id='realShareBtn' class='btn btn-primary btn-lg' onclick='sharePhoto("${pageContext.request.contextPath}","${album.al_no}","${album.mem_no.mem_no}","${album.mem_no.mem_rank}","${album.mem_no.mem_nickname}","<fmt:setLocale value="en_US" /><fmt:formatDate value="${photo.ul_Date}" pattern="yyyy-MM-dd HH:mm" />","${photo.photo_no}");'>拜託分享我嘛</button>  </div>
 							     <ul class="list-group pre-scrollable" style=' vertical-align:middle;max-height:88%; height:88%;'>
 								    <c:if test="${empty photo.comments }">
 								    	<li class="list-group-item text-center" style='height: 100%; font-size: 20px;'>							    		
@@ -345,11 +354,11 @@ div.addAlbum {
 
 
 <!-- 分享 -->
-<a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='shareBtn'>Open demo</a>
+<a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='shareBtn' style='display:none;'>share</a>
  <div style="display: none;" id="hidden-content-b">
 <div class="modal-content" id='shareContainer' style='width:100%;'>
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">分享XX至動態</h4>
+        <h4 class="modal-title" id="myModalLabel">分享相片至動態</h4>
       </div>
       <div class="modal-body">
         <textarea class="form-control" id='shareText' rows="3" style="resize: none;">
@@ -358,7 +367,7 @@ div.addAlbum {
       </div>
       <div class="modal-footer">
       
-      <a href="#" target="_blank" >
+      <a href="#" id='shareLink' target="_blank" >
         <div class="panel panel-default">
 		  <div class="panel-heading text-left">
 		 		<div class="row">
@@ -448,6 +457,7 @@ div.addAlbum {
     </div>
   </div>
 
+<!-- 分享 end -->
 
 <!-- test -->
 
@@ -457,11 +467,12 @@ div.addAlbum {
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 	<script type="text/javascript">
-	function sharePhoto(path,mem_no,mem_rank,mem_nickname,ul_date,photo_no){
+	function sharePhoto(path,al_no,mem_no,mem_rank,mem_nickname,ul_date,photo_no){
 		$('#sharePic').attr('src',path+'/util/OutputPic?mem_no='+mem_no+"&mem_rank="+mem_rank);
 		$('#shareIMG').attr('src',path+'/util/OutputPic?photo_no='+photo_no);
 		$('#shareNickname').text(mem_nickname+" 發佈的相片");
 		$('#shareTime').text(ul_date);
+		$('#shareLink').attr('href',path+'/album/PhotosShowCtrl?al_no='+al_no+"&mem_no="+mem_no);
 		$('#shareBtn').trigger('click');
 		
 		
@@ -923,7 +934,6 @@ div.addAlbum {
 								photo_no = photo_no + "photo_no=" + $(this).val() +"&";
 							});
 							photo_no = photo_no.substring(0,photo_no.length-1);
-							console.log("action=delete&"+photo_no);
 							$.ajax({
 				                url: path+"/album/PhotosActionCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage="+thisPage,
 				                data:   "action=delete&"+photo_no,				                
