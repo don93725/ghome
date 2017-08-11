@@ -21,6 +21,7 @@
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/comm/css/sweetalert.css">
 <style type="text/css">
 .shareContent img{
 	width: 50%;
@@ -155,6 +156,26 @@ font-size:50px;
 	width:100%;
 	
 }
+.alert-dismissable {
+  padding-right: 35px;
+  position: fixed;
+  top:25%;
+  left:0;
+  right:0;
+  margin-left:auto;
+  margin-right:auto;
+  width: 30%;
+  font-size:50px;
+  text-align: center;
+  z-index: 1000000;
+}
+.alert-dismissable .close {
+  position: relative;
+  top: -5px;
+  right: -21px;
+  font-size:50px;
+  color: inherit;
+}
 </style>
 
 </head>
@@ -171,7 +192,7 @@ font-size:50px;
 					<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
 					  新增照片
 					</button>
-					<input type="button" id='editPic' style="display: none;" class="btn btn-primary btn-lg" onclick="editPic()" value="編輯相簿" >
+					<input type="button" id='editPic' style="display: none;" class="btn btn-primary btn-lg" onclick="editPic()" value="編輯相片" >
 					<input type="button" id='deletePic' style="display: none;" class="btn btn-danger btn-lg" onclick="return deletePic('${pageContext.request.contextPath}','${param.mem_no }','${param.al_no }','${thisPage }');" value="刪除照片" >
 					</div>
 					<div class="col-xs-12 col-sm-4 text-right" style="vertical-align: middle;">
@@ -466,6 +487,7 @@ font-size:50px;
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
+	<script src='${pageContext.request.contextPath}/front_end/comm/js/sweetalert.min.js'></script>	
 	<script type="text/javascript">
 	function sharePhoto(path,al_no,mem_no,mem_rank,mem_nickname,ul_date,photo_no){
 		$('#sharePic').attr('src',path+'/util/OutputPic?mem_no='+mem_no+"&mem_rank="+mem_rank);
@@ -479,9 +501,8 @@ font-size:50px;
 	}
 	function shareSubmit(path,mem_no){
 		var content = $('#shareContainer').find('.modal-footer').html();
-		var bd_msg_ctx = $('#shareText').val();
+		var bd_msg_ctx = $('#shareText').val().trim();
 		var bd_prvt = $('#dropdownMenu2').val();
-		alert(bd_msg_ctx);
 		$.ajax({
 			type : "POST",
 			url : path + "/board/BoardActionCtrl?action=ref_board&mem_no="+mem_no,
@@ -494,19 +515,42 @@ font-size:50px;
 				
 			},
 			success : function(msg) {
-				if (msg.length != 0) {
-					alert('ok');
-				
+				if (msg.length == 0) {
+					swal({
+					  title: "成功",
+					  text: "已成功分享動態",
+					  timer: 1000,
+					  type: "success",
+					  showConfirmButton: false
+					},function(){
+						swal.close();
+						$('.fancybox-close-small').click();	
+					});
 					
 				} else {						
-					
+					$.each(JSON.parse(msg),function(v,i){
+						swal({
+							  title: "輸入錯誤",
+							  text: i,
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+						});					
+
+					});
+
 					
 					
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "輸入錯誤",
+					  text: "請再嘗試試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+					});
 			}
 
 		});
@@ -533,7 +577,7 @@ font-size:50px;
 			dataType : 'text',
 			data: "cmt_type=1&bd_cmt_no="+bd_cmt_no,
 			success : function(msg) {
-				if (msg.length != 0) {
+				if (msg.length == 0) {
 					var num = parseInt(span.next().text(),10);
 					if(num==undefined||num==null||span.next().text().length==0){
 						num=0;
@@ -553,14 +597,27 @@ font-size:50px;
 					}
 					
 				} else {						
-					
+					$.each(JSON.parse(msg),function(v,i){
+						swal({
+						  title: "輸入錯誤",
+						  text: i,
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+						});
+					});
 					
 					
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "輸入錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+					});
 			}
 
 		});
@@ -577,7 +634,7 @@ font-size:50px;
 				dataType : 'text',
 				data: "cmt_type=1&bd_cmt_no="+bd_cmt_no,
 				success : function(msg) {
-					if (msg.length != 0) {
+					if (msg.length == 0) {
 						_self.remove();
 						var num = parseInt(_CommtNum.text(),10);
 						if(num-1!=0){
@@ -586,14 +643,27 @@ font-size:50px;
 							_CommtNum.text('');
 						}
 					} else {						
-						
+						$.each(JSON.parse(msg),function(v,i){
+							swal({
+							  title: "輸入錯誤",
+							  text: i,
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+							});
+						});
 						
 						
 					}
 				},
 				error : function(xhr, ajaxOptions, thrownError) {
-					alert(xhr.status);
-					alert(thrownError);
+					swal({
+						  title: "輸入錯誤",
+						  text: "請再嘗試看看	",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+						});
 				}
 
 			});
@@ -625,22 +695,43 @@ font-size:50px;
 			dataType : 'text',
 			data: "bd_cmt_no="+bd_cmt_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
-				if (msg.length != 0) {
+				if (msg.length == 0) {
 					ch.removeClass();
 					ch.addClass('glyphicon glyphicon-pencil');
 					ch.css("color","black");
 					content.find('.a').css("display", "");
 					content.find('.b').css("display","none");
 					content.find('.a').text(content.find('.b').val());
+					swal({
+						  title: "成功",
+						  text: "已成功編輯留言",
+						  timer: 1000,
+						  type: "success",
+						  showConfirmButton: false
+					});
 				} else {						
-					
+					$.each(JSON.parse(msg),function(v,i){
+						swal({
+						  title: "輸入錯誤",
+						  text: i,
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+						});
+					});
 					result = false;
 					
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+
+				swal({
+					  title: "輸入錯誤",
+					  text: "請再次嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+					});
 				result = false;
 			}
 
@@ -667,17 +758,39 @@ font-size:50px;
 			dataType : 'text',
 			data: "cmt_type=1&org_no="+photo_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
-				if (msg.length != 0) {
-					location.reload();
-				} else {						
+				if (msg.length == 0) {
+					swal({
+						  title: "成功",
+						  text: "已成功發布動態",
+						  timer: 1000,
+						  type: "success",
+						  showConfirmButton: false
+					},function(){
+						location.reload();
+					});
 					
+				} else {						
+					$.each(JSON.parse(msg),function(v,i){
+						swal({
+						  title: "輸入錯誤",
+						  text: i,
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+						});
+					});
 					
 					
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "輸入錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+					});
 			}
 
 		});
@@ -737,25 +850,46 @@ font-size:50px;
             },
             success: function(msg){
             	
-				if(msg.length!=0){	
+				if(msg.length==0){	
 					upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
                 	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
                 	upload_progress.attr('aria-valuenow', 100) ;
 	        		
 	        		$('#picReset').trigger('click');
-	        		alert('上傳完成');		
+	        			
 	        		$('.progress').css('display','none');
 	        		$('.progressCr').css('display','none');
-                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";
+	        		swal({
+						  title: "成功",
+						  text: "已成功上傳照片",
+						  timer: 1000,
+						  type: "success",
+						  showConfirmButton: false
+					},function(){
+	                	location.href ="PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage=1";						
+					});
+                	
              	}else{
-                	//報錯啊
-                	alert('上傳失敗');
+             		$.each(JSON.parse(msg),function(v,i){
+    					swal({
+    					  title: "輸入錯誤",
+    					  text: i,
+    					  timer: 1000,
+    					  type: "error",
+    					  showConfirmButton: false
+    					});
+    				});
              	}
             },
 
              error:function(xhr, ajaxOptions, thrownError){ 
-                alert(xhr.status); 
-                alert(thrownError); 
+            	 swal({
+					  title: "輸入錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+					});
             }
            
         });
@@ -904,17 +1038,38 @@ font-size:50px;
 			                type:"POST",
 			                dataType:'text',
 			                success: function(msg){
-			                    if(msg.length!=0){
+			                    if(msg.length==0){
+			                    	swal({
+										  title: "修改成功",
+										  text: "已成功修改照片描述。",
+										  timer: 1000,
+										  type: "success",
+										  showConfirmButton: false
+									});
 			                    	self.parent().parent().prev().children('span').text(val);	
 			                    	
 			                    }else{
 			                    	//報錯啊
-			                    	alert('更新失敗');
+			                    	$.each(JSON.parse(msg),function(v,i){
+			        					swal({
+			        					  title: "輸入錯誤",
+			        					  text: i,
+			        					  timer: 1000,
+			        					  type: "error",
+			        					  showConfirmButton: false
+			        					});
+			        				});
 			                    }
 			                },
 
 			                 error:function(xhr, ajaxOptions, thrownError){ 
-			                    alert('更新失敗');
+		     					swal({
+		     					  title: "發生錯誤",
+		     					  text: "請稍後再嘗試。",
+		     					  timer: 1000,
+		     					  type: "error",
+		     					  showConfirmButton: false
+		     					});
 			                 }
 			            });
 					
@@ -925,37 +1080,73 @@ font-size:50px;
 				}
 				function deletePic(path,mem_no,al_no,thisPage){
 					if($('input[name=photo_no]:checked').length==0){
-						alert('請至少選擇一個');
+						swal({
+							  title: "請至少選擇一張",
+							  text: "刪除照片至少要選擇一張才行。",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+							});
 						return false;
 					}else{
-						if(confirm('確認要刪除照片?')){
 							var photo_no = "";
 							$.each($('input[name=photo_no]:checked') ,function(){
 								photo_no = photo_no + "photo_no=" + $(this).val() +"&";
 							});
 							photo_no = photo_no.substring(0,photo_no.length-1);
-							$.ajax({
-				                url: path+"/album/PhotosActionCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage="+thisPage,
-				                data:   "action=delete&"+photo_no,				                
-				                type:"POST",
-				                dataType:'text',
-				                success: function(msg){
-				                    if(msg.length!=0){	
-				                    	alert('刪除成功')
-				                    	location.href =path + "/album/PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage="+thisPage;
-				                    }else{
-				                    	//報錯啊
-				                    	alert('刪除失敗');
-				                    }
-				                },
+							swal({
+								  title: "確定要刪除照片?",
+							 	  text: "刪除後將無法回復，請三思再做此舉。",
+								  type: "warning",
+								  showCancelButton: true,
+								  confirmButtonColor: "#DD6B55",
+								  cancelButtonText: "算了",
+								  confirmButtonText: "是的",
+								  closeOnConfirm: false
+							},
+							function(){
+								$.ajax({
+					                url: path+"/album/PhotosActionCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage="+thisPage,
+					                data:   "action=delete&"+photo_no,				                
+					                type:"POST",
+					                dataType:'text',
+					                success: function(msg){
+					                    if(msg.length==0){	
+					                    	swal({
+												  title: "刪除成功",
+												  text: "已成功刪除照片",
+												  timer: 1000,
+												  type: "success",
+												  showConfirmButton: false
+											},function(){
+						                    	location.href =path + "/album/PhotosShowCtrl?mem_no="+mem_no+"&al_no="+al_no+"&thisPage="+thisPage;
+											});
+					                    }else{
+					                    	//報錯啊
+					                    	$.each(JSON.parse(msg),function(v,i){
+					        					swal({
+					        					  title: "輸入錯誤",
+					        					  text: i,
+					        					  timer: 1000,
+					        					  type: "error",
+					        					  showConfirmButton: false
+					        					});
+					        				});
+					                    }
+					                },
 
-				                 error:function(xhr, ajaxOptions, thrownError){ 
-				                    alert('刪除失敗');
-				                 }
-				            });
-						}else{
+					                 error:function(xhr, ajaxOptions, thrownError){ 
+					                	 swal({
+					   					  title: "錯誤",
+					   					  text: "請稍後再次嘗試看看。",
+					   					  timer: 1000,
+					   					  type: "error",
+					   					  showConfirmButton: false
+					   					});
+					                 }
+					            });						
 							
-						}
+							});
 					}
 				}
 
@@ -985,7 +1176,13 @@ font-size:50px;
 				var each_img = function(files){
 					$.each(files, function(index,file){
 						if (!file.type.match('image')){
-			    			alert('這又不是圖片..');
+							swal({
+								  title: "上傳錯誤",
+								  text: "這並不是圖片。",
+								  timer: 1000,
+								  type: "error",
+								  showConfirmButton: false
+							});
 			    			return;
 			    		}
 						var reader  = new FileReader();
@@ -1057,6 +1254,7 @@ font-size:50px;
 				var path = window.location.pathname;
 			    webCtx = path.substring(0, path.indexOf('/', 1));
 			})
+			
 			var root,count,webCtx;
 			var fileList = [];
 			

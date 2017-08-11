@@ -12,7 +12,8 @@
 		<meta content="Pragma" content="no-cache">
 		<title>Title Page</title>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-						<link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/css/ace.min.css" />
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/comm/css/sweetalert.css">
+
 		<!--[if lt IE 9]>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -115,6 +116,7 @@
 					<div class="form-group">
 					<label for="al_name">相簿名稱：</label>
 					<input type="text" id='al_name' name="al_name">
+					<div class="alert alert-dnager" style="display: none; color:red;"  role='alert'  id='alert_al_name'></div>
 				</div>
 						<input type='text' id='action' value='insert' style="display:none;">
 				<label for="inlineRadioOptions">開放狀態：
@@ -143,6 +145,7 @@
 
 		
 		<script src="https://code.jquery.com/jquery.js"></script>
+		<script src='${pageContext.request.contextPath}/front_end/comm/js/sweetalert.min.js'></script>	
 		<script type="text/javascript">
 				function four(){
 					$('.album').removeClass('col-sm-2');
@@ -191,10 +194,22 @@
 				
 				function editAlbum(){
 					if($('input[name=al_no]:checked').length>1){
-						alert('請不要選擇多個');
+						swal({
+							  title: "請不要選擇多個",
+							  text: "一次只能編輯一個相簿",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+							});
 						return false;
 					}else if($('input[name=al_no]:checked').length==0){
-						alert('請至少選擇一個');
+						swal({
+							  title: "請至少選擇一個",
+							  text: "請先選擇相簿再來後續動作。",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+							});
 						return false;
 					}else{
 						
@@ -210,7 +225,7 @@
 					}
 				}
 				function updateData(path,mem_no,thisPage){
-						alert(thisPage);
+					$('#alert_al_name').css('display','none');
 					  $.ajax({
 			                url: path+"/album/AlbumsActionCtrl",
 			                data: "action="+$('#action').val()+"&al_no="+$('input[name=al_no]:checked').val()+"&al_name="+$('#al_name').val()+"&al_prvt="+
@@ -219,15 +234,36 @@
 			                dataType:'text',
 
 			                success: function(msg){
-			                    if(msg.length!=0){
+			                    if(msg.length==0){
 			                    	if($('#action').val()=='insert'){
-			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage=1";			                    					                    		
+			                    		swal({
+			  							  title: "成功",
+			  							  text: "已成功新增相簿",
+			  							  timer: 1000,
+			  							  type: "success",
+			  							  showConfirmButton: false
+			  							},function(){
+					                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage=1";
+			  							});
 			                    	}else{
-			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;			                    		
+			                    		swal({
+				  							  title: "成功",
+				  							  text: "已成功修改相簿",
+				  							  timer: 1000,
+				  							  type: "success",
+				  							  showConfirmButton: false
+				  							},function(){
+				  								location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;	
+				  						});
+			                    			                    		
 			                    	}
 			                    	
-			                    }else{
-			                    	//報錯啊
+			                    }else{			                    	
+			                    	$.each(JSON.parse(msg),function(v,i){
+			                    		$('#alert_'+v).css('display',"block");
+			                    		$('#alert_'+v).text(i);								
+			                    		
+			                    	})
 			                    }
 			                },
 
@@ -237,10 +273,7 @@
 			                 }
 			            });
 				}
-				function deleteAlbum(path,mem_no,thisPage){
-					if(!confirm('確定要刪除相簿及相片!?')){
-						return;
-					}
+				function deleteAlbum(path,mem_no,thisPage){					
 					
 					var queryStr = "" ;				  	
 				  	var al = $('input[name=al_no]:checked');
@@ -249,25 +282,58 @@
 
 				  	}
 				  	queryStr = "?action=delete&mem_no="+mem_no+"&"+queryStr.substring(0,queryStr.length-1);
-					  $.ajax({		              						  	
-						  	
-						  	url: path+"/album/AlbumsActionCtrl"+queryStr,			                
-			                type:"POST",
-			                dataType:'text',
+				  	swal({
+						  title: "確定要刪除相簿及相片!?",
+					 	  text: "此舉會永久刪除這些檔案，請三思而後行。",
+						  type: "warning",
+						  showCancelButton: true,
+						  confirmButtonColor: "#DD6B55",
+						  cancelButtonText: "算了",
+						  confirmButtonText: "是的",
+						  closeOnConfirm: false
+					},function(){
+						 $.ajax({		              						  	
+							  	
+							  	url: path+"/album/AlbumsActionCtrl"+queryStr,			                
+				                type:"POST",
+				                dataType:'text',
 
-			                success: function(msg){
-			                    if(msg.length!=0){
-			                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;
-			                    }else{
-			                    	//報錯啊
-			                    }
-			                },
+				                success: function(msg){
+				                    if(msg.length==0){
+				                    	swal({
+											  title: "成功",
+											  text: "已成功發布動態",
+											  timer: 1000,
+											  type: "success",
+											  showConfirmButton: false
+										},function(){
+					                    	location.href =path + "/album/AlbumsShowCtrl?mem_no="+mem_no+"&thisPage="+thisPage;
+										});
+				                    }else{
+				                    	//報錯啊
+				                    	$.each(JSON.parse(msg),function(v,i){
+				        					swal({
+				        					  title: "輸入錯誤",
+				        					  text: i,
+				        					  timer: 1000,
+				        					  type: "error",
+				        					  showConfirmButton: false
+				        					});
+				        				});
+				                    }
+				                },
 
-			                 error:function(xhr, ajaxOptions, thrownError){ 
-			                    alert(xhr.status); 
-			                    alert(thrownError); 
-			                 }
-			            });
+				                 error:function(xhr, ajaxOptions, thrownError){ 
+				                	 swal({
+				   					  title: "輸入錯誤",
+				   					  text: "請稍後再嘗試。",
+				   					  timer: 1000,
+				   					  type: "error",
+				   					  showConfirmButton: false
+				   					});
+				                 }
+				            }); 
+					 });
 				}
 
 		</script>

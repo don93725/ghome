@@ -105,11 +105,8 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	// 建置修改
 
 	public boolean updateByVO(Message_board message_board) {
-		String sql = "update message_board set mem_no=?,bd_type=?,bd_likes=?,bd_msg_ctx=?,bd_ref_ctx=?,bd_prvt=?,bd_msg_time=?,bd_upd_time=?,bd_ref_url=? where bd_msg_no=?";
-		Object[] param = { message_board.getBd_msg_no(), message_board.getMem_no().getMem_no(),
-				message_board.getBd_type(), message_board.getBd_likes(), message_board.getBd_msg_ctx(),
-				message_board.getBd_ref_ctx(), message_board.getBd_prvt(), message_board.getBd_msg_time(),
-				message_board.getBd_upd_time(), message_board.getBd_ref_url() };
+		String sql = "update message_board set bd_msg_ctx=?,bd_upd_time=sysdate where bd_msg_no=?";
+		Object[] param = { message_board.getBd_msg_ctx(),message_board.getBd_msg_no()};
 		boolean updateResult = new SQLHelper().executeUpdate(sql, param);
 		return updateResult;
 	}

@@ -121,7 +121,9 @@ public class Message_boardService {
 			e.printStackTrace();
 		}
 		Message_boardDAO dao = new Message_boardDAO();
-		
+		if("5".equals(delStat)){
+			return dao.updateByVO(message_board);
+		}
 		return dao.updateByVO(message_board, photos, delPhoto_no,delStat);
 	}
 		

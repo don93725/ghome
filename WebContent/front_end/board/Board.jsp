@@ -16,6 +16,8 @@
 	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/front_end/album/css/jquery.fancybox.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/comm/css/sweetalert.css">
+
 <!--[if lt IE 9]>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -233,6 +235,9 @@
   transform: translateY(-50px);
   transition: all .33s;
 }
+
+
+
 </style>
 </head>
 <body ondragover="javascript: dragHandler(event);"
@@ -264,7 +269,8 @@
   
 						<textarea class="form-control scrollable" id='bd_msg_ctx'
 							style="resize: none; background-color: transparent;" rows="8"
-							placeholder="${user.mem_nickname }，在想些什麼呢？"></textarea>
+							placeholder="${user.mem_nickname }，在想些什麼呢？"></textarea>	
+							<div class="error alert alert-danger" role='alert' style='display:none;' id='alert_bd_msg_ctx'></div>					
 					</div>
 					<div class="row-fluid" id='media'></div>
 					<div class="row-fluid" id='filmContainer'></div>
@@ -614,14 +620,13 @@
 									 <span
 											class="glyphicon glyphicon-thumbs-up">&nbsp讚</span>
 									</a></li>
-									<li role="presentation"><a href="#"
-										onclick="return showCmmt.call(this,event,'${message_board.bd_msg_no }');">
+									<li role="presentation"><a href="#" onclick="return showCmmt.call(this,event,'${message_board.bd_msg_no }');">
 										<c:if test="${not empty message_board.comments }"> <span class="badage">${fn:length(message_board.comments)}</span></c:if>
 											<span class="glyphicon glyphicon-comment">&nbsp留言</span>
 									</a></li>
 									<li role="presentation" ${(not empty user)?"":"class='disabled'"} ${(not empty user)?"":"disabled"}>
 									<c:if test='${empty user}'><a href="#" onclick="return false;"></c:if>
-										<c:if test='${!empty user}'><a href="#" onclick="sharePhoto.call(this,event,"${pageContext.request.contextPath}","${message_board.bd_msg_no}","${message_board.mem_no.mem_no}","${message_board.mem_no.mem_rank}","${message_board.mem_no.mem_nickname}","<fmt:setLocale value="en_US" /><fmt:formatDate value="${message_board.bd_msg_time}" pattern="yyyy-MM-dd HH:mm" />","${message_board.bd_msg_ctx}","${message_board.bd_type}","${message_board.bd_film }","${message_board.photos[0].photo_no},${message_board.photos[1].photo_no},${message_board.photos[2].photo_no}");"></c:if> 
+										<c:if test='${!empty user}'><a href="#" onclick='sharePhoto.call(this,event,"${pageContext.request.contextPath}","${message_board.bd_msg_no}","${message_board.mem_no.mem_no}","${message_board.mem_no.mem_rank}","${message_board.mem_no.mem_nickname}","<fmt:setLocale value="en_US" /><fmt:formatDate value="${message_board.bd_msg_time}" pattern="yyyy-MM-dd HH:mm" />","${message_board.bd_type}","${message_board.photos[0].photo_no},${message_board.photos[1].photo_no},${message_board.photos[2].photo_no}");'></c:if> 
 										<span class="glyphicon glyphicon-share-alt">&nbsp分享</span>
 									</a></li>
 								</ul>
@@ -679,127 +684,17 @@
 				</c:forEach>
 
 
-
-
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">
-							<div class="row">
-								<div class="col-xs-12 col-sm-1">
-
-									<img
-										src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg"
-										class="img-circle cmt_mem_pic">
-
-								</div>
-								</a>
-								<div class="col-xs-12 col-sm-11">
-									<div class="col-xs-12 col-sm-12 cmtInfo">
-										<a href="#">李宗霖</a>
-									</div>
-									<div class="col-xs-12 col-sm- cmtInfo cmtTime">
-										yyyy/MM/dd HH:mm
-										<div class="btn-group cmtPrvt">
-											<div data-toggle="dropdown" aria-haspopup="true"
-												aria-expanded="false">
-												<img
-													src="${pageContext.request.contextPath}/front_end/board/images/cmmtPrvt1.png">
-												<span class="caret"></span>
-											</div>
-											<ul class="dropdown-menu" id='cmtPrvt'>
-												<li><a href="#">隱私設定</a></li>
-												<li role="separator" class="divider"></li>
-												<li><a href="#" onclick="setCmmtPrvt.call(this,'0');">朋友</a></li>
-												<li><a href="#" onclick="setCmmtPrvt.call(this,'1');">公開</a></li>
-												<li><a href="#" onclick="setCmmtPrvt.call(this,'2');">本人</a></li>
-											</ul>
-										</div>
-									</div>
-
-
-								</div>
-							</div>
-
-						</h3>
-					</div>
-					<div class="panel-body">
-						動態內容
-						<div class="panel panel-default shareContent">
-							<div class="panel-heading">
-								<h3 class="panel-title">Panel title</h3>
-							</div>
-
-							<div class="panel-body">分享內容</div>
-						</div>
-					</div>
-					<div class="panel-body updatTime">
-						<div class="col-xs-12 col-sm-4 col-sm-offset-8">最後更新於
-							yyyy/MM/dd HH:mm</div>
-
-					</div>
-					<div class="panel panel-default" style="margin-bottom: 0px;">
-						<div class="panel-heading">
-							<ul class="nav nav-pills">
-								<li role="presentation"><a href="#" onclick="return false;">
-										<span class="glyphicon glyphicon-thumbs-up">&nbsp讚</span>
-								</a></li>
-								<li role="presentation"><a href="#"
-									onclick="return showCmmt('1','1');"> <span class="badage">10</span>
-										<span class="glyphicon glyphicon-comment">&nbsp留言</span>
-								</a></li>
-								<li role="presentation"><a href="#" onclick="return false;">
-										<span class="glyphicon glyphicon-share-alt">&nbsp分享</span>
-								</a></li>
-							</ul>
-						</div>
-					</div>
-
-					<ul id='b1_commt1' class="list-group" style="display: none;">
-						<div class="row">
-							<div class="container">
-								<a href="#">
-									<div class="col-xs-12 col-sm-1">
-
-										<img
-											src="http://www.imageshop.com.tw/pic/shop/home/img1-01.jpg"
-											class="img-circle cmt_mem_pic">
-
-									</div>
-								</a>
-								<div class="col-xs-12 col-sm-11 cmt">
-									<div>hahaha</div>
-
-								</div>
-
-							</div>
-						</div>
-						<li class="list-group-item">Dapibus ac facilisis in</li>
-						<li class="list-group-item">Morbi leo risus</li>
-						<li class="list-group-item">Porta ac consectetur ac</li>
-						<li class="list-group-item"><a href="#"
-							onclick="return false;">顯示更多</a></li>
-						<li class="list-group-item">
-							<div class="input-group">
-								<input type="text" class="form-control" placeholder="留些什麼吧">
-								<span class="input-group-btn">
-									<button class="btn btn-default" type="button">送出</button>
-								</span>
-							</div>
-						</li>
-					</ul>
-				</div>
-
+				<div id='loader' style='display:none;' class='col-xs-12 col-sm-7 col-sm-offset-5'><img style='margin-left:30px;width:50px;' src='${pageContext.request.contextPath}/front_end/comm/image/loader.gif'></div>
 			</div>
 		</div>
 	</div>
 	
 	<!-- 分享 -->
-<a data-fancybox data-src="#hidden-content-b" href="javascript:;" id='shareBtn' >share</a>
- <div style="display: none;" id="hidden-content-b">
+<a data-fancybox data-src="#hidden-content-b" style='display:none;' href="javascript:;" id='shareBtn' >share</a>
+ <div  id="hidden-content-b" style='display:none;'>
 <div class="modal-content" id='shareContainer' style='width:100%;'>
       <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">分享相片至動態</h4>
+        <h4 class="modal-title" id="myModalLabel">分享此動態至個人動態</h4>
       </div>
       <div class="modal-body">
         <textarea class="form-control" id='shareText' rows="3" style="resize: none;">
@@ -808,34 +703,32 @@
       </div>
       <div class="modal-footer">
       
-      <a href="#" id='shareLink' target="_blank" >
+      <a href="#" class='shareLink' target="_blank" >
         <div class="panel panel-default">
 		  <div class="panel-heading text-left">
 		 		<div class="row">
 									<div class="col-xs-12 col-sm-1">
 
-										<img id='sharePic'
-											src=""
-											class="img-circle cmt_mem_pic">
+										<img src=""
+											class="img-circle cmt_mem_pic sharePic">
 
 									</div>
 									<div class="col-xs-12 col-sm-11">
-										<div class="col-xs-12 col-sm-12 cmtInfo" id='shareNickname'>
+										<div class="col-xs-12 col-sm-12 cmtInfo shareNickname" >
 											名字
 										</div>
-										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime" id='shareTime'>
-											時間									
-
+										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime shareTime">
+											時間
 										</div>
 
 									</div>
 									</div>
 		  </div>
 		  <div class="panel-body shareContent">
-		  		<div id='bd_msg_ctx' class="col-xs-12 col-sm-12 text-left">
+		  		<div class="col-xs-12 col-sm-12 text-left bd_msg_ctx">
 		  		內文
 		  		</div>
-		    	<div class="col-xs-12 col-sm-12 text-left" id='shareMedia'>
+		    	<div class="col-xs-12 col-sm-12 text-left shareMedia">
 		    		
 		    	</div>
 		    	
@@ -848,11 +741,11 @@
       	<div class="col-xs-12 col-sm-2 col-sm-offset-9" style="padding-left: 80px;" >
       		<div class="dropup">
 					<button class="btn btn-default btn-lg dropdown-toggle" type="button"
-						id="dropdownMenu2" data-toggle="dropdown"
+						id="dropdownMenu3" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="true" value="0">
 						隱私 <span class="caret"></span>
 					</button>
-					<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
 						<li><a href="#"
 							onclick="chooseCmmtPrvt.call(this,'0');">朋友&nbsp</a></li>
 						<li><a href="#"
@@ -899,57 +792,62 @@
       
     </div>
   </div>
-
+	
 	
   <!-- 123 -->
 	
 	
-	<input type='text' id='thisPage' value='${thisPage }'>
-	<input type='text' id='allPageCount' value='${allPageCount }'>
-	<button onclick='del();'>123</button>
-
+	<input type='text' style='display:none;' id='thisPage' value='${thisPage }'>
+	<input type='text' id='allPageCount' style='display:none;' value='${allPageCount }'>
+	
 	<script src="https://code.jquery.com/jquery.js"></script>
 	<script src='${pageContext.request.contextPath}/front_end/album/js/jquery.ajax-progress.js'></script>
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script
 		src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
+	<script src='${pageContext.request.contextPath}/front_end/comm/js/sweetalert.min.js'></script>
 	<script type="text/javascript">
-	function sharePhoto(event,path,bd_msg_no,mem_no,mem_rank,mem_nickname,bd_msg_time,bd_msg_ctx,bd_type,bd_film,photo_no){
+	function sharePhoto(event,path,bd_msg_no,mem_no,mem_rank,mem_nickname,bd_msg_time,bd_type,photo_no){
 		event.preventDefault();
-		$('#sharePic').attr('src',path+'/util/OutputPic?mem_no='+mem_no+"&mem_rank="+mem_rank);
-		$('#bd_msg_ctx').text(bd_msg_ctx);
-		var media;
+		$('.sharePic:last').attr('src',path+'/util/OutputPic?mem_no='+mem_no+"&mem_rank="+mem_rank);
+		$('.bd_msg_ctx:last').text($(this).parents('.panel').find('.content').text().trim());
+		var media ="";
 		
 		if(bd_type=='2'||bd_type=='3'){
-			media ="<div class='col-xs-12 col-sm-12'>"+
+			media +="<div class='col-xs-12 col-sm-12'>"+
 				"<video controls='controls'>"+
 			"<source src='"+path+"/util/OutputPic?bd_msg_no="+bd_msg_no+"'></video></div>";
 		}
 		if(bd_type=='1'||bd_type=='3'){
 			//補多張格式 要加foreach
-			for(var i =0 ; i< photo_no ; i++){
-				if(photo_no[0].length!=0){
+			
+			var temp = photo_no.split(",");
+			for(var i =0 ; i< temp.length ; i++){
+				if(temp[i].length!=0){					
 					media +="<div class='col-xs-12 col-sm-4'>"+
-					"<img  src='"+path+"'/util/OutputPic?photo_no='"+photo_no[0]+"'></div>";					
+					"<img style='height:250;width:100%'  src='"+path+"/util/OutputPic?photo_no="+temp[i]+"'></div>";					
 				}
 			}
 		}
-
+		if(bd_type=='4'){
+			media = "<div class='col-xs-12 col-sm-12 well'>此為分享內容，點擊此後即可觀看詳細內容</div>";
+		}
+		$('.shareMedia:last').empty();
+		$('.shareMedia:last').append(media);		
+		$('.shareNickname:last').text(mem_nickname+" 發佈的動態");
+		$('.shareTime:last').text(bd_msg_time);
 		
-		$('#shareMedia').append(media);		
-		$('#shareNickname').text(mem_nickname+" 發佈的相片");
-		$('#shareTime').text(ul_date);
-		$('#shareLink').attr('href',path+'/album/PhotosShowCtrl?al_no='+al_no+"&mem_no="+mem_no);
+		$('#shareLink').attr('href',path+'/board/BoardShowCtrl?bd_msg_no='+bd_msg_no);
 		$('#shareBtn').trigger('click');
 		
 		
 	}
 	function shareSubmit(path,mem_no){
 		var content = $('#shareContainer').find('.modal-footer').html();
-		var bd_msg_ctx = $('#shareText').val();
-		var bd_prvt = $('#dropdownMenu2').val();
-		alert(bd_msg_ctx);
+		var bd_msg_ctx = $('#shareText').val().trim();
+		var bd_prvt = $('#dropdownMenu3').val();
+		
 		$.ajax({
 			type : "POST",
 			url : path + "/board/BoardActionCtrl?action=ref_board&mem_no="+mem_no,
@@ -962,19 +860,42 @@
 				
 			},
 			success : function(msg) {
-				if (msg.length != 0) {
-					alert('ok');
-				
+				if (msg.length == 0) {
+					swal({
+						  title: "成功",
+						  text: "已成功發布動態",
+						  timer: 1000,
+						  type: "success",
+						  showConfirmButton: false
+						},function(){
+							$('.fancybox-close-small').click();
+							location.reload();
+						});
+					
 					
 				} else {						
 					
-					
+					$.each(JSON.parse(msg),function(v,i){
+						swal({
+							  title: "輸入錯誤",
+							  text: i,
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+							});					
+
+					});
 					
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "發生錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+				});
 			}
 
 		});
@@ -995,7 +916,7 @@
 			dataType : 'text',
 			data: "cmt_type=1&bd_cmt_no="+bd_cmt_no,
 			success : function(msg) {
-				if (msg.length != 0) {
+				if (msg.length == 0) {
 					var num = parseInt(span.next().text(),10);
 					if(num==undefined||num==null||span.next().text().length==0){
 						num=0;
@@ -1015,14 +936,27 @@
 					}
 					
 				} else {						
-					
+					$.each(JSON.parse(msg),function(v,i){
+						swal({
+						  title: "輸入錯誤",
+						  text: i,
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+						});
+					});
 					
 					
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "發生錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+				});
 			}
 
 		});
@@ -1031,15 +965,25 @@
 	function delPhotoCmmt(event,path,bd_cmt_no,mem_no){
 		event.preventDefault();
 		var _self = $(this).parents('.comments');
-		var _CommtNum = $(this).parents('.list-group').prev().find('.badage');
-		if(confirm('你確定要很獨裁的刪除此筆留言嗎？')){
+		var _CommtNum = $(this).parents('.list-group').prev().find('.badage');		
+		swal({
+			  title: "確定要刪除此筆留言嗎？?",
+			  text: "此舉有點獨裁，你要確定你仍想這樣做哦。",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonColor: "#DD6B55",
+			  cancelButtonText: "算了",
+			  confirmButtonText: "是的",
+			  closeOnConfirm: false
+			},
+		function(){
 			$.ajax({
 				type : "POST",
 				url : path + "/all/CommentsCtrl?action=delete&mem_no="+mem_no,
 				dataType : 'text',
 				data: "cmt_type=1&bd_cmt_no="+bd_cmt_no,
 				success : function(msg) {
-					if (msg.length != 0) {
+					if (msg.length == 0) {
 						_self.remove();
 						var num = parseInt(_CommtNum.text(),10);
 						if(num-1!=0){
@@ -1047,19 +991,37 @@
 						}else{
 							_CommtNum.text('');
 						}
+						swal({
+							  title: "成功",
+							  text: "你這獨裁者，已成功刪除留言。",
+							  timer: 1000,
+							  type: "success",
+							  showConfirmButton: false
+						});
 					} else {						
-						
+						swal({
+							  title: "刪除失敗",
+							  text: "請在嘗試看看。",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+						});
 						
 						
 					}
 				},
 				error : function(xhr, ajaxOptions, thrownError) {
-					alert(xhr.status);
-					alert(thrownError);
+					swal({
+						  title: "出了點錯",
+						  text: "應該是網路問題。",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+						});
 				}
 
 			});
-		}
+		});
 	}
 	function editPhotoCmmt(event,path,bd_cmt_no,mem_no){
 		event.preventDefault();
@@ -1087,7 +1049,7 @@
 			dataType : 'text',
 			data: "bd_cmt_no="+bd_cmt_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
-				if (msg.length != 0) {
+				if (msg.length == 0) {
 					ch.removeClass();
 					ch.addClass('glyphicon glyphicon-pencil');
 					ch.css("color","black");
@@ -1101,8 +1063,13 @@
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "發生錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+				});
 				result = false;
 			}
 
@@ -1129,7 +1096,7 @@
 			dataType : 'text',
 			data: "cmt_type=1&org_no="+photo_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
-				if (msg.length != 0) {
+				if (msg.length == 0) {
 					location.reload();
 				} else {						
 					
@@ -1138,8 +1105,13 @@
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "發生錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+				});
 			}
 
 		});
@@ -1160,7 +1132,7 @@
 			dataType : 'text',
 			data: "cmt_type=0&bd_cmt_no="+bd_cmt_no,
 			success : function(msg) {
-				if (msg.length != 0) {
+				if (msg.length == 0) {
 					var num = parseInt(span.next().text(),10);
 					if(num==undefined||num==null||span.next().text().length==0){
 						num=0;
@@ -1186,8 +1158,13 @@
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "發生錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+				});
 			}
 
 		});
@@ -1197,15 +1174,24 @@
 		event.preventDefault();
 		var _self = $(this).parents('.comments');
 		var _CommtNum = $(this).parents('.list-group').prev().find('.badage');
-		alert(_CommtNum.html());
-		if(confirm('你確定要很獨裁的刪除此筆留言嗎？')){
+		swal({
+			  title: "確定要刪除此筆留言?",
+			  text: "此舉有點獨裁，你要確定你仍想這樣做哦。",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonColor: "#DD6B55",
+			  cancelButtonText: "算了",
+			  confirmButtonText: "是的",
+			  closeOnConfirm: false
+			},
+		function(){
 			$.ajax({
 				type : "POST",
 				url : path + "/all/CommentsCtrl?action=delete&mem_no="+mem_no,
 				dataType : 'text',
 				data: "cmt_type=0&bd_cmt_no="+bd_cmt_no,
 				success : function(msg) {
-					if (msg.length != 0) {
+					if (msg.length == 0) {
 						_self.remove();
 						var num = parseInt(_CommtNum.text(),10);
 						if(num-1!=0){
@@ -1213,19 +1199,37 @@
 						}else{
 							_CommtNum.text('');
 						}
+						swal({
+							  title: "成功",
+							  text: "你這獨裁者，已成功刪除留言。",
+							  timer: 1000,
+							  type: "success",
+							  showConfirmButton: false
+						});
 					} else {						
-						
+						swal({
+							  title: "刪除失敗",
+							  text: "請在嘗試看看。",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+						});
 						
 						
 					}
 				},
 				error : function(xhr, ajaxOptions, thrownError) {
-					alert(xhr.status);
-					alert(thrownError);
+					swal({
+						  title: "發生錯誤",
+						  text: "請再嘗試看看",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+					});
 				}
 
 			});
-		}
+		});
 	}
 	function editCmmt(event,path,bd_cmt_no,mem_no){
 		event.preventDefault();
@@ -1257,7 +1261,7 @@
 			dataType : 'text',
 			data: "bd_cmt_no="+bd_cmt_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
-				if (msg.length != 0) {
+				if (msg.length == 0) {
 					return true;
 				} else {						
 					
@@ -1266,8 +1270,13 @@
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "發生錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+				});
 				return false;
 			}
 
@@ -1293,7 +1302,7 @@
 			dataType : 'text',
 			data: "cmt_type=0&org_no="+bd_msg_no+"&bd_cmt_ctx="+val,
 			success : function(msg) {
-				if (msg.length != 0) {
+				if (msg.length == 0) {
 					location.reload();
 				} else {						
 					
@@ -1302,8 +1311,13 @@
 				}
 			},
 			error : function(xhr, ajaxOptions, thrownError) {
-				alert(xhr.status);
-				alert(thrownError);
+				swal({
+					  title: "發生錯誤",
+					  text: "請再嘗試看看",
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+				});
 			}
 
 		});
@@ -1323,20 +1337,31 @@
 				contentType : false,
 				success : function(msg) {
 
-					if (msg.length != 0) {
+					if (msg.length == 0) {
 						likesBtn.parent().addClass('disabled');
 						likesBtn.parent().attr('disabled','');
 						var likes = $('#likes'+bd_msg_no).text();
 						$('#likes'+bd_msg_no).text(parseInt(likes,10)+1);
 					} else {						
-						
+						swal({
+							  title: "輸入錯誤",
+							  text: "請稍後再嘗試。",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+							});
 						
 						
 					}
 				},
 				error : function(xhr, ajaxOptions, thrownError) {
-					alert(xhr.status);
-					alert(thrownError);
+					swal({
+						  title: "發生錯誤",
+						  text: "請再嘗試看看",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+					});
 				}
 
 			});
@@ -1500,7 +1525,13 @@
 							}
 							return;
 						}
-						alert('這是什麼格式..?');
+						swal({
+							  title: "格式不符",
+							  text: "請換檔案再嘗試看看",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+						});
 					});
 					
 					
@@ -1626,27 +1657,38 @@
 			var mem_no = QueryString("mem_no");
 			ifLoad=true;
 			thisPage = parseInt(thisPage,10)+1;	
+			$('#loader').css('display',"block");
 			$.ajax({
 				type : "POST",
 				url : webCtx+"/board/BoardShowCtrl?type=json&mem_no="+mem_no+"&thisPage="+(thisPage+1),
 				dataType : 'text',
 				contentType : false,
 				success : function(msg) {
-					alert(msg);
-					alert(thisPage);
-					if (msg.length != 0) {
+					if (msg.length == 0) {
 						ifLoad=false;
-						$('#boardContainer').append(msg);
+						$('#loader').before(msg);
 						reload();
+						$('#loader').css('display',"none");
 					} else {
 						//報錯啊
-						alert('刪除失敗');
+						swal({
+							  title: "載入失敗",
+							  text: "請再嘗試看看",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+						});
 					}
 				},
 
 				error : function(xhr, ajaxOptions, thrownError) {
-					alert(xhr.status);
-					alert(thrownError);
+					swal({
+						  title: "發生錯誤",
+						  text: "請再嘗試看看",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+					});
 				}
 
 			});
@@ -1662,7 +1704,18 @@
 			return "";
 		}
 		function deleteBoard(path ,mem_no, bd_msg_no) {
-			if (confirm('將會把照片及內文完全刪除，確定不會捨不得，執意還要刪除？')) {
+			
+			swal({
+				  title: "確定要刪除此筆動態?",
+			 	  text: "將會把照片及內文，確定不會捨不得，仍要執意刪除哦。",
+				  type: "warning",
+				  showCancelButton: true,
+				  confirmButtonColor: "#DD6B55",
+				  cancelButtonText: "算了",
+				  confirmButtonText: "是的",
+				  closeOnConfirm: false
+			},
+			function(){
 				$.ajax({
 					type : "POST",
 					url : path + "/board/BoardActionCtrl?action=delete&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no,
@@ -1671,28 +1724,47 @@
 					processData : false, //不做任何處理，只上傳原始資料					
 					success : function(msg) {
 	
-						if (msg.length != 0) {
+						if (msg.length == 0) {
 							// 							upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
 							// 		                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
 							// 		                	upload_progress.attr('aria-valuenow', 100) ;
 
-							alert('刪除成功');
 							// 			        		$('.progress').css('display','none');
 							// 			        		$('.progressCr').css('display','none');
-							location.reload();
+							swal({
+							  title: "成功",
+							  text: "已成功刪除動態",
+							  timer: 1000,
+							  type: "success",
+							  showConfirmButton: false
+							},function(){
+								location.reload();
+							});
+							
 						} else {
 							//報錯啊
-							alert('刪除失敗');
+							swal({
+								  title: "發生錯誤",
+								  text: "請再嘗試看看",
+								  timer: 1000,
+								  type: "error",
+								  showConfirmButton: false
+							});
 						}
 					},
 
 					error : function(xhr, ajaxOptions, thrownError) {
-						alert(xhr.status);
-						alert(thrownError);
+						swal({
+							  title: "發生錯誤",
+							  text: "請再嘗試看看",
+							  timer: 1000,
+							  type: "error",
+							  showConfirmButton: false
+						});
 					}
 
 				});
-			}
+			});
 		}
 		
 		function edit(path,bd_msg_no,mem_no,bd_type) {
@@ -1724,8 +1796,18 @@
 					
 				}
 			} else {
-				if(isEditOpen){	
-					if(confirm('此舉將會完成編輯，可能會改動貼問內容，很危險低，確定要繼續？')){						
+				if(isEditOpen){						
+					swal({
+						  title: "確定要完成編輯?",
+					 	  text: "此舉會改動貼問內容，很危險低，請確定要不要繼續。",
+						  type: "warning",
+						  showCancelButton: true,
+						  confirmButtonColor: "#DD6B55",
+						  cancelButtonText: "算了",
+						  confirmButtonText: "是的",
+						  closeOnConfirm: false
+					},
+					function(){
 						if(submitBd(path,bd_msg_no,mem_no,bd_type)){
 							$('.fdi-Carousel .item').each(function() {
 								var id = $(this).children(':first-child').children().children().attr('id');
@@ -1781,8 +1863,7 @@
 							content.attr("contenteditable", "false");
 							isEditOpen=false;
 						}
-						
-					}
+					});
 				}
 			}
 			
@@ -1799,7 +1880,6 @@
 			ele.focus();
 		}
 		function submitBd(path,bd_msg_no,mem_no,bd_type){
-			
 			var data = new FormData();
 			var bd_msg_ctx = $('#bd_msg_ctx'+bd_msg_no).text();
 			data.append("bd_msg_ctx",bd_msg_ctx);
@@ -1825,6 +1905,8 @@
 				delStat=0;
 			}else if(ifDelFilm==0&&bd_type==1){
 				delStat=0;
+			}else if(ifDelFilm==0&&bd_type==4){
+				delStat=5;
 			}else{
 				alert('怎麼可能有意外');
 			}
@@ -1837,39 +1919,55 @@
 				data : data,
 				success : function(msg) {
 
-					if (msg.length != 0) {
+					if (msg.length == 0) {						
+						
 						// 							upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
 						// 		                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
 						// 		                	upload_progress.attr('aria-valuenow', 100) ;
 
-						alert('刪除成功');
+						swal({
+							  title: "成功",
+							  text: "已成功修改動態",
+							  timer: 1000,
+							  type: "success",
+							  showConfirmButton: false
+						},function(){
+							location.reload();
+						});
 						// 			        		$('.progress').css('display','none');
 						// 			        		$('.progressCr').css('display','none');
 // 						location.href =path+"/board/BoardShowCtrl?mem_no="+mem_no+"&thisPage=1";
-						location.reload();
+						
 					} else {
-						//報錯啊
-						alert('刪除失敗');
+						$.each(JSON.parse(msg),function(v,i){
+							swal({
+								  title: "輸入錯誤",
+								  text: i,
+								  timer: 1000,
+								  type: "error",
+								  showConfirmButton: false
+								});
+						});
 					}
 				},
 
 				error : function(xhr, ajaxOptions, thrownError) {
-					alert(xhr.status);
-					alert(thrownError);
+					swal({
+						  title: "發生錯誤",
+						  text: "請再嘗試看看",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+					});
 				}
 
 			});
 			
 		}
 		function submit(path, mem_no) {
-			var upload_progress = $('#upload_progress');
-			$('.progress').css('display','block');
-			$('.progressCr').css('display','block');
-			upload_progress.html('') ; 
-	    	upload_progress.css("width",'') ;                 
-	    	upload_progress.attr('aria-valuenow', '') ;
-			var bd_prvt = $('#dropdownMenu1').val()
-			var bd_msg_ctx = $('#bd_msg_ctx').val()
+			$('#alert_bd_msg_ctx').css('display','none');
+			var bd_prvt = $('#dropdownMenu1').val();
+			var bd_msg_ctx = $('#bd_msg_ctx').val();
 			var num = 0;
 			var data = new FormData();
 			var bd_type = 0;
@@ -1889,6 +1987,14 @@
 			data.append("bd_msg_ctx", bd_msg_ctx);
 			data.append("bd_prvt", bd_prvt);
 
+			var upload_progress = $('#upload_progress');			
+			upload_progress.html('') ; 
+	    	upload_progress.css("width",'') ;                 
+	    	upload_progress.attr('aria-valuenow', '') ;
+	    	if(fileList.length!=0||film!=null){
+	    		$('.progress').css('display','block');
+    			$('.progressCr').css('display','block');
+	    	}
 			$.ajax({
 				type : "POST",
 				url : path + "/board/BoardActionCtrl?action=insert&bd_type="
@@ -1897,7 +2003,7 @@
 				contentType : false,
 				processData : false, //不做任何處理，只上傳原始資料
 				data : data,
-	            progress: function(e) {
+	            progress: function(e) {	            	
 	                //make sure we can compute the length
 	                if(e.lengthComputable) {
 	                	var intComplete = (e.loaded / e.total) * 100 | 0 ;  
@@ -1913,49 +2019,87 @@
 	            },
 				success : function(msg) {
 
-					if (msg.length != 0) {
+					if (msg.trim().length == 0) {
 						upload_progress.html(100 + '%') ; // 控制進度條的顯示數字，例如65%
 	                	upload_progress.css("width",100 + '%') ; // 控制進度條的長度                        
 	                	upload_progress.attr('aria-valuenow', 100) ;
-
-						$('#picReset').trigger('click');
-						alert('上傳完成');
+						$('#picReset').trigger('click');									
 		        		$('.progress').css('display','none');
 		        		$('.progressCr').css('display','none');
-						location.href =path+"/board/BoardShowCtrl?mem_no="+mem_no+"&thisPage=1";
+		        		swal({
+							  title: "成功",
+							  text: "已成功發布動態",
+							  timer: 1000,
+							  type: "success",
+							  showConfirmButton: false
+							},function(){
+								location.href =path+"/board/BoardShowCtrl?mem_no="+mem_no+"&thisPage=1";
+							});
+						
+						
 					} else {
-						//報錯啊
-						alert('上傳失敗');
+						var errorMsg = $.each(JSON.parse(msg),function(v,i){							
+							$('#alert_'+v).css('display',"block");
+							$('#alert_'+v).text(i);		
+							
+						})
 						$('.progress').css('display','none');
 		        		$('.progressCr').css('display','none');
 					}
 				},
 
 				error : function(xhr, ajaxOptions, thrownError) {
-					alert(xhr.status);
-					alert(thrownError);
+					swal({
+						  title: "發生錯誤",
+						  text: "請再嘗試看看",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+					});
 				}
 
 			});
 		}
 		function setCmmtPrvt(path,mem_no,bd_msg_no,bd_prvt) {
-
-			if (confirm("確定要更改隱私設定嗎？")) {
-				var option = $(this).parents('ul').prev().find('img');
+			var self = $(this);			
+			swal({
+				  title: "確定要更改隱私設定嗎？",
+				  text: "此舉將會改動隱私權，觀看者範圍將會改變。",
+				  type: "warning",
+				  showCancelButton: true,
+				  confirmButtonColor: "#DD6B55",
+				  confirmButtonText: "是的",
+				  cancelButtonText:"算了",
+				  closeOnConfirm: false
+				},function(){
+				
+				var option = self.parents('ul').prev().find('img');
 				$.ajax({
 					url: path+"/board/BoardActionCtrl?action=setPrvt&mem_no="+mem_no+"&bd_msg_no="+bd_msg_no+"&bd_prvt="+bd_prvt,
 					type: "POST",
 					dataType: "text",
 					success: function(msg){
 						option.attr('src',webCtx+'/front_end/board/images/cmmtPrvt' + bd_prvt + '.png');
+						swal({
+							  title: "成功",
+							  text: "已成功變更隱私",
+							  timer: 500,
+							  type: "success",
+							  showConfirmButton: false
+						});
 					},
 					error: function(xhr, ajaxOptions, thrownError){ 
-				         alert('更新失敗');
+						swal({
+							  title: "更新失敗",
+							  text: "",
+							  timer: 500,
+							  type: "error",
+							  showConfirmButton: false
+							});
 				    }
 
 				});
-				
-			} 
+			});
 		}
 		function chooseCmmtPrvt(bd_prvt) {
 			$(this).parents('ul').prev().html(
@@ -2006,7 +2150,13 @@
 								files,
 								function(index, file) {
 									if (!file.type.match('image')) {
-										alert('這又不是圖片..');
+										swal({
+											  title: "這並不是圖片",
+											  text: "請換檔案再嘗試看看",
+											  timer: 1000,
+											  type: "error",
+											  showConfirmButton: false
+										});
 										return;
 									}
 									var reader = new FileReader();
@@ -2068,7 +2218,13 @@
 								files,
 								function(index, file) {
 									if (!file.type.match('video')) {
-										alert('這又不是影片..');
+										swal({
+											  title: "這並不是影片",
+											  text: "請換檔案再嘗試看看",
+											  timer: 1000,
+											  type: "error",
+											  showConfirmButton: false
+										});
 										return;
 									}
 									var reader = new FileReader();
@@ -2183,7 +2339,13 @@
 										}
 										return;
 									}
-									alert('這是什麼格式..?');
+									swal({
+										  title: "這啥格式",
+										  text: "請換檔案再嘗試看看",
+										  timer: 1000,
+										  type: "error",
+										  showConfirmButton: false
+									});
 								});
 			}
 		}

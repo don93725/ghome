@@ -9,6 +9,7 @@ import java.lang.reflect.Type;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -43,7 +44,7 @@ public class PhotosActionCtrl extends HttpServlet {
 		String mem_no = req.getParameter("mem_no");
 		String al_no = req.getParameter("al_no");
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
-System.out.println(action);
+		HashMap<String,String> map = new HashMap<String,String>();
 		if (action == null || !user.getMem_no().equals(mem_no)) {
 			String referer = (String) req.getSession().getAttribute("referer");
 			req.getSession().removeAttribute("referer");
@@ -63,8 +64,8 @@ System.out.println(action);
 			Collection<Part> parts = req.getParts();
 			PhotosService photosService = new PhotosService();
 			boolean result = photosService.add(parts, names, al_no);
-			if(result){
-				out.print("ok");
+			if (!result) {
+				out.write("{\"fail\",\"fail\"}");
 			}
 			return;
 		}
@@ -75,8 +76,8 @@ System.out.println(action);
 			PhotosService photosService = new PhotosService();
 			System.out.println(photo_no+ photo_desc);
 			boolean result = photosService.update(photo_no, photo_desc);		
-			if(result){
-				out.print("ok");
+			if (!result) {
+				out.write("{\"fail\",\"fail\"}");
 			}
 			return;
 
@@ -86,8 +87,8 @@ System.out.println(action);
 			String[] photo_no = req.getParameterValues("photo_no");
 			PhotosService photosService = new PhotosService();
 			boolean result = photosService.delete(photo_no);		
-			if(result){
-				out.print("ok");
+			if (!result) {
+				out.write("{\"fail\",\"fail\"}");
 			}
 			return;
 		}
