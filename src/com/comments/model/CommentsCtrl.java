@@ -30,18 +30,30 @@ public class CommentsCtrl extends HttpServlet {
 		String user_no = user.getMem_no();
 		PrintWriter out = res.getWriter();
 		HashMap<String,String> map = new HashMap<String,String>();
-//		if (!mem_no.equals(user.getMem_no()) || action == null) {
-//			// 非會員想做其他操作
-//			String referer = (String) req.getSession().getAttribute("referer");
-//			req.getSession().removeAttribute("referer");
-//			if (referer != null) {
-//				res.sendRedirect(referer);
-//			} else {
-//				res.sendRedirect(req.getContextPath() + "/index.jsp");
-//			}
-//			return;
-//		}
+//		
 
+		if ("addCmtLikes".equals(action)) {
+			// 刪除
+			String bd_cmt_no = req.getParameter("bd_cmt_no");
+			String cmt_type = req.getParameter("cmt_type");
+			Board_cmtService dao = new Board_cmtService();
+			boolean result = dao.addCmt_likes(bd_cmt_no,user_no,cmt_type);
+			if (!result) {
+				out.write("{\"fail\":\"fail\"}");
+			} 
+			return;
+		}
+		if ("negativeCmtLikes".equals(action)) {
+			// 刪除
+			String bd_cmt_no = req.getParameter("bd_cmt_no");
+			String cmt_type = req.getParameter("cmt_type");
+			Board_cmtService dao = new Board_cmtService();
+			boolean result = dao.negativeCmt_likes(bd_cmt_no,user_no,cmt_type);
+			if (!result) {
+				out.write("{\"fail\":\"fail\"}");
+			} 
+			return;
+		}
 		if ("insert".equals(action)) {
 			// 新增
 			Board_cmtService dao = new Board_cmtService();
@@ -56,8 +68,19 @@ public class CommentsCtrl extends HttpServlet {
 			}
 			boolean result = dao.add(mem_no, cmt_type, org_no, bd_cmt_ctx);
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			} 
+			return;
+		}
+		if (!mem_no.equals(user.getMem_no()) || action == null) {
+			// 非會員想做其他操作
+			String referer = (String) req.getSession().getAttribute("referer");
+			req.getSession().removeAttribute("referer");
+			if (referer != null) {
+				res.sendRedirect(referer);
+			} else {
+				res.sendRedirect(req.getContextPath() + "/index.jsp");
+			}
 			return;
 		}
 		if ("update".equals(action)) {
@@ -73,7 +96,7 @@ public class CommentsCtrl extends HttpServlet {
 			}
 			boolean result = dao.update(bd_cmt_no, bd_cmt_ctx);
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			} 
 			return;
 		}
@@ -83,29 +106,7 @@ public class CommentsCtrl extends HttpServlet {
 			Board_cmtService dao = new Board_cmtService();
 			boolean result = dao.delete(bd_cmt_no);
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
-			} 
-			return;
-		}
-		if ("addCmtLikes".equals(action)) {
-			// 刪除
-			String bd_cmt_no = req.getParameter("bd_cmt_no");
-			String cmt_type = req.getParameter("cmt_type");
-			Board_cmtService dao = new Board_cmtService();
-			boolean result = dao.addCmt_likes(bd_cmt_no,user_no,cmt_type);
-			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
-			} 
-			return;
-		}
-		if ("negativeCmtLikes".equals(action)) {
-			// 刪除
-			String bd_cmt_no = req.getParameter("bd_cmt_no");
-			String cmt_type = req.getParameter("cmt_type");
-			Board_cmtService dao = new Board_cmtService();
-			boolean result = dao.negativeCmt_likes(bd_cmt_no,user_no,cmt_type);
-			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			} 
 			return;
 		}

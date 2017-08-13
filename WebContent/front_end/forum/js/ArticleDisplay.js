@@ -7,6 +7,8 @@ KindEditor.ready(function(K) {
 		$('#ctx').html(editor.html());
 		var ctx = document.getElementById('ctx').childNodes;
 		var text = "";	
+		var path = window.location.pathname;
+		webCtx = path.substring(0, path.indexOf('/', 1));
 		for(var i = 0 ; i<ctx.length ; i++){
  			var temp = ctx[i];	 			
  			if(temp.nodeType==1){
@@ -29,13 +31,61 @@ KindEditor.ready(function(K) {
  				text = text +temp.nodeValue;
  			}	 
 
-		} 		 				 			
+		} 	
+		var form = $('#cmmtForm');
 		var art_cmt_ctx = document.getElementsByName("art_cmt_ctx")[0]; 
 		art_cmt_ctx.innerHTML = text;
+		check(text,form);
 	});
 	
 });
+var webCtx;
+function check(art_cmt_ctx,form){
+	$.ajax({
+        url: webCtx+"/forum/ArtCmtActionCtrl",
+        data: {
+        	"action":"check",
+        	"art_cmt_ctx":art_cmt_ctx,   	
+        },                	  
+        type:"POST",
+        dataType:'text',
 
+        success: function(msg){	
+        	if(msg.length==0){                    	
+					swal({
+					  title: "發文成功",
+					  text: "水喔，已成功發文，希望不是廢文。",
+					  timer: 1000,
+					  type: "success",
+					  showConfirmButton: false
+					},function(){
+						form.submit();
+					});
+            }else{
+            	$.each(JSON.parse(msg),function(v,i){
+					swal({
+					  title: "輸入錯誤",
+					  text: v+i,
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+					});
+				});
+            }
+        
+        },
+
+         error:function(xhr, ajaxOptions, thrownError){ 
+        	 swal({
+				  title: "申請失敗",
+				  text: "請再嘗試看看",
+				  timer: 1000,
+				  type: "error",
+				  showConfirmButton: false
+				});
+         }
+    });
+}
 var editor;
 KindEditor.ready(function(K) {
 	editor = K.create('div[name="content"]', {
@@ -61,36 +111,37 @@ function report(pj,art_no){
 		{
 
 		  if (xhr.readyState==4 && xhr.status==200){			  
-			  $(".inline").colorbox.close();
-			  if(xhr.responseText.length!=0){					  
-					  $('#tips').css("background","url("+pj+"/front_end/forum/css/images/tick.png) no-repeat center center"); 		
-					  $('#tips').css("display","block");
-					  $('#tips').animate({opacity:'1'},"slow",function(){
-						  $(this).animate({opacity:'0'},"slow",function(){
-							  $('#tips').css("display","none");					  
-						  });
-					  });
-			  } else{
-				  $('#tips').css("background","url("+pj+"/front_end/forum/css/images/cross.png) no-repeat center center"); 		
-				  $('#tips').css("display","block");
-				  $('#tips').animate({opacity:'1'},"slow",function(){
-			  			$(this).animate({opacity:'0'},"slow",function(){
-							  $('#tips').css("display","none");					  
-						  });
-			  				
+			  
+			  if(xhr.responseText.length==0){	
+				  $(".inline").colorbox.close();
+				  swal({
+					  title: "成功",
+					  text: "已成功送出檢舉",
+					  timer: 1000,
+					  type: "success",
+					  showConfirmButton: false
 				  });
+			  } else{
+				  $.each(JSON.parse(xhr.responseText),function(v,i){
+						swal({
+						  title: "輸入錯誤",
+						  text: i,
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+						});
+					});
 			  }
 			 
 			 
 		  }else	if(xhr.status==404||xhr.status==500){
-			  $('#tips').css("background","url("+pj+"/front_end/forum/css/images/cross.png) no-repeat center center"); 		
-			  $('#tips').css("display","block");
-			  $('#tips').animate({opacity:'1'},"slow",function(){
-		  			$(this).animate({opacity:'0'},"slow",function(){
-						  $('#tips').css("display","none");					  
-					  });
-		  				
-			  }); 
+			  swal({
+				  title: "檢舉失敗",
+				  text: "請在嘗試看看",
+				  timer: 1000,
+				  type: "error",
+				  showConfirmButton: false
+			  });
 		  		
 		  }
 	  	}
@@ -111,3 +162,4 @@ function createXHR(){
 	}
 	return xhr;
 }		
+

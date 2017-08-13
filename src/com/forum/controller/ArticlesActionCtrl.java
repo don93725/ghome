@@ -1,8 +1,10 @@
 package com.forum.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
+import com.don.util.Validation;
 import com.forum.dao.Art_typesDAO;
 import com.forum.dao.ArticlesDAO;
 import com.forum.domain.Art_types;
@@ -21,6 +24,7 @@ import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.forum.service.Article_photosService;
 import com.forum.service.ArticlesService;
+import com.google.gson.Gson;
 import com.members.model.MembersVO;
 
 /**
@@ -36,9 +40,26 @@ public class ArticlesActionCtrl extends HttpServlet {
 		String forum_no = req.getParameter("forum_no");
 		HttpSession session = req.getSession();
 		MembersVO user = ((MembersVO) session.getAttribute("user"));
-		if (user == null) {
-			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
-			res.sendRedirect(URL);
+		
+		if("check".equals(action)){
+			res.setContentType("text/html ; charset=utf-8 ");
+			PrintWriter out = res.getWriter();
+			
+			HashMap<String,String> map = new HashMap<String,String>();
+			String art_name = req.getParameter("art_name");
+			boolean valid = Validation.checkLengthOne2Ten(art_name, "文章標題", map);
+			if(!valid){
+				Gson gson = new Gson();
+				out.write(gson.toJson(map));
+				return;
+			}
+			String art_ctx = req.getParameter("art_ctx").replace("$ProjectRealPath$", req.getContextPath());
+			valid = Validation.checkLengthTen2ThrH(art_ctx, "文章內文", map);
+			if(!valid){
+				Gson gson = new Gson();
+				out.write(gson.toJson(map));
+				return;
+			}
 			return;
 		}
 		if ((action.equals("goCreatePage") || action.equals("goUpdatePage")) && forum_no != null) {
@@ -51,10 +72,12 @@ public class ArticlesActionCtrl extends HttpServlet {
 				req.setAttribute("articles", articles);
 			}
 			req.getRequestDispatcher("/front_end/forum/ArticlesMaker.jsp").forward(req, res);
+			return;
 
-		} else if (forum_no != null) {
+		}
+		if (forum_no != null) {
 
-			if (action.equals("create")) {
+			if ("create".equals(action)) {
 				String art_name = req.getParameter("art_name");
 				String art_type_name = req.getParameter("art_type_name");
 				String order = req.getParameter("order");
@@ -78,7 +101,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 					req.setAttribute("msg", "失敗");
 					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
-			} else if (action.equals("update")) {
+			} else if ("update".equals(action)) {
 				String art_name = req.getParameter("art_name");
 				String art_type_name = req.getParameter("art_type_name");
 				String art_no = req.getParameter("art_no");
@@ -105,7 +128,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 					req.setAttribute("msg", "失敗");
 					req.getRequestDispatcher("/front_end/forum/ok.jsp").forward(req, res);
 				}
-			} else if (action.equals("delete")) {
+			} else if ("delete".equals(action)) {
 				String art_no = req.getParameter("art_no");
 				boolean result = new ArticlesDAO().executeDelete(art_no);
 				if (result) {

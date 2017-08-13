@@ -17,6 +17,10 @@
     <filter-name>loginFilter</filter-name>
     <url-pattern>/album/AlbumsActionCtrl</url-pattern>
     <url-pattern>/album/PhotosActionCtrl</url-pattern>
+    <url-pattern>/forum/ForumActionCtrl</url-pattern>
+    <url-pattern>/forum/ArticlesActionCtrl</url-pattern>
+    <url-pattern>/forum/ArticlesReportActionCtrl</url-pattern>
+    <url-pattern>/forum/ArtCmtActionCtrl</url-pattern>
     <dispatcher>REQUEST</dispatcher>
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>INCLUDE</dispatcher>

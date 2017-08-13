@@ -37,17 +37,6 @@ public class BoardActionCtrl extends HttpServlet {
 		HttpSession session = req.getSession();
 		MembersVO user = (MembersVO) session.getAttribute("user");
 		HashMap<String,String> map = new HashMap<String,String>();
-		// if (!mem_no.equals(user.getMem_no())||action==null) {
-		// //非會員想做其他操作
-		// String referer = (String) req.getSession().getAttribute("referer");
-		// req.getSession().removeAttribute("referer");
-		// if(referer!=null){
-		// res.sendRedirect(referer);
-		// }else{
-		// res.sendRedirect(req.getContextPath()+"/index.jsp");
-		// }
-		// return;
-		// }
 
 		if ("insert".equals(action)) {
 			// 新增
@@ -64,7 +53,7 @@ public class BoardActionCtrl extends HttpServlet {
 			Message_boardService message_boardService = new Message_boardService();
 			boolean result = message_boardService.add(user.getMem_no(), bd_type, bd_msg_ctx, bd_prvt, parts);
 			if(!result){
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 				return;
 			}
 			return;
@@ -84,10 +73,21 @@ public class BoardActionCtrl extends HttpServlet {
 			Message_boardService message_boardService = new Message_boardService();
 			boolean result = message_boardService.addRefBoard(user.getMem_no(), bd_type, bd_msg_ctx, bd_prvt, bd_ref_ctx);
 			if(!result){
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			}
 			return;
 		}
+		 if (!mem_no.equals(user.getMem_no())||action==null) {
+		 //非會員想做其他操作
+		 String referer = (String) req.getSession().getAttribute("referer");
+		 req.getSession().removeAttribute("referer");
+		 if(referer!=null){
+		 res.sendRedirect(referer);
+		 }else{
+		 res.sendRedirect(req.getContextPath()+"/index.jsp");
+		 }
+		 return;
+		 }
 		if ("update".equals(action)) {
 			// 修改
 			String bd_msg_no = req.getParameter("bd_msg_no");
@@ -102,9 +102,9 @@ public class BoardActionCtrl extends HttpServlet {
 			String[] delPhoto_no = req.getParameterValues("delPhoto_no");
 			Collection<Part> parts = req.getParts();
 			Message_boardService message_boardService = new Message_boardService();
-			boolean result = message_boardService.updateByVO(bd_msg_no, mem_no, delStat, bd_msg_ctx, parts, delPhoto_no);
+			boolean result = message_boardService.updateByVO(bd_msg_no, user.getMem_no(), delStat, bd_msg_ctx, parts, delPhoto_no);
 			if(!result){
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			}
 			return;
 		}
@@ -114,7 +114,7 @@ public class BoardActionCtrl extends HttpServlet {
 			Message_boardService message_boardService = new Message_boardService();
 			boolean result = message_boardService.executeDelete(bd_msg_no);
 			if(!result){
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			}
 			return;
 		}
@@ -124,7 +124,7 @@ public class BoardActionCtrl extends HttpServlet {
 			Message_boardService message_boardService = new Message_boardService();
 			boolean result = message_boardService.setBd_prvt(bd_msg_no,bd_prvt);
 			if(!result){
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			}
 			return;
 			
@@ -134,7 +134,7 @@ public class BoardActionCtrl extends HttpServlet {
 			Message_boardService message_boardService = new Message_boardService();
 			boolean result = message_boardService.setBd_likes(bd_msg_no, user.getMem_no());
 			if(!result){
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			}
 			return;
 		}

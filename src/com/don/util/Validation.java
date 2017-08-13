@@ -15,6 +15,15 @@ public class Validation {
 			return false;
 		}
 	}
+	public static boolean checkLengthTen2FakeThrH(String str, String key,HashMap<String,String> map){
+		String regex = "[\\S\\s]{10,900}";
+		if(str.matches(regex)){
+			return true;
+		}else{			
+			map.put(key, "請輸入10-300字的內容。");
+			return false;
+		}
+	}
 	public static boolean checkLengthOne2Ten(String str, String key,HashMap<String,String> map){
 		String regex = "[\\S\\s]{1,10}";
 		if(str.matches(regex)){
@@ -33,6 +42,7 @@ public class Validation {
 			return false;
 		}
 	}
+
 	public static boolean checkLengthLessFifteen(String str, String key,HashMap<String,String> map){
 		String regex = "[\\S\\s]{,15}";
 		if(str.matches(regex)){

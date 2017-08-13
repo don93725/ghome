@@ -48,6 +48,7 @@ public class Article_reportService {
 		Article_reportDAO dao = new Article_reportDAO();
 		String SQL = "select count(*) from article_report where art_no in (select art_no from articles where forum_no="+forum_no+")";
 		int result = dao.countBySQL(SQL);
+		System.out.println(result);
 		
 		return (result-1) / pageSize +1;
 	}

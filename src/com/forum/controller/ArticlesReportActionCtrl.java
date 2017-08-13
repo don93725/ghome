@@ -2,6 +2,7 @@ package com.forum.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,11 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.don.util.Validation;
 import com.forum.dao.ArticlesDAO;
 import com.forum.dao.ForumsDAO;
 import com.forum.domain.Article_report;
 import com.forum.service.Article_reportService;
 import com.forum.service.ArticlesService;
+import com.google.gson.Gson;
 import com.members.model.MembersVO;
 
 /**
@@ -28,21 +31,24 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 		String action = req.getParameter("action");
 		res.setContentType("text/html ; charset=utf-8");
 		PrintWriter out = res.getWriter();
-		if (user == null) {
-			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
-			res.sendRedirect(URL);
-			return;
-		}		
+
 		if("insert".equals(action)){
 			String rpt_type = req.getParameter("rpt_type");
 			String rpt_ctx = req.getParameter("rpt_ctx");
+			HashMap<String,String> map = new HashMap<String,String>();
+			boolean valid = Validation.checkLengthOne2Ten(rpt_ctx, "檢舉內容", map);
+			if(!valid){
+				Gson gson = new Gson();
+				out.write(gson.toJson(map));
+				return;
+			}
 			String art_no = req.getParameter("art_no");
 			String mem_no = req.getParameter("mem_no");
 			Article_reportService article_reportServiece = new Article_reportService();
 			System.out.println(rpt_type+rpt_ctx+art_no+mem_no);
 			boolean result = article_reportServiece.add(art_no, user.getMem_no(), rpt_type, rpt_ctx);
-			if(result){
-				out.print("ok");
+			if(!result){
+				out.print("{\"動作失敗\":\"請稍後再嘗試\"}");
 			}		
 			return;
 		}
@@ -78,6 +84,7 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 				queryStr = queryStr +"&rpt_type="+rpt_type;
 			}
 			int allPageCount = article_reportServiece.countAllPage(forum_no,pageSize);
+			System.out.println(allPageCount);
 			Object[] param = {forum_no};
 			String forum_name= (String)new ForumsDAO().getCol("forum_name",param )[0];			
 			req.setAttribute("forum_name", forum_name);

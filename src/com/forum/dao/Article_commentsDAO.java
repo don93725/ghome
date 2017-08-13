@@ -21,10 +21,7 @@ import com.members.model.MembersVO;
 import oracle.sql.BLOB;
 
 public class Article_commentsDAO extends BasicDAO implements DAOInterface<Article_comments>{
-	//建置查詢
-	Integer i =new Integer(123);
-	Integer x = i;
-	Integer b = i.getInteger("123");
+	//建置查詢	
 	public List<Article_comments> getVOBySQL(String SQL,Object[] param){
 	List list = new SQLHelper().executeQuery(SQL, param);
 	List<Article_comments> tempList = new ArrayList<Article_comments>();

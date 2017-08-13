@@ -240,104 +240,13 @@
 
 </style>
 </head>
-<body ondragover="javascript: dragHandler(event);"
-	ondragleave="javascript: leave_image(event);">
+<body>
 
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-12 col-sm-2">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">Panel title</h3>
-					</div>
-					<div class="panel-body">Panel content</div>
-				</div>
-			</div>
-			<div class="col-xs-12 col-sm-10" id="boardContainer">
-				<c:if test="${!(empty param.friend && user.mem_no != param.mem_no)&& (not empty user)}">
-						<div class="panel panel-default opcityDiv" id='showBorder'
-					ondrop="javascript: drop_image(event);">
-					<div class="panel-heading">
-						<h3 class="panel-title">新增動態</h3>
-					</div>
-					<div class="panel-body">
-					 		<div class='progressCr' >
-</div>
-<div class="progress text-center">
-<div id="upload_progress" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100">
-</div>
-</div>  
-  
-						<textarea class="form-control scrollable" id='bd_msg_ctx'
-							style="resize: none; background-color: transparent;" rows="8"
-							placeholder="${user.mem_nickname }，在想些什麼呢？"></textarea>	
-							<div class="error alert alert-danger" role='alert' style='display:none;' id='alert_bd_msg_ctx'></div>					
-					</div>
-					<div class="row-fluid" id='media'></div>
-					<div class="row-fluid" id='filmContainer'></div>
-					<div class="panel panel-default"
-						style="margin-bottom: 0px; background-color: transparent;">
-						<div class="row">
-							<div class="col-xs-12 col-sm-8">
-								<div class="panel-heading">
-									<button class="btn btn-default" id='uploadTrigger'>
-										<span class="glyphicon glyphicon-picture"> 新增照片</span>
-									</button>
-									<input type="file" style="display: none;" id="uploadPhoto"
-										multiple>
-									<button class="btn btn-default" id='uploadFilmTrigger'>
-										<span class="glyphicon glyphicon-facetime-video"> 新增影片</span>
-									</button>
-									<input type="file" style="display: none;" id="uploadFilm">
-								</div>
-							</div>
-
-
-							<div class="col-xs-12 col-sm-2">
-								<div class="row" style="padding-left: 100px;">
-									<div class="panel-heading">
-										<div class="dropdown">
-											<button class="btn btn-default dropdown-toggle" type="button"
-												id="dropdownMenu1" data-toggle="dropdown"
-												aria-haspopup="true" aria-expanded="true" value="0">
-												隱私設定 <span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-												<li><a href="#"
-													onclick="chooseCmmtPrvt.call(this,'0');">朋友&nbsp</a></li>
-												<li><a href="#"
-													onclick="chooseCmmtPrvt.call(this,'1');">公開&nbsp</a></li>
-												<li><a href="#"
-													onclick="chooseCmmtPrvt.call(this,'2');">本人&nbsp</a></li>
-											</ul>
-										</div>
-
-									</div>
-
-								</div>
-
-							</div>
-
-
-
-							<div class="col-xs-12 col-sm-1" style="margin-left: 35px;">
-
-								<div class="row">
-
-									<div class="panel-heading" style="padding-left:">
-
-										<button class="btn btn-primary"
-											onclick="submit.call(this,'${pageContext.request.contextPath}','${param.mem_no }','${param.friend }');">
-											&nbsp&nbsp&nbsp送出&nbsp&nbsp&nbsp</button>
-
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				</c:if>
-
+			
+			<div class="col-xs-12 col-sm-12" id="boardContainer">
+				
 				<c:forEach var="message_board" items="${message_board}" varStatus="number">
 					<div class="panel panel-default panel<fmt:formatNumber type="number" value="${number.count/8 }" maxFractionDigits="0" var="num" />${num}">
 						<div class="panel-heading">

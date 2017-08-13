@@ -72,6 +72,11 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 		List<Forums> list = getVOBySQL(SQL, null);
 		return list;
 	}
+	public List<Forums> getAllOfficialForum() {
+		String SQL = "select * from forums where forum_stat=3";
+		List<Forums> list = getVOBySQL(SQL, null);
+		return list;
+	}
 	// 算數量
 
 	public int countAll() {
@@ -79,7 +84,7 @@ public class ForumsDAO extends BasicDAO implements DAOInterface<Forums> {
 		return countBySQL(SQL);
 	}
 	// 計算文章數量
-	public Map<String,Integer> countArticle(){
+	public Map<String,Integer> countArticle(String forum_stat){
 		SQLHelper helper = new SQLHelper();
 		Connection con = helper.getConnection();
 		PreparedStatement pstmt = null;

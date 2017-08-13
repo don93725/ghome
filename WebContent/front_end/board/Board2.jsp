@@ -6,7 +6,7 @@
 
 
 				
-				<c:forEach var="message_board" items="${message_board}" varStatus="number">
+		<c:forEach var="message_board" items="${message_board}" varStatus="number">
 					<div class="panel panel-default panel<fmt:formatNumber type="number" value="${number.count/8 }" maxFractionDigits="0" var="num" />${num}">
 						<div class="panel-heading">
 							<h3 class="panel-title">
@@ -31,16 +31,16 @@
 													aria-expanded="false">
 													<img
 														src="${pageContext.request.contextPath}/front_end/board/images/cmmtPrvt${message_board.bd_prvt }.png">
-													<c:if test="${param.mem_no==user.mem_no }">
+													<c:if test="${message_board.mem_no.mem_no==user.mem_no }">
 														<span class="caret"></span>
 												</div>
 
 												<ul class="dropdown-menu" id='cmtPrvt'>
-													<li><a href="#">隱私設定</a></li>
+													<li><a href="#">隱私設定${message_board.mem_no.mem_no}</a></li>
 													<li role="separator" class="divider"></li>
-													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no }','0');">朋友</a></li>
-													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no }','1');">公開</a></li>
-													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no }','2');">本人</a></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${message_board.mem_no.mem_no }','${message_board.bd_msg_no }','0');">朋友</a></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${message_board.mem_no.mem_no }','${message_board.bd_msg_no }','1');">公開</a></li>
+													<li><a href="#" onclick="setCmmtPrvt.call(this,'${pageContext.request.contextPath}','${message_board.mem_no.mem_no }','${message_board.bd_msg_no }','2');">本人</a></li>
 												</ul>
 
 											</div>
@@ -50,7 +50,7 @@
 
 									</div>
 									<div class="col-xs-12 col-sm-2 boardEdit">
-										<button class="btn btn-info" onclick='edit.call(this,"${pageContext.request.contextPath}","${message_board.bd_msg_no }","${param.mem_no }","${message_board.bd_type }");'>
+										<button class="btn btn-info" onclick='edit.call(this,"${pageContext.request.contextPath}","${message_board.bd_msg_no }","${message_board.mem_no.mem_no }","${message_board.bd_type }");'>
 											<span class="glyphicon glyphicon-pencil"></span>
 										</button>
 										<button class="btn btn-danger"
@@ -285,7 +285,7 @@
 								<ul class="nav nav-pills">
 									<li role="presentation" ${(message_board.ifClick)? 'class="disabled"':''}>
 									<a href="#"
-										<c:if test='${!message_board.ifClick }' >onclick="addLikes.call(this,event,'${pageContext.request.contextPath}','${param.mem_no }','${message_board.bd_msg_no}')"</c:if>
+										<c:if test='${!message_board.ifClick }' >onclick="addLikes.call(this,event,'${pageContext.request.contextPath}','${message_board.mem_no.mem_no }','${message_board.bd_msg_no}')"</c:if>
 									 	<c:if test='${!message_board.ifClick }' >onclick="return false;"</c:if>>
 									 <span
 											class="glyphicon glyphicon-thumbs-up">&nbsp讚</span>
@@ -321,11 +321,11 @@
 									<div class="col-xs-12 col-sm-8 cmt" >
 										<span class='a' style='padding:30px; padding-right: 0px;'>${comment.bd_cmt_ctx }</span>
 										<input type='text' class='b' value='${comment.bd_cmt_ctx }' style='display:none;' onfocus='this.value = this.value;'/>
-										<span class='c' ><a href="#" style='margin-left: 3px' onclick='addCmtLikes.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${param.mem_no }");'><span class='cmtLikes'>${(comment.ifClick)?'收回讚':'讚'}</span><span style='margin-left: 5px;'>${(comment.cmt_likes>0)? comment.cmt_likes:''  }</span></a></span>
+										<span class='c' ><a href="#" style='margin-left: 3px' onclick='addCmtLikes.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${comment.mem_no.mem_no }");'><span class='cmtLikes'>${(comment.ifClick)?'收回讚':'讚'}</span><span style='margin-left: 5px;'>${(comment.cmt_likes>0)? comment.cmt_likes:''  }</span></a></span>
 
 									</div>
 									<div class="col-xs-12 col-sm-3 cmt">
-									<a href='#' onclick='editCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }");' style='color:black'>
+									<a href='#' onclick='editCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${comment.mem_no.mem_no}");' style='color:black'>
 										<span class='glyphicon glyphicon-pencil'></span></a>
 										&nbsp&nbsp&nbsp&nbsp&nbsp
 									<a href='#' onclick='delCmmt.call(this,event,"${pageContext.request.contextPath}","${comment.bd_cmt_no }","${comment.mem_no.mem_no}");' style='color:black'>

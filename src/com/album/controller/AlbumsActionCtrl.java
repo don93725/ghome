@@ -55,7 +55,7 @@ public class AlbumsActionCtrl extends HttpServlet {
 			AlbumsService albumsService = new AlbumsService();
 			boolean result = albumsService.add(user.getMem_no(), al_name, al_prvt);
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			} 
 			return;
 		}
@@ -75,7 +75,7 @@ public class AlbumsActionCtrl extends HttpServlet {
 			boolean result = albumsService.update(al_no, al_name, al_prvt);
 			
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			} 
 			return;
 		}
@@ -85,7 +85,7 @@ public class AlbumsActionCtrl extends HttpServlet {
 			AlbumsService albumsService = new AlbumsService();
 			boolean result = albumsService.delete(al_no);
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			} 
 			return;
 		}

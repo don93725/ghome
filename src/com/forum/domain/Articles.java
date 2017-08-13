@@ -10,7 +10,14 @@ public class Articles {
 	String art_no,forum_no,art_type,art_name,art_ctx;
 	Date art_add_date,art_upd_date;
 	MembersVO mem_no;
+	Article_comments newestCmmt;
 	
+	public Article_comments getNewestCmmt() {
+		return newestCmmt;
+	}
+	public void setNewestCmmt(Article_comments newestCmmt) {
+		this.newestCmmt = newestCmmt;
+	}
 	public Integer getArt_views() {
 		return art_views;
 	}

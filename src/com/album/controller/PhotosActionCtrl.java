@@ -65,7 +65,7 @@ public class PhotosActionCtrl extends HttpServlet {
 			PhotosService photosService = new PhotosService();
 			boolean result = photosService.add(parts, names, al_no);
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			}
 			return;
 		}
@@ -77,7 +77,7 @@ public class PhotosActionCtrl extends HttpServlet {
 			System.out.println(photo_no+ photo_desc);
 			boolean result = photosService.update(photo_no, photo_desc);		
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			}
 			return;
 
@@ -88,7 +88,7 @@ public class PhotosActionCtrl extends HttpServlet {
 			PhotosService photosService = new PhotosService();
 			boolean result = photosService.delete(photo_no);		
 			if (!result) {
-				out.write("{\"fail\",\"fail\"}");
+				out.write("{\"fail\":\"fail\"}");
 			}
 			return;
 		}

@@ -2,6 +2,7 @@ package com.forum.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.don.util.Validation;
 import com.forum.domain.Art_types;
 import com.forum.domain.Forums;
 import com.forum.service.Art_typesService;
@@ -29,27 +31,45 @@ public class ForumActionCtrl extends HttpServlet {
 		MembersVO user = (MembersVO) req.getSession().getAttribute("user");
 		res.setContentType("text/html ; charset=utf-8 ");
 		PrintWriter out = res.getWriter();
-		if (user == null) {
-			// 請先登入
-			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
-			res.sendRedirect(URL);
-			return;
+		HashMap<String,String> map = new HashMap<String,String>();
 
-		}
 		if ("insert".equals(action)) {
 			String mem_no = user.getMem_no();
 			String forum_name = req.getParameter("forum_name");
+			boolean valid = Validation.checkLengthOne2Ten(forum_name, "板塊名字", map);
+			if(!valid){
+				Gson gson = new Gson();
+				out.write(gson.toJson(map));
+				return;
+			}
 			String forum_desc = req.getParameter("forum_desc");
+			valid = Validation.checkLengthOne2Thirty(forum_desc, "板塊敘述", map);
+			if(!valid){
+				Gson gson = new Gson();
+				out.write(gson.toJson(map));
+				return;
+			}
 			String forum_note = req.getParameter("forum_note");
+			valid = Validation.checkLengthOne2Thirty(forum_note, "申請原因", map);
+			if(!valid){
+				Gson gson = new Gson();
+				out.write(gson.toJson(map));
+				return;
+			}
+			
 			String[] art_type_name = req.getParameterValues("art_type_name");
+			
+
 			ForumsService forumsSevice = new ForumsService();
 			boolean result = forumsSevice.add(mem_no, forum_name, forum_desc, forum_note, art_type_name);
-			if(result){
-				out.print("ok");
+			if(!result){
+				out.write("{\"fail\":\"fail\"}");
+				return;
 			}
 			return;
 
-		} else if ("goUpdate".equals(action)) {
+		} 
+		if ("goUpdate".equals(action)) {
 			String forum_no = req.getParameter("forum_no");
 			ForumsService forumsSevice = new ForumsService();
 			Gson gson = new Gson();
@@ -59,20 +79,38 @@ public class ForumActionCtrl extends HttpServlet {
 			System.out.println(jsonStr);
 			String jsonStr2 = gson.toJson(art_types);
 			out.print(jsonStr+"|"+jsonStr2);
-
-		} else if ("update".equals(action)) {
-			String forum_no = req.getParameter("forum_no");
+			return;
+		}
+		if ("update".equals(action)) {
+			String forum_no = req.getParameter("forum_no");			
 			String forum_desc = req.getParameter("forum_desc");
+			boolean valid = Validation.checkLengthOne2Thirty(forum_desc, "板塊描述", map);
+			if(!valid){
+				Gson gson = new Gson();
+				out.write(gson.toJson(map));
+				return;
+			}
 			String[] art_type_name = req.getParameterValues("art_type_name");
+			valid = false;
+			for(String temp : art_type_name){
+				if(temp.length()>0){
+					valid = true;					
+				}
+			}
+			if(!valid){
+				out.write("{\"文章類型\":\"至少填入一個吧\"}");
+				return;
+			}
 			ForumsService forumsSevice = new ForumsService();
-			boolean result = forumsSevice.update(forum_no, forum_desc,art_type_name);
-			if (result) {
-				res.sendRedirect(req.getContextPath() + "/forum/ForumShowCtrl?forum_no=" + forum_no);
-			} else {
-				req.setAttribute("msg", "fail to update forum");
-				req.getRequestDispatcher("front_end/forum/ok.jsp").forward(req, res);
+			boolean result = forumsSevice.update(forum_no, forum_desc,art_type_name);			
+			
+			if(!result){
+				System.out.println("進?");
+				out.write("{\"fail\":\"fail\"}");
+				return;
 			}
 		}
+
 
 	}
 

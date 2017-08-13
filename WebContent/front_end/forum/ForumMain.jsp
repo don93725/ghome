@@ -5,7 +5,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html lang="zh-ch-en">
 <head>
 <meta content="Expires" content="-1">
 <meta content="Catch-Control" content="no-cache">
@@ -13,169 +13,143 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>Insert title here</title>
 <link rel="stylesheet"
+			href="${pageContext.request.contextPath}/front_end/forum/css/colorbox.css" />
+<link rel="stylesheet"
 	href="${pageContext.request.contextPath}/front_end/forum/css/forum.css">
 <link rel="stylesheet"
 	href="${pageContext.request.contextPath}/front_end/forum/css/ArticleDisplay.css">
-
-<script type="Text/JavaScript"
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js"></script>
-<script type="text/javascript"
-	src='${pageContext.request.contextPath}/front_end/forum/js/ForumApply.js'></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/comm/css/sweetalert.css">
 </head>
 <body>
-	<h1>討論區</h1>
+<div class="container">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12">
+					
+	
 	<c:if test="${not empty user }">
-		<div>
-			<a class='inline' href="#inline_content">申請板塊</a>
+		<div class="col-xs-12 col-sm-12">
+						<a class='inline' href="#inline_content"><button class='btn btn-lg btn-primary'>申請板塊</button></a>
 		</div>
 	</c:if>
-	<div>
-		<div class='rank'>
-			<table border='1'>
-				<tr>
-					<td>名次</td>
-					<td>板塊名稱</td>
-					<td>月點擊/總點擊</td>
-				</tr>
-				<c:forEach var='rankList' items="${rankList}" varStatus="loop">
-					<tr>
-						<td><c:out value="${loop.count}" /></td>
-						<td><a
-							href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=<c:out value='${rankList.forum_no}'/>'><c:out
-									value='${rankList.forum_name }' /></a></td>
-						<td align="center"><c:out value="${rankList.forum_views }" />/<c:out
-								value="${rankList.forum_mviews }" /></td>
-					</tr>
-				</c:forEach>
-			</table>
-		</div>
-		<div class='rank'>
-			<table border='1'>
-				<tr>
-					<td>名次</td>
-					<td>文章名稱</td>
-					<td>月點擊/總點擊</td>
-				</tr>
+		<div class="col-xs-12 col-sm-12">
+			<div class="panel panel-default">
+						  <div class="panel-heading"><caption>官方板塊</caption></div>
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>編號</th>
+										<th>板塊名稱</th>
+										<th>文章數</th>
+										<th>介紹</th>
+										<th>點擊次數</th>
+								</tr>
+							</thead>
+							<tbody>
+									<c:forEach var='f' items='${offcialforums}' varStatus="loop">
+							<tr>
+								<td>${loop.count }</td>
+								<td><a
+									href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${f.forum_no }'>${f.forum_name }</a></td>
+								<td><c:out value="${countOfficialArticles[f.forum_no ] }" default="0" /></td>
+								<td>${f.forum_desc }</td>
+								<td>${f.forum_views }</td>
+							</tr>
+						</c:forEach>
+							</tbody>
+						</table>
+						</div>
+						
+						<div class="panel panel-default">
+					  <div class="panel-heading"><caption>會員板塊</caption></div>
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>編號</th>
+									<th>板塊名稱</th>
+									<th>文章數</th>
+									<th>介紹</th>
+									<th>點擊次數</th>
+							</tr>
+						</thead>
+						<tbody>
+									<c:forEach var='f' items='${ forums}' varStatus="loop">
+						<tr>
+							<td>${loop.count }</td>
+							<td><a
+								href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${f.forum_no }'>${f.forum_name }</a></td>
+							<td><c:out value="${countArticles[f.forum_no ] }" default="0" /></td>
+							<td>${f.forum_desc }</td>
+							<td>${f.forum_views }</td>
+						</tr>
+					</c:forEach>
+						</tbody>
+					</table>
+					</div>
+				</div>
 
-				<c:forEach var="rankArticles" items="${articlesRankList}"
-					varStatus="loop2">
-					<tr>
-						<td><c:out value="${loop2.count}" /></td>
-						<td><a
-							href='${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=<c:out value="${rankArticles.forum_no}"/>&art_no=<c:out value="${rankArticles.art_no}"/>'><c:out
-									value="${rankArticles.art_name }" /></a></td>
-						<td><c:out value="${rankArticles.art_views }" />/<c:out
-								value="${rankArticles.art_mviews }" /></td>
-					</tr>
-				</c:forEach>
-				<c:if test="${empty articlesRankList}">
-					<tr rowspan='5'>
-						<td colspan='3'>目前尚無排行</td>
-					</tr>
-				</c:if>
-			</table>
-		</div>
-	</div>
-	<div>
-		<table border='1'>
-			<tr>
-				<td>名次</td>
-				<td>最新文章</td>
-				<td>發表時間</td>
-			</tr>
-
-			<c:forEach var="newestRankList" items="${newestRankList}"
-				varStatus="loop3">
-				<tr>
-					<td><c:out value="${loop3.count}" /></td>
-					<td><a
-						href='${pageContext.request.contextPath}/forum/ArticleShowCtrl?forum_no=<c:out value="${newestRankList.forum_no}"/>&art_no=<c:out value="${newestRankList.art_no}"/>'><c:out
-								value="${newestRankList.art_name }" /></a></td>
-					<td><fmt:setLocale value="en_US" /> <fmt:formatDate
-							value="${newestRankList.art_add_date}" pattern="yyyy-MM-d HH:mm" /></td>
-				</tr>
-			</c:forEach>
-			<c:if test="${empty newestRankList}">
-				<tr rowspan='5'>
-					<td colspan='3'>目前尚最新文章</td>
-				</tr>
-			</c:if>
-		</table>
-	</div>
-	</div>
-	<div class='rank'>
-		<table border=1>
-			<tr>
-				<th>編號</th>
-				<th>論壇</th>
-				<th>文章數</th>
-				<th>介紹</th>
-				<th>點擊次數</th>
-			</tr>
-
-
-			<c:forEach var='f' items='${ forums}'>
-				<tr>
-					<td>${f.forum_no }</td>
-					<td><a
-						href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${f.forum_no }'>${f.forum_name }</a></td>
-					<td><c:out value="${countArticles[f.forum_no ] }" default="0" /></td>
-					<td>${f.forum_desc }</td>
-					<td>${f.forum_views }</td>
-				</tr>
-			</c:forEach>
-
-
-		</table>
-		</div>
+				</div>
+			</div>
+		</div>	
+		
+		
+		
 		<div id='inline' style="display: none">
 			<div id='inline_content'
 				style='padding: 10px; background: #fff; font-size: 30px;'>
-				<h1>版塊申請</h1>
 				<form
 					action="#"
 					method="post">
-					<table>
-						<tr>
+					<table class="table table-hover">
+						<caption><h1>版塊申請</h1></caption>						
+						<tbody>
+							<tr>
 							<td><label>版塊名字</label></td>
-							<td><input type="text" id='forum_name' name='forum_name'></td>
+							<td><input type="text" class='form-control' id='forum_name' name='forum_name'></td>
 						</tr>
 						<tr>
 							<td valign="top"><label>文章類型</label></td>
-							<td><c:forEach begin="0" end="4" varStatus="loop">
-									<input type="text" name='art_type_name' style="display: none;">
-									<input type="button" class='xbtn' value='X'
-										style="display: none;">
-								</c:forEach> <input type="button" id='btn' value='+'></td>
+							<td><c:forEach begin="0" end="4" varStatus="loop">									
+									<input type="text" name="art_type_name" style="display: none;width:60%;">
+									<button type="button" class='xbtn btn btn-danger'
+										style="display: none;"><span class='glyphicon glyphicon-remove'></span></button>
+									
+								</c:forEach> <button type="button" class='btn btn-info' id='btn'><span class='glyphicon glyphicon-plus'></span></button></td>
 
 						</tr>
 
 						<tr>
 							<td><label>版塊敘述</label></td>
-							<td><textarea rows="5" cols="20" id='forum_desc'
+							<td><textarea style='resize: none;' class='form-control' rows="5" cols="20" id='forum_desc'
 									name='forum_desc'></textarea></td>
 						</tr>
 						<tr>
 							<td><label>申請原因</label></td>
-							<td><textarea rows="5" cols="20" id='forum_note'
+							<td><textarea style='resize: none;' class='form-control' rows="5" cols="20" id='forum_note'
 									name='forum_note'></textarea></td>
 						</tr>
 						<tr align='center'>
-							<td colspan="2"><input id='test' type="button" name=""
+							<td colspan="2"><input id='test' class='btn btn-lg btn-primary' type="button" name=""
 								value="送出"
 								onclick="create('${pageContext.request.contextPath}','${user.mem_no }');">
-								<input type="reset" name="" value="重填"></td>
+								<input class='btn btn-default btn-lg' type="reset" name="" value="重填"></td>
 						</tr>
+						</tbody>
 					</table>
+				
 				</form>
 
 			</div>
 		</div>
 		<div id='tips'></div>
-		<script
-			src="${pageContext.request.contextPath}/front_end/forum/js/jquery.colorbox2.js"></script>
-		<link rel="stylesheet"
-			href="${pageContext.request.contextPath}/front_end/forum/css/colorbox.css" />
-
+		
+		
+		
+		
+<script src="https://code.jquery.com/jquery.js"></script>
+<script src='${pageContext.request.contextPath}/front_end/comm/js/sweetalert.min.js'></script>	
+<script	src="${pageContext.request.contextPath}/front_end/forum/js/jquery.colorbox2.js"></script>		
+<script type="text/javascript" src='${pageContext.request.contextPath}/front_end/forum/js/ForumApply.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </body>
 </html>

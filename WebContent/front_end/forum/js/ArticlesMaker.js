@@ -4,7 +4,8 @@ KindEditor.ready(function(K) {
 	editor = K.create('textarea[name="content"]', {
 		allowFileManager : true
 	});
-	
+	var path = window.location.pathname;
+	webCtx = path.substring(0, path.indexOf('/', 1));
 	for(var i = 0 ; i < $('#ctx img').length ; i ++){				
 		var temp = $('#ctx img').eq(i).attr("id");
 		temp = temp.substring(temp.length-1,temp.length); 
@@ -12,9 +13,8 @@ KindEditor.ready(function(K) {
 	}	
 	K('input[name=getHtml]').click(function(e) {
 		
-	
+		e.preventDefault();
 		$('#ctx').html(editor.html());
-		
 		var deleteInfo = "";
 		var ctx = document.getElementById('ctx').childNodes;
 		var text = "";
@@ -73,13 +73,64 @@ KindEditor.ready(function(K) {
 		}
 		$('#order').val(order);
 		$('#deleteInfo').val(deleteInfo);
+		var form = $('#articleForm');
 		var art_ctx = document.getElementsByName("art_ctx")[0]; 
+		var art_name = $('#art_name').val();
 		art_ctx.innerHTML = text;
+		check(art_name,text,form);
 		
 	});
 	
 });
 
+var webCtx;
+function check(art_name,art_ctx,form){
+	$.ajax({
+        url: webCtx+"/forum/ArticlesActionCtrl",
+        data: {
+        	"action":"check",
+        	"art_name":art_name,
+        	"art_ctx":art_ctx        	
+        },                	  
+        type:"POST",
+        dataType:'text',
+
+        success: function(msg){	
+        	if(msg.length==0){                    	
+					swal({
+					  title: "發文成功",
+					  text: "水喔，已成功發文，希望不是廢文。",
+					  timer: 1000,
+					  type: "success",
+					  showConfirmButton: false
+					},function(){
+						form.submit();
+					});
+            }else{
+            	$.each(JSON.parse(msg),function(v,i){
+					swal({
+					  title: "輸入錯誤",
+					  text: v+i,
+					  timer: 1000,
+					  type: "error",
+					  showConfirmButton: false
+					});
+				});
+            }
+        
+        },
+
+         error:function(xhr, ajaxOptions, thrownError){ 
+        	 swal({
+				  title: "申請失敗",
+				  text: "請再嘗試看看",
+				  timer: 1000,
+				  type: "error",
+				  showConfirmButton: false
+				});
+         }
+    });
+}
 var editor;
 KindEditor.ready(function(K) {
 	editor = K.create('div[name="content"]', {

@@ -3,7 +3,9 @@ package com.forum.controller;
 import java.io.IOException;
 
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.servlet.ServletException;
@@ -17,9 +19,11 @@ import javax.servlet.http.Part;
 
 import com.don.inteface.DAOInterface;
 import com.don.util.TransData;
+import com.don.util.Validation;
 import com.forum.dao.Article_commentsDAO;
 import com.forum.domain.Article_comments;
 import com.forum.service.Article_commentsService;
+import com.google.gson.Gson;
 import com.members.model.MembersVO;
 
 @WebServlet("/forum/ArtCmtActionCtrl")
@@ -32,10 +36,17 @@ public class ArtCmtActionCtrl extends HttpServlet {
 		MembersVO user = ((MembersVO) session.getAttribute("user"));
 		String art_no = req.getParameter("art_no");
 		String action = req.getParameter("action");
-
-		if (user == null) {
-			String URL = this.getServletContext().getContextPath() + "/LoginCtrl";
-			res.sendRedirect(URL);
+		if("check".equals(action)){
+			res.setContentType("text/html ; charset=utf-8 ");
+			PrintWriter out = res.getWriter();			
+			HashMap<String,String> map = new HashMap<String,String>();
+			String art_cmt_ctx = req.getParameter("art_cmt_ctx");	
+			boolean valid = Validation.checkLengthTen2FakeThrH(art_cmt_ctx, "留言內文", map);
+			if(!valid){
+				Gson gson = new Gson();
+				out.write(gson.toJson(map));
+				return;
+			}
 			return;
 		}
 		if (art_no != null) {

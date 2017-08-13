@@ -29,7 +29,14 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 			Object[] obj = (Object[]) list.get(i);
 			Articles articles = new Articles();
 			if (obj[0] != null) {
-				articles.setArt_no((String) obj[0]);
+				articles.setArt_no(String.valueOf(obj[0]));
+				Article_commentsDAO article_commentsDAO = new Article_commentsDAO();
+				String sql="select art_cmt_no,art_no,a.mem_no,art_cmt_ctx,art_cmt_img,art_cmt_time,mem_nickname,mem_rank from Article_comments a join (select mem_nickname,mem_rank,mem_no from members) b on a.mem_no=b.mem_no "+ 
+						   "where (art_cmt_time,art_cmt_no) in (select max(art_cmt_time),art_cmt_no from Article_comments where art_no="+String.valueOf(obj[0])+" group by art_cmt_no)";
+				List<Article_comments> temp = article_commentsDAO.getVOBySQL(sql, null);
+				if(temp.size()!=0){
+					articles.setNewestCmmt(temp.get(0));					
+				}
 			}
 			if (obj[1] != null) {
 				MembersVO members = new MembersVO();

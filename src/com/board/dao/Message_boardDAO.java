@@ -346,7 +346,6 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 		}
 		sql = sql + " order by " + order + ")) where rn between " + firstPage + " and " + lastPage;
 		List<Message_board> list = getVOBySQL(sql, null);
-
 		return list;
 	}
 
