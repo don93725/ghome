@@ -161,7 +161,7 @@
 								        </ul>
 								      </div><!-- /btn-group -->
 								      <div class="input-group-btn">
-								        <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-share-alt"></span>&nbspSend</button>
+								        <button type="button" class="btn btn-primary" onclick="send();"><span class="glyphicon glyphicon-share-alt"></span>&nbspSend</button>
 								        <input type='hidden' id='sendWho'>
 								        <input type='file' id='uplInput' style='display:none;'>
 								      </div>
@@ -187,7 +187,61 @@
 			load(path,post_no);
 		}
 		function send(){
-			
+			var rcv_no = $('#sendWho').val();
+			var msg_ctx = $('#sendInput').val();
+			$.ajax({
+				type : "POST",
+				url : webCtx + "/message/MessageCtrl",
+				dataType : 'text',
+				data: {
+					"action" : "insert",					
+					"rcv_no": rcv_no,
+					"msg_ctx" : msg_ctx
+				},
+				success : function(msg) {
+					
+					$('#msgContent').append(msg);
+					$('#allPage').text($('#oneNum').val());
+					if (msg.length == 0) {
+						$('#sendInput').empty();
+						swal({
+							  title: "成功",
+							  text: "已成功發布動態",
+							  timer: 1000,
+							  type: "success",
+							  showConfirmButton: false
+							},function(){
+								$('.fancybox-close-small').click();
+								location.reload();
+							});
+						
+						
+					} else {						
+						
+						$.each(JSON.parse(msg),function(v,i){
+							swal({
+								  title: "輸入錯誤",
+								  text: i,
+								  timer: 1000,
+								  type: "error",
+								  showConfirmButton: false
+								});					
+
+						});
+						
+					}
+				},
+				error : function(xhr, ajaxOptions, thrownError) {
+					swal({
+						  title: "發生錯誤",
+						  text: "請再嘗試看看",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+					});
+				}
+
+			});
 		}
 		function load(path,post_no){
 			$.ajax({
@@ -242,14 +296,17 @@
 
 			});
 		}
+	    var webCtx ;
 		$(function(){
 			$("#sendInput").keypress(function(e){
 				  code = (e.keyCode ? e.keyCode : e.which);
 				  if (code == 13)
 				  {
-				      alert($(this).val());
+				      send();
 				  }
 			});
+			var path = window.location.pathname;
+		    webCtx = path.substring(0, path.indexOf('/', 1));
 			$('#uplBtn').click(function(){
 				$('#uplInput').trigger('click');
 			});
