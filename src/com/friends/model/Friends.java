@@ -4,8 +4,21 @@ import java.util.Date;
 
 public class Friends {
 
-	String mem_no, fd_no;
+	String mem_no,mem_nickname,fd_no,fd_nickname;
 	Date fd_date;
+	
+	public String getMem_nickname() {
+		return mem_nickname;
+	}
+	public void setMem_nickname(String mem_nickname) {
+		this.mem_nickname = mem_nickname;
+	}
+	public String getFd_nickname() {
+		return fd_nickname;
+	}
+	public void setFd_nickname(String fd_nickname) {
+		this.fd_nickname = fd_nickname;
+	}
 	public String getMem_no() {
 		return mem_no;
 	}

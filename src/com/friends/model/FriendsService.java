@@ -23,4 +23,10 @@ public class FriendsService {
 		FriendsDAO FriendsDAO = new FriendsDAO();
 		return FriendsDAO.checkFriendShip(mem_no, fd_no);
 	}
+	public List<Friends> getFriendList(String user_no){
+		FriendsDAO dao = new FriendsDAO();
+		String sql = "select a.mem_no,fd_no,fd_date,b.mem_nickname,c.mem_nickname from (select * from friends where fd_no="+user_no+" or mem_no="+user_no+
+				") a join members b on a.mem_no=b.mem_no join members c on a.fd_no = c.mem_no ";
+		return dao.getVOBySQL(sql, null);
+	}
 }

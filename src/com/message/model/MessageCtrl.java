@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.friends.model.Friends;
+import com.friends.model.FriendsService;
 import com.members.model.MembersVO;
 
 /**
@@ -33,6 +35,9 @@ public class MessageCtrl extends HttpServlet {
 			
 			List<Message> lastestMsg = messageService.getLastestMsg(user_no);
 			req.setAttribute("lastestMsg", lastestMsg);
+			FriendsService friendsService = new FriendsService();
+			List<Friends> friendList = friendsService.getFriendList(user_no);
+			req.setAttribute("friendList", friendList);			
 			req.getRequestDispatcher("/front_end/message/Message.jsp").forward(req, res);
 			return;
 		}
@@ -55,7 +60,10 @@ public class MessageCtrl extends HttpServlet {
 
 		if ("insert".equals(action)) {
 			// 新增
-			messageService.add("1", "1", "好");
+			String rcv_no = req.getParameter("rcv_no");					
+			String msg_ctx = req.getParameter("msg_ctx");					
+			messageService.add(rcv_no, user_no, msg_ctx);
+			System.out.println(rcv_no+"進?"+msg_ctx);
 			return;
 		}
 		if ("update".equals(action)) {

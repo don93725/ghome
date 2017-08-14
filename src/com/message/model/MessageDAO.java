@@ -90,12 +90,12 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 	public List<Message> getLastest(String user_no) {
 		String sql = "select msg_no,rcv_no,post_no,send_time,msg_ctx,if_read,b.mem_nickname bnick,b.mem_rank brk,c.mem_nickname cnick,c.mem_rank crk from "+ 
 				"message a join members b on a.rcv_no=b.mem_no join members c on a.post_no=c.mem_no  "+
-				"where (rcv_no,post_no,send_time) in (select rcv_no,max(post_no),sdate from (select least(max1,(case when max2 is null then max1 else"+
+				"where (rcv_no,post_no,send_time) in (select distinct * from (select rcv_no,max(post_no),sdate from (select greatest(max1,(case when max2 is null then max1 else"+
 				"(case when max2>max1 then max2 else max1 end) end)) sdate,(case when max1>=(case when max2 is null then max1 else max2 end )then rcv1 else rcv2 end)"+
 				" rcv_no,(case when max1>=(case when max2 is null then max1 else max2 end )then post1 else post2 end) post_no from "+
 				"(select max(send_time) max1,rcv_no rcv1,post_no post1 from message where  rcv_no="+user_no+" or post_no="+user_no+" group by rcv_no,post_no) a  "+
 				"left outer join(select max(send_time) max2,rcv_no rcv2,post_no post2 from message where  rcv_no="+user_no+" or post_no="+user_no+
-				" group by rcv_no,post_no) b on rcv1=post2 and post1=rcv2) group by post_no,rcv_no,sdate)";
+				" group by rcv_no,post_no) b on rcv1=post2 and post1=rcv2) group by post_no,rcv_no,sdate)) order by send_time desc";
 		List<Message> list = getVOBySQL(sql, null);
 		return list;
 	}
@@ -182,7 +182,6 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 		}
 		sql = sql + " order by " + order + ")) where rn between " + firstPage + " and " + lastPage;
 		List<Message> list = getVOBySQL(sql, null);
-		System.out.println(sql);
 		return list;
 	}
 	public List<Message> chatPageAndRank(int page, int pageSize, String user_no,String other_no) {
@@ -194,7 +193,6 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 		
 		sql = sql + " order by send_time desc)) where rn between " + firstPage + " and " + lastPage;
 		List<Message> list = getVOBySQL(sql, null);
-		System.out.println(sql);
 		return list;
 	}
 	// 建置分頁(彈性排序不設條件)

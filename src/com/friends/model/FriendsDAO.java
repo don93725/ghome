@@ -35,6 +35,12 @@ public class FriendsDAO extends BasicDAO {
 			if (obj[2] != null) {
 				friends.setFd_date((Date) obj[2]);
 			}
+			if (obj[3] != null) {
+				friends.setMem_nickname(String.valueOf(obj[3]));
+			}
+			if (obj[4] != null) {
+				friends.setFd_nickname(String.valueOf(obj[4]));
+			}
 			tempList.add(friends);
 		}
 		return tempList;

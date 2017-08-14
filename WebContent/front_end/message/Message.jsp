@@ -33,7 +33,7 @@
 			.msgInput{
 				padding: 0px;
 			}
-			.pre-scrollable{
+			.msgPanel{
 				height: 30000px;
 			}
 		</style>
@@ -49,12 +49,11 @@
 					  		<ul class="nav nav-tabs" role="tablist">
 							    <li role="presentation" class="active"><a href="#message" aria-controls="message" role="tab" data-toggle="tab">最新訊息</a></li>
 							    <li role="presentation"><a href="#firendList" aria-controls="firendList" role="tab" data-toggle="tab">朋友列表</a></li>
-							    <li role="presentation"><a href="#stranger" aria-controls="stranger" role="tab" data-toggle="tab">陌生人</a></li>
 						  	</ul>
 						  
 					  <!-- List group -->
 					   <div class="tab-content">
-					    <div role="tabpanel" class="tab-pane active pre-scrollable" id="message">
+					    <div role="tabpanel" class="tab-pane active pre-scrollable msgPanel" id="message">
 					    	<ul class="list-group">
 					    		<c:forEach var="newMsg" items="${lastestMsg }">
 							    <li class="list-group-item hover" onclick='show("${pageContext.request.contextPath }","${(newMsg.post_no.mem_no==user.mem_no)? newMsg.rcv_no.mem_no :newMsg.post_no.mem_no}","${(newMsg.post_no.mem_no==user.mem_no)? newMsg.rcv_no.mem_nickname :newMsg.post_no.mem_nickname}");'>
@@ -80,42 +79,13 @@
 							    </c:forEach>							    
 							  </ul>
 					    </div>
-					    <div role="tabpanel" class="tab-pane pre-scrollable" id="firendList">
+					    <div role="tabpanel" class="tab-pane pre-scrollable msgPanel" id="firendList">
 					    	<ul class="list-group">
-							    <li class="list-group-item">XXX</li>
-							    <li class="list-group-item">XXX</li>
-							    <li class="list-group-item">XXX</li>
-							    <li class="list-group-item">XXX</li>
+					    		<c:forEach var='friend' items='${friendList }'>
+							    <li class="list-group-item text-center fdList" onclick='show("${pageContext.request.contextPath }","${(user_no!=friend.mem_no)? friend.fd_no:friend.mem_no }","${(user_no!=friend.mem_no)? friend.fd_nickname:friend.mem_nickname }");'>${(user_no!=friend.mem_no)? friend.fd_nickname:friend.mem_nickname }</li>
+							    </c:forEach>
 							  </ul>
-					    </div>
-					    <div role="tabpanel" class="tab-pane pre-scrollable" id="stranger">
-					    	<ul class="list-group">
-								<li class="list-group-item">
-								    <div class="row">
-								    	
-								    	<div class="col-xs-12 col-sm-12">
-								    		<div class="row">
-								    			
-								    		<div class="col-xs-12 col-sm-12">
-								    			王小名
-								    		</div>
-								    		
-								    	
-									    <div class="col-xs-12 col-sm-10 col-sm-offset-2">
-									    	你在幹嘛?
-									    </div>
-									    <div class="col-xs-12 col-sm-8 col-sm-offset-4 msgTime">
-									    	yyyy-MM-dd HH:mm
-									    </div>
-									    </div>
-								    </div>
-							    </li>
-							    <li class="list-group-item">Dapibus ac facilisis in</li>
-							    <li class="list-group-item">Morbi leo risus</li>
-							    <li class="list-group-item">Porta ac consectetur ac</li>
-							    <li class="list-group-item">Vestibulum at eros</li>
-							  </ul>
-					    </div>
+					    </div>	
 					   
 					  </div>
 							  
@@ -134,38 +104,43 @@
 							  			
 							  		</div>
 							  		<div class="col-xs-12 col-sm-2">
-							  			<button class="btn btn-default"><span class="glyphicon glyphicon-triangle-left"></span></button>
-							  			<span id='thisPage'></span>/<span id='allPage'></span>
-							  			<button class="btn btn-default"><span class="glyphicon glyphicon-triangle-right"></span></button>
+							  			<button class="btn btn-default btn-xs" id='moreMsg' onclick='showMore("${pageContext.request.contextPath }");'>載入更多</button>
+							  			<input type='hidden' id='thisPage'>
 							  		</div>
 					  			</div>	
 					  		</div>
 					  <!-- List group -->
-							  <div class="panel-body msgContent pre-scrollable">
+							  <div class="panel-body msgContent pre-scrollable msgPanel" id='msgContent'>
 							    <div class="col-xs-12 col-sm-12">
 								    <div class="row" id='msgContent'>
 								    	
 								    </div>
 							    </div>
 							  </div>
-							  <div class="panel-footer msgInput">
+							  <div class="panel-footer msgInput" style='display:none;background-color: transparent;'>
 							    <div class="row">
 							    	<div class="col-lg-12">
-								    <div class="input-group">								      
-								      <input type="text" id='sendInput' class="form-control" aria-label="...">
-								      <div class="input-group-btn">
-								        <button type="button" class="btn btn-default dropdown-toggle" style='height:37px;' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+							    	<div class="col-xs-12 col-sm-10">
+										<div class='row'>
+											<div id='sendInput' class='form-group pre-scrollable' contenteditable='true' style='margin-bottom:0px;padding:5px;background-color: white;height:80px; width:100%;' ></div>
+										</div>
+							    	</div>
+							    	<div class="col-xs-12 col-sm-1" style='margin-top:45px;'>
+								      <div class='row'>
+								      	<div class="input-group-btn">
+								        <button type="button" class="btn btn-default dropdown-toggle" style='height:37px;width: 50px;' data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
 								        <ul class="dropdown-menu">
 								          <li><a href="#" id='uplBtn'><span class="glyphicon glyphicon-folder-open"></span>&nbsp傳檔</a></li>
 								          <li><a href="#"><span class="glyphicon glyphicon-facetime-video"></span>&nbsp視訊</a></li>
 								        </ul>
 								      </div><!-- /btn-group -->
 								      <div class="input-group-btn">
-								        <button type="button" class="btn btn-primary" onclick="send();"><span class="glyphicon glyphicon-share-alt"></span>&nbspSend</button>
+								        <button type="button" class="btn btn-primary" onclick="send(${user.mem_no});"><span class="glyphicon glyphicon-share-alt"></span>&nbspSend</button>
 								        <input type='hidden' id='sendWho'>
-								        <input type='file' id='uplInput' style='display:none;'>
+								        <input type='file' id='uplInput' style='display:none;' mutiple>
 								      </div>
-								    </div><!-- /input-group -->
+								      </div>
+							    	</div>
 								  </div><!-- /.col-lg-6 -->
 							    </div>
 							  </div>
@@ -175,73 +150,33 @@
 			</div>
 		</div>	
 		
-		
+		<input type='hidden' id='pastUser_no' value='${user.mem_no }'>
 		<script src="https://code.jquery.com/jquery.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script type="text/javascript">
 		function show(path,post_no,mem_nickname){
+			$('.msgInput').show();
 			$('#msgContent').empty();
 			$('#sendWho').val(post_no);
-			$('#thisPage').text(1);
+			$('#thisPage').val(1);
 			$('#msgName').text(mem_nickname);
+			$('#moreMsg').removeClass('disabled').removeAttr('disabled');
+			$('#sendInput').empty();
 			load(path,post_no);
 		}
-		function send(){
+		function showMore(path){
+			var num = parseInt($('#thisPage').val(),10);
+			if(num+1<=$('#oneNum').val()){
+				$('#thisPage').val(num+1);
+				load(path,$('#sendWho').val());
+			}
+			
+		}
+		function send(user_no){
 			var rcv_no = $('#sendWho').val();
-			var msg_ctx = $('#sendInput').val();
-			$.ajax({
-				type : "POST",
-				url : webCtx + "/message/MessageCtrl",
-				dataType : 'text',
-				data: {
-					"action" : "insert",					
-					"rcv_no": rcv_no,
-					"msg_ctx" : msg_ctx
-				},
-				success : function(msg) {
-					
-					$('#msgContent').append(msg);
-					$('#allPage').text($('#oneNum').val());
-					if (msg.length == 0) {
-						$('#sendInput').empty();
-						swal({
-							  title: "成功",
-							  text: "已成功發布動態",
-							  timer: 1000,
-							  type: "success",
-							  showConfirmButton: false
-							},function(){
-								$('.fancybox-close-small').click();
-								location.reload();
-							});
-						
-						
-					} else {						
-						
-						$.each(JSON.parse(msg),function(v,i){
-							swal({
-								  title: "輸入錯誤",
-								  text: i,
-								  timer: 1000,
-								  type: "error",
-								  showConfirmButton: false
-								});					
-
-						});
-						
-					}
-				},
-				error : function(xhr, ajaxOptions, thrownError) {
-					swal({
-						  title: "發生錯誤",
-						  text: "請再嘗試看看",
-						  timer: 1000,
-						  type: "error",
-						  showConfirmButton: false
-					});
-				}
-
-			});
+			var msg_ctx = $('#sendInput').html();
+			$('#sendInput').empty();
+			
 		}
 		function load(path,post_no){
 			$.ajax({
@@ -254,8 +189,14 @@
 				},
 				success : function(msg) {
 					
-					$('#msgContent').append(msg);
-					$('#allPage').text($('#oneNum').val());
+					$('#msgContent').prepend(msg);
+					if($('#thisPage').val()==1){
+						var $div = $('#msgContent');  
+						$div.scrollTop($div[0].scrollHeight); 
+					}
+					if($('#oneNum').val()==$('#thisPage').val()){
+						$('#moreMsg').addClass('disabled').attr('disabled',"");
+					}
 					if (msg.length == 0) {
 						swal({
 							  title: "成功",
@@ -298,6 +239,8 @@
 		}
 	    var webCtx ;
 		$(function(){
+			connect($('#pastUser_no').val());
+			Preview.file_change();
 			$("#sendInput").keypress(function(e){
 				  code = (e.keyCode ? e.keyCode : e.which);
 				  if (code == 13)
@@ -310,6 +253,13 @@
 			$('#uplBtn').click(function(){
 				$('#uplInput').trigger('click');
 			});
+			$.each($('.fdList'),function(){
+				$(this).hover(function(){
+					$(this).addClass('active');
+				},function(){
+					$(this).removeClass('active');
+				})
+			});
 			$.each($('.hover'),function(){
 				$(this).hover(function(){
 					$(this).addClass('active');
@@ -318,6 +268,109 @@
 				})
 			});
 		})
+		Preview = new function() {
+			var fileInput = $('#uplInput');
+			this.file_change = function() {
+				$('#uplInput').on('change', function() {
+					show(this);
+				});
+			}
+			var show = function(input) {
+				if (input.files && input.files[0]) {
+					each_img(input.files);
+				}
+			}			
+			var each_img = function(files) {
+				$.each(files,function(index, file) {
+						if (file.type.match('image')) {
+							var reader = new FileReader();
+							var img = new Image();
+							img.onload = function() {
+								
+								var pic ="<img style='width:200px;' height=100  src='"
+										+ img.src
+										+ "'>";
+								$("#sendInput").append(pic);								
+
+							};
+							reader.onload = function() {
+								img.src = reader.result;
+							}
+							if (file) {
+								reader.readAsDataURL(file);
+							}
+						}
+						if (file.type.match('video')) {
+							film = null;
+							var reader = new FileReader();
+							reader.onload = function() {
+								var video = "<video style='height:50px; width:20%;' controls='conrtols'><source src="+
+										reader.result+" type='video/mp4'></video>";
+								$("#sendInput").append(video);							
+								
+
+							}
+							if (file) {
+								reader.readAsDataURL(file);
+							}
+							return;
+						}
+					});
+			}
+
+		}
+	    var MyPoint = "/MyWebSocketServer/";
+	    var host = window.location.host;
+	    var path = window.location.pathname;
+	    var webCtx = path.substring(0, path.indexOf('/', 1));
+	    var endPointURL = "ws://" + window.location.host + webCtx + MyPoint;
+		var statusOutput = document.getElementById("statusOutput");
+		var webSocket;
+		
+		function connect(user_no) {
+			// 建立 websocket 物件
+			webSocket = new WebSocket(endPointURL+user_no);			
+			webSocket.onopen = function(event){
+				
+			};
+
+			webSocket.onmessage = function(event) {
+		        var jsonObj = JSON.parse(event.data);
+		        alert(jsonObj);
+			};
+
+			webSocket.onclose = function(event) {
+			};
+		}		
+		
+		var inputUserName = $('#sendInput');
+		inputUserName.focus();
+		
+		function send() {
+		    var inputMessage = $('#sendInput');
+		    var message = inputMessage.text().trim();
+		    
+		    if (message === ""){
+		        alert ("訊息請勿空白!");
+		        inputMessage.focus();	
+		    }else{
+		    	var user_no =$('#pastUser_no').val();
+		    	var rcv_no = $('#sendWho').val();
+				var msg_ctx = $('#sendInput').html();
+		        var jsonObj = {"post_no" : user_no,"rcv_no": rcv_no, "msg_ctx" : msg_ctx};
+		        webSocket.send(JSON.stringify(jsonObj));
+		        $('#sendInput').empty();
+		        inputMessage.focus();
+		    }
+		}
+
+		
+		function disconnect () {
+			webSocket.close();			
+		}
+
+		
+
 		</script>
 	</body>
 </html>
