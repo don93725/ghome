@@ -16,9 +16,40 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">		
 <link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/css/ArticleDisplay.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/css/colorbox.css" />
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/front_end/album/css/jquery.fancybox.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/themes/default/default.css" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/comm/css/sweetalert.css">
 <title>Insert title here</title>
+<style type="text/css">
+.shareContent {
+	margin-top: 2em;
+}
+
+.cmt {
+	height: 60px;
+	padding-top: 20px;
+	padding-left: 0px;
+}
+
+.cmt_mem_pic {
+	height: 60px;
+	width: 60px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
+#hidden-content-b {
+  /* Custom styling */
+  max-width: 50%;
+  width: 50%;
+  height: auto;
+  border-radius: 4px;
+
+  /* Custom transition - slide from top*/
+  transform: translateY(-50px);
+  transition: all .33s;
+}
+</style>
 </head>
 <body>
 ><a href="${pageContext.request.contextPath}/forum/ForumCtrl">討論大廳</a>><a href="${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }">${forum_name }</a>
@@ -37,16 +68,21 @@
 						  		<tr>	
 									<td rowspan='3' width='100' style='text-align: center' valign="top"><img width=80 src='${pageContext.request.contextPath}/util/OutputPic?mem_no=${articles.mem_no.mem_no}&mem_rank=${articles.mem_no.mem_rank}'><br>
 									<a href='${pageContext.request.contextPath}/forum/PersonalPageCtrl?mem_no=${articles.mem_no.mem_no}'>${articles.mem_no.mem_nickname}</a><br>
-									<c:if test="${articles.mem_no.mem_rank=='0'}">健身者</c:if><c:if test="${articles.mem_no.mem_rank=='1'}">教練</c:if><c:if test="${articles.mem_no.mem_rank=='2'}">健身房</c:if></td>
+									<c:if test="${articles.mem_no.mem_rank=='0'}">健身者</c:if><c:if test="${articles.mem_no.mem_rank=='1'}">教練</c:if><c:if test="${articles.mem_no.mem_rank=='2'}">健身房</c:if>
+									<c:if test="${not empty user }">
+									<br>
+									<button class='btn btn-primary' onclick='sharePhoto.call(this,event,"${pageContext.request.contextPath}","${articles.forum_no}","${articles.art_type}","${articles.art_name}","${articles.art_no}","${articles.mem_no.mem_no}","${articles.mem_no.mem_rank}","${articles.mem_no.mem_nickname}","${articles.art_add_date}");'>分享</button>
+									</c:if>
+									</td>
 									<td colspan='2'>${articles.art_name}</td>
 								</tr>
-								<tr><td valign="top">${articles.art_ctx}</td></tr>
+								<tr><td id='shareArt_ctx' valign="top">${articles.art_ctx}</td></tr>
 								<tr><td>
 									<c:if test="${(articles.mem_no.mem_no==user.mem_no)||user.mem_rank=='3'||user.mem_rank=='4'}">
 									<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=goUpdatePage&forum_no=${param.forum_no }&art_no=${articles.art_no}"><button class='btn btn-info'><span class='glyphicon glyphicon-pencil'></span>&nbsp編輯</button></a>&nbsp
 									<a href="${pageContext.request.contextPath}/forum/ArticlesActionCtrl?action=delete&forum_no=${param.forum_no }&art_no=${articles.art_no}" onclick="return del.call(this);"><button class='btn btn-danger'><span class='glyphicon glyphicon-trash'></span>&nbsp刪除</button></a>&nbsp
 									</c:if>
-									<c:if test="${articles.mem_no.mem_no!=user.mem_no&&! empty user}">
+									<c:if test="${articles.mem_no.mem_no!=user.mem_no&&! empty user}">									
 									<a class='inline' href="#inline_content"><button class='btn btn-warning'><span class='glyphicon glyphicon-exclamation-sign'></span>&nbsp檢舉</button></a>	</c:if>
 									</td></tr>	
 						  </tbody>
@@ -154,16 +190,165 @@
 			</form>
 			</div>
 		</div>
+	<!-- 分享 -->
+<a data-fancybox data-src="#hidden-content-b" style='display:none;' href="javascript:;" id='shareBtn' >share</a>
+ <div  id="hidden-content-b" style='display:none;'>
+<div class="modal-content" id='shareContainer' style='width:100%;'>
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">分享此文章至個人動態</h4>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" id='shareText' rows="3" style="resize: none;">
+        	
+        </textarea>
+      </div>
+      <div class="modal-footer">
+      
+      <a href="#" class='shareLink' target="_blank" >
+        <div class="panel panel-default">
+		  <div class="panel-heading text-left">
+		 		<div class="row">
+									<div class="col-xs-12 col-sm-1">
 
-<div id='tips'></div>
+										<img src=""
+											class="img-circle cmt_mem_pic sharePic">
+
+									</div>
+									<div class="col-xs-12 col-sm-11">
+										<div class="col-xs-12 col-sm-12 cmtInfo shareTitle">
+											標題
+										</div>
+										<div class="col-xs-12 col-sm-12 cmtInfo shareNickname" >
+											名字
+										</div>
+										
+										<div class="col-xs-12 col-sm-12 cmtInfo cmtTime shareTime">
+											時間
+										</div>
+										
+
+									</div>
+									</div>
+		  </div>
+		  <div class="panel-body shareContent">
+		  		<div class="col-xs-12 col-sm-12 text-left bd_msg_ctx">
+		  		內文
+		  		</div>		    	
+		  
+		  </div>
+		</div>
+      </a>
+      </div>
+      <div class="modal-footer">
+      	<div class="col-xs-12 col-sm-2 col-sm-offset-9" style="padding-left: 80px;" >
+      		<div class="dropup">
+					<button class="btn btn-default btn-lg dropdown-toggle" type="button"
+						id="dropdownMenu3" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="true" value="0">
+						隱私 <span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'0');">朋友&nbsp</a></li>
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'1');">公開&nbsp</a></li>
+						<li><a href="#"
+							onclick="chooseCmmtPrvt.call(this,'2');">本人&nbsp</a></li>
+					</ul>
+				</div>
+      	</div>
+      	<div class="col-xs-12 col-sm-1" style="padding-left: 0px;">
+        <button type="button" class="btn btn-primary btn-lg" onclick='shareSubmit("${pageContext.request.contextPath}");'>分享</button></div>
+      	
+      </div>
+    </div>
+  </div>
+  
+  
+<!-- 分享 end -->
+  
 <script src="https://code.jquery.com/jquery.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/front_end/forum/js/jquery.colorbox.js"></script>
 <script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/kindeditor-all.js"></script>
 <script charset="utf-8" src="${pageContext.request.contextPath}/front_end/forum/js/kindeditor/lang/zh-TW.js"></script>
 <script src='${pageContext.request.contextPath}/front_end/comm/js/sweetalert.min.js'></script>	
+<script
+		src="${pageContext.request.contextPath}/front_end/album/js/jquery.fancybox.js"></script>
 <script type="Text/JavaScript" src="${pageContext.request.contextPath}/front_end/forum/js/ArticleDisplay.js"></script>
 <script type="text/javascript">
+function sharePhoto(event,path,forum_no,art_type,art_name,art_no,mem_no,mem_rank,mem_nickname,art_add_date){
+	event.preventDefault();
+	var art_ctx = $('#shareArt_ctx').html();
+	$('.sharePic:last').attr('src',path+'/util/OutputPic?mem_no='+mem_no+"&mem_rank="+mem_rank);
+	//補內文
+	$('.bd_msg_ctx:last').html(art_ctx);	
+	$('.shareNickname:last').text(mem_nickname+" 發佈的文章");
+	$('.shareTime:last').text(art_add_date);
+	$('.shareTitle:last').text("標題 ：["+art_type+"]"+art_name);
+	art_ctx
+	$('.shareLink:last').prop('href',path+'/forum/ArticleShowCtrl?forum_no='+forum_no+'&art_no='+art_no);
+	$('#shareBtn').trigger('click');
+	
+	
+}
+function shareSubmit(path,mem_no){
+	var content = $('#shareContainer').find('.modal-footer').html();
+	var bd_msg_ctx = $('#shareText').val().trim();
+	var bd_prvt = $('#dropdownMenu3').val();
+	
+	$.ajax({
+		type : "POST",
+		url : path + "/board/BoardActionCtrl?action=ref_board",
+		dataType : 'text',
+		data: {
+			bd_ref_ctx : content,
+			bd_type:"4",
+			bd_msg_ctx: bd_msg_ctx,
+			bd_prvt: bd_prvt
+			
+		},
+		success : function(msg) {
+			if (msg.length == 0) {
+				swal({
+					  title: "成功",
+					  text: "已成功發布動態",
+					  timer: 1000,
+					  type: "success",
+					  showConfirmButton: false
+					},function(){
+						$('.fancybox-close-small').click();	
+						swal.close();
+					});
+				
+				
+			} else {						
+				
+				$.each(JSON.parse(msg),function(v,i){
+					swal({
+						  title: "輸入錯誤",
+						  text: i,
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+						});					
+
+				});
+				
+			}
+		},
+		error : function(xhr, ajaxOptions, thrownError) {
+			swal({
+				  title: "發生錯誤",
+				  text: "請再嘗試看看",
+				  timer: 1000,
+				  type: "error",
+				  showConfirmButton: false
+			});
+		}
+
+	});
+}
 function del(){
 	var res = $(this).prop('href');
 		swal({

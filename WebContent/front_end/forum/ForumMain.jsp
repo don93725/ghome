@@ -34,9 +34,9 @@
 	</c:if>
 		<div class="col-xs-12 col-sm-12">
 			<div class="panel panel-default">
-						  <div class="panel-heading"><caption>官方板塊</caption></div>
 						<table class="table table-hover">
 							<thead>
+								<tr class='active well'><th colspan='5'><h4>官方版塊</h4></th></tr>
 								<tr>
 									<th>編號</th>
 										<th>板塊名稱</th>
@@ -57,13 +57,10 @@
 							</tr>
 						</c:forEach>
 							</tbody>
-						</table>
-						</div>
 						
-						<div class="panel panel-default">
-					  <div class="panel-heading"><caption>會員板塊</caption></div>
-					<table class="table table-hover">
+					 
 						<thead>
+							<tr class='active well'><th colspan='5'><h4>會員板塊</h4></th></tr>
 							<tr>
 								<th>編號</th>
 									<th>板塊名稱</th>
@@ -141,8 +138,6 @@
 
 			</div>
 		</div>
-		<div id='tips'></div>
-		
 		
 		
 		

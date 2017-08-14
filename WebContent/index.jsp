@@ -15,6 +15,7 @@
 <a href="${pageContext.request.contextPath }/forum/ForumCtrl">討論區</a><br>
 <a href="${pageContext.request.contextPath }/album/AlbumsShowCtrl?mem_no=1">相簿</a><br>
 <a href="${pageContext.request.contextPath }/board/BoardShowCtrl?mem_no=1">動態</a><br>
+<a href="${pageContext.request.contextPath }/message/MessageCtrl">訊息管理</a><br>
 
 
 </body>

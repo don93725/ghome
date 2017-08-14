@@ -110,13 +110,11 @@ public class ArticlesActionCtrl extends HttpServlet {
 				String order = req.getParameter("order");
 				String updateInfo = req.getParameter("updateInfo");
 				String deleteInfo = req.getParameter("deleteInfo");
-				System.out.println("order=" + order + ",updateInfo=" + updateInfo + ",deleteInfo=" + deleteInfo);
 				Article_photosService article_photosService = new Article_photosService();
 				Collection<Part> parts = req.getParts();
 				List<Article_photos> list = article_photosService.setArticle_photos(parts, order, updateInfo);
 				ArticlesService articlesSevice = new ArticlesService();
 				boolean createResult = false;
-				System.out.println(parts.size() + "list" + list.size());
 				createResult = articlesSevice.update(art_type_name, art_name, art_ctx, art_no, list, updateInfo,
 						deleteInfo);
 
