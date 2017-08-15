@@ -40,5 +40,12 @@ public class MessageService {
 		int num = dao.countBySQL(sql);
 		return num;
 	}
+	public int getNRNum(String user_no){
+		String sql = "select count(*) from message where if_read=0 and rcv_no="+user_no;
+		MessageDAO dao = new MessageDAO();
+		int num = dao.countBySQL(sql);
+		return num;
+	}
+	
 
 }

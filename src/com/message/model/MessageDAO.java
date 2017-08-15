@@ -71,7 +71,7 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 		}
 		return tempList;
 	}
-	public List<Message> getVOBySQLForNew(String sql, Object[] param) {
+	public List<Message> getVOBySQLForNew(String sql, Object[] param,String user_no) {
 		List list = new SQLHelper().executeQuery(sql, param);
 		List<Message> tempList = new ArrayList<Message>();
 		for (int i = 0; i < list.size(); i++) {
@@ -93,8 +93,7 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 				post.setMem_nickname(String.valueOf(obj[8]));
 				post.setMem_rank(String.valueOf(obj[9]));
 				message.setPost_no(post);
-				sql = "select count(*) from message where (if_read=0 and post_no="+String.valueOf(obj[1])+"and rcv_no="+String.valueOf(obj[2])+
-						") or (if_read=0 and post_no="+String.valueOf(obj[2])+" and rcv_no="+String.valueOf(obj[1])+")";
+				sql = "select count(*) from message where if_read=0 and rcv_no="+user_no+"and post_no="+String.valueOf(obj[2]);
 				int num = countBySQL(sql);
 				message.setNr(num);
 			}
@@ -118,7 +117,7 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 						
 						String temp2 = msg_ctx.substring(index,temp.length());
 						int index2 = temp2.indexOf(">");
-						temp2 = "(此處有圖片)"+temp2.substring(index2+1, temp2.length());
+						temp2 = "(訊息圖片)"+temp2.substring(index2+1, temp2.length());
 						temp = temp.substring(0,index)+temp2;
 					}
 					if(temp.length()>8){
@@ -166,7 +165,7 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 				"(select max(send_time) max1,rcv_no rcv1,post_no post1 from message where  rcv_no="+user_no+" or post_no="+user_no+" group by rcv_no,post_no) a  "+
 				"left outer join(select max(send_time) max2,rcv_no rcv2,post_no post2 from message where  rcv_no="+user_no+" or post_no="+user_no+
 				" group by rcv_no,post_no) b on rcv1=post2 and post1=rcv2) group by post_no,rcv_no,sdate)) order by send_time desc";
-		List<Message> list = getVOBySQLForNew(sql, null);
+		List<Message> list = getVOBySQLForNew(sql, null,user_no);
 		return list;
 	}
 //	public List<Message> getLastest(String user_no) {
@@ -275,7 +274,7 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 		return list;
 	}
 	public boolean clear(String user_no,String other_no) {
-		String sql = "update message set if_read=1 where (rcv_no="+user_no+" and post_no="+other_no+") or (rcv_no="+other_no+" and post_no="+user_no+")";
+		String sql = "update message set if_read=1 where rcv_no="+user_no+" and post_no="+other_no;
 		boolean updateResult = new SQLHelper().executeUpdate(sql, null);
 		return updateResult;
 	}

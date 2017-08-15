@@ -41,6 +41,6 @@
   </resource-ref>
   <context-param>
     <param-name>org.apache.tomcat.websocket.textBufferSize</param-name>
-    <param-value>4000000</param-value>
+    <param-value>10000000</param-value>
   </context-param>
 </web-app>

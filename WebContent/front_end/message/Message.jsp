@@ -15,6 +15,8 @@
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
 		<![endif]-->
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/front_end/comm/css/sweetalert.css">
+
 		<style type="text/css">
 			.profilePic{
 				width: 80%;
@@ -69,7 +71,9 @@
 									    		<div class='row'>
 									    		<div class="col-xs-12 col-sm-9">${newMsg.msg_ctx }</div>
 									    		<div class="col-xs-12 col-sm-2">
-									    		<span class="badge">${newMsg.nr }</span></div>
+									    		<c:if test="${newMsg.nr>0 }">
+									    		<span class="badge" style='background-color: red;'>${newMsg.nr }</span>
+									    		</c:if></div>
 									    		</div>
 									    </div>
 									    
@@ -158,6 +162,7 @@
 		<input type='hidden' id='pastUser_no' value='${user.mem_no }'>
 		<script src="https://code.jquery.com/jquery.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src='${pageContext.request.contextPath}/front_end/comm/js/sweetalert.min.js'></script>	
 		<script type="text/javascript">
 		function show(path,post_no,mem_nickname){
 			$('.msgInput').show();
@@ -182,7 +187,13 @@
 					if (msg.length != 0) {
 						$('#message').empty();
 						$('#message').append(msg);
-						
+						$.each($('.hover'),function(){
+							$(this).hover(function(){
+								$(this).addClass('active');
+							},function(){
+								$(this).removeClass('active');
+							})
+						});
 						
 						
 					} else {						
@@ -399,6 +410,7 @@
 			};
 
 			webSocket.onclose = function(event) {
+				console.log('123');
 			};
 		}		
 		
