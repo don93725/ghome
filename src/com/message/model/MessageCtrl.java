@@ -56,6 +56,13 @@ public class MessageCtrl extends HttpServlet {
 			req.getRequestDispatcher("/front_end/message/Message2.jsp").forward(req, res);
 			
 			return;
+		}		
+		if("refresh".equals(action)){
+			List<Message> lastestMsg = messageService.getLastestMsg(user_no);
+			req.setAttribute("lastestMsg", lastestMsg);
+			res.setContentType("text/html; charset=utf-8");
+			req.getRequestDispatcher("/front_end/message/Message3.jsp").forward(req, res);			
+			return;
 		}
 
 		if ("insert".equals(action)) {
@@ -63,7 +70,6 @@ public class MessageCtrl extends HttpServlet {
 			String rcv_no = req.getParameter("rcv_no");					
 			String msg_ctx = req.getParameter("msg_ctx");					
 			messageService.add(rcv_no, user_no, msg_ctx);
-			System.out.println(rcv_no+"進?"+msg_ctx);
 			return;
 		}
 		if ("update".equals(action)) {

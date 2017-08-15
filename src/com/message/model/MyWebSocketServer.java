@@ -1,6 +1,7 @@
 package com.message.model;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.websocket.server.PathParam;
@@ -30,22 +31,26 @@ public class MyWebSocketServer {
 
 	@OnMessage
 	public void onMessage(Session userSession, String message) {
-		System.out.println(message);
 		Gson gson = new Gson();
 		TempMsg msg = gson.fromJson(message, TempMsg.class);
+		System.out.println(message);
 		Session rcvSession = connectedSessions.get(msg.rcv_no);
-		if(userSession.isOpen()){
-			userSession.getAsyncRemote().sendText(message);			
-		}
-		if(rcvSession!=null){
-			if(rcvSession.isOpen()){
-				rcvSession.getAsyncRemote().sendText(message);
-			}			
-		}
 		if(msg!=null){			
 			MessageService messageService = new MessageService();
-			System.out.println(msg.getRcv_no()+"-"+ msg.getPost_no()+"-"+msg.getMsg_ctx());
-			messageService.add(msg.getRcv_no(), msg.getPost_no(), msg.getMsg_ctx());
+			Message m = messageService.add(msg.getRcv_no(), msg.getPost_no(), msg.getMsg_ctx());
+			SimpleDateFormat sdfor = new SimpleDateFormat("HH:mm");
+			m.setDate(sdfor.format(m.getSend_time()));
+			message = gson.toJson(m);
+			System.out.println(message);
+			
+			if(userSession.isOpen()){
+				userSession.getAsyncRemote().sendText(message);			
+			}
+			if(rcvSession!=null){
+				if(rcvSession.isOpen()){
+					rcvSession.getAsyncRemote().sendText(message);
+				}			
+			}
 		}
 	}
 

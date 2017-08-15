@@ -39,7 +39,7 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 				post.setMem_no(String.valueOf(obj[2]));
 				post.setMem_nickname(String.valueOf(obj[8]));
 				post.setMem_rank(String.valueOf(obj[9]));
-				message.setPost_no(post);
+				message.setPost_no(post);				
 			}
 			if (obj[3] != null) {
 				message.setSend_time((Date) obj[3]);
@@ -71,6 +71,76 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 		}
 		return tempList;
 	}
+	public List<Message> getVOBySQLForNew(String sql, Object[] param) {
+		List list = new SQLHelper().executeQuery(sql, param);
+		List<Message> tempList = new ArrayList<Message>();
+		for (int i = 0; i < list.size(); i++) {
+			Object[] obj = (Object[]) list.get(i);
+			Message message = new Message();
+			if (obj[0] != null) {
+				message.setMsg_no((String) obj[0]);
+			}
+			if (obj[1] != null) {
+				MembersVO rcv = new MembersVO();
+				rcv.setMem_no(String.valueOf(obj[1]));
+				rcv.setMem_nickname(String.valueOf(obj[6]));
+				rcv.setMem_rank(String.valueOf(obj[7]));
+				message.setRcv_no(rcv);
+			}
+			if (obj[2] != null) {
+				MembersVO post = new MembersVO();
+				post.setMem_no(String.valueOf(obj[2]));
+				post.setMem_nickname(String.valueOf(obj[8]));
+				post.setMem_rank(String.valueOf(obj[9]));
+				message.setPost_no(post);
+				sql = "select count(*) from message where (if_read=0 and post_no="+String.valueOf(obj[1])+"and rcv_no="+String.valueOf(obj[2])+
+						") or (if_read=0 and post_no="+String.valueOf(obj[2])+" and rcv_no="+String.valueOf(obj[1])+")";
+				int num = countBySQL(sql);
+				message.setNr(num);
+			}
+			if (obj[3] != null) {
+				message.setSend_time((Date) obj[3]);
+			}
+			if (obj[4] != null) {
+				BufferedReader br =null;
+				try {
+					Clob clob = (Clob) obj[4];				
+					br = new BufferedReader(clob.getCharacterStream());
+					StringBuilder msg_ctx = new StringBuilder();
+					String temp = null;
+					while( (temp = br.readLine()) !=null){
+						msg_ctx.append(temp);
+					}
+					br.close();
+					temp = msg_ctx.toString();
+					int index = temp.indexOf("<img");
+					if(index!=-1){
+						
+						String temp2 = msg_ctx.substring(index,temp.length());
+						int index2 = temp2.indexOf(">");
+						temp2 = "(此處有圖片)"+temp2.substring(index2+1, temp2.length());
+						temp = temp.substring(0,index)+temp2;
+					}
+					if(temp.length()>8){
+						temp = temp.substring(0,8)+"..";						
+					}
+					message.setMsg_ctx(temp);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (obj[5] != null) {
+				message.setIf_read(String.valueOf(obj[5]));;
+			}
+			tempList.add(message);
+		}
+		return tempList;
+	}
+
 	// 建置查詢單筆
 
 	public Message getVOByPK(String msg_no) {
@@ -96,7 +166,7 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 				"(select max(send_time) max1,rcv_no rcv1,post_no post1 from message where  rcv_no="+user_no+" or post_no="+user_no+" group by rcv_no,post_no) a  "+
 				"left outer join(select max(send_time) max2,rcv_no rcv2,post_no post2 from message where  rcv_no="+user_no+" or post_no="+user_no+
 				" group by rcv_no,post_no) b on rcv1=post2 and post1=rcv2) group by post_no,rcv_no,sdate)) order by send_time desc";
-		List<Message> list = getVOBySQL(sql, null);
+		List<Message> list = getVOBySQLForNew(sql, null);
 		return list;
 	}
 //	public List<Message> getLastest(String user_no) {
@@ -128,27 +198,35 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 		return updateResult;
 	}
 	public boolean executeInsert(Message message)  {
+		return false;
+		
+	}
+	public Message add(Message message)  {
 		SQLHelper helper = new SQLHelper();
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		String insertResult = null;
 		con =helper.getConnection();
-		Clob clob =null;
-		boolean result = false;
+		Clob clob =null;		
 		try {
 			clob = con.createClob();
 			clob.setString(1, message.getMsg_ctx());
 			String sql = "insert into message values(message_pk_seq.nextval,?,?,default,?,default)";
 			Object[] param = { message.getRcv_no().getMem_no(), message.getPost_no().getMem_no(),
 					clob};
-			insertResult = helper.executeUpdate(sql, param,null,con);
+			insertResult = helper.executeUpdate(sql, param,"msg_no",con);
 			if(insertResult!=null){
 				con.commit();
-				result = true ;		
-				
+				sql = "select msg_no,rcv_no,post_no,send_time,msg_ctx,if_read,b.mem_nickname bnick,b.mem_rank brk,c.mem_nickname cnick,c.mem_rank crk from message a join members b on a.rcv_no=b.mem_no join members c on a.post_no = c.mem_no where msg_no="+ insertResult;
+				List<Message> list =  getVOBySQL(sql, null);
+				if(list.size()!=0){
+					message = list.get(0);
+					return message;
+				}
+				return null;
 			}else{
 				con.rollback();
-				result = false ;	
+				return null ;	
 			}
 		} catch (SQLException e) {
 			try {
@@ -161,7 +239,7 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 		} finally{
 			helper.close(con, pstmt);
 		}
-		return result;
+		return null;
 	}
 	// 建置刪除
 
@@ -193,7 +271,13 @@ public class MessageDAO extends BasicDAO implements DAOInterface<Message> {
 		
 		sql = sql + " order by send_time desc)) where rn between " + firstPage + " and " + lastPage;
 		List<Message> list = getVOBySQL(sql, null);
+		clear(user_no,other_no);
 		return list;
+	}
+	public boolean clear(String user_no,String other_no) {
+		String sql = "update message set if_read=1 where (rcv_no="+user_no+" and post_no="+other_no+") or (rcv_no="+other_no+" and post_no="+user_no+")";
+		boolean updateResult = new SQLHelper().executeUpdate(sql, null);
+		return updateResult;
 	}
 	// 建置分頁(彈性排序不設條件)
 

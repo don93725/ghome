@@ -66,8 +66,13 @@
 								    		
 								    	
 									    <div class="col-xs-12 col-sm-10 col-sm-offset-2">
-									    		${newMsg.msg_ctx }
+									    		<div class='row'>
+									    		<div class="col-xs-12 col-sm-9">${newMsg.msg_ctx }</div>
+									    		<div class="col-xs-12 col-sm-2">
+									    		<span class="badge">${newMsg.nr }</span></div>
+									    		</div>
 									    </div>
+									    
 									    <div class="col-xs-12 col-sm-8 col-sm-offset-4 msgTime">
 									    	<fmt:setLocale value="en_US" />
 											<fmt:formatDate value="${newMsg.send_time}"
@@ -162,7 +167,50 @@
 			$('#msgName').text(mem_nickname);
 			$('#moreMsg').removeClass('disabled').removeAttr('disabled');
 			$('#sendInput').empty();
+			refresh();
 			load(path,post_no);
+		}
+		function refresh(){
+			$.ajax({
+				type : "POST",
+				url : webCtx + "/message/MessageCtrl",
+				dataType : 'text',
+				data: {
+					"action" : "refresh"
+				},
+				success : function(msg) {					
+					if (msg.length != 0) {
+						$('#message').empty();
+						$('#message').append(msg);
+						
+						
+						
+					} else {						
+						
+						$.each(JSON.parse(msg),function(v,i){
+							swal({
+								  title: "輸入錯誤",
+								  text: i,
+								  timer: 1000,
+								  type: "error",
+								  showConfirmButton: false
+								});					
+
+						});
+						
+					}
+				},
+				error : function(xhr, ajaxOptions, thrownError) {
+					swal({
+						  title: "發生錯誤",
+						  text: "請再嘗試看看",
+						  timer: 1000,
+						  type: "error",
+						  showConfirmButton: false
+					});
+				}
+
+			});
 		}
 		function showMore(path){
 			var num = parseInt($('#thisPage').val(),10);
@@ -187,27 +235,17 @@
 					"action" : "getOne",					
 					"post_no":post_no
 				},
-				success : function(msg) {
+				success : function(msg) {					
 					
-					$('#msgContent').prepend(msg);
-					if($('#thisPage').val()==1){
-						var $div = $('#msgContent');  
-						$div.scrollTop($div[0].scrollHeight); 
-					}
-					if($('#oneNum').val()==$('#thisPage').val()){
-						$('#moreMsg').addClass('disabled').attr('disabled',"");
-					}
-					if (msg.length == 0) {
-						swal({
-							  title: "成功",
-							  text: "已成功發布動態",
-							  timer: 1000,
-							  type: "success",
-							  showConfirmButton: false
-							},function(){
-								$('.fancybox-close-small').click();
-								location.reload();
-							});
+					if (msg.length != 0) {
+						$('#msgContent').prepend(msg);
+						if($('#thisPage').val()==1){
+							var $div = $('#msgContent');  
+							$div.scrollTop($div[0].scrollHeight); 
+						}
+						if($('#oneNum').val()==$('#thisPage').val()){
+							$('#moreMsg').addClass('disabled').attr('disabled',"");
+						}
 						
 						
 					} else {						
@@ -335,8 +373,29 @@
 			};
 
 			webSocket.onmessage = function(event) {
-		        var jsonObj = JSON.parse(event.data);
-		        alert(jsonObj);
+		        var obj = JSON.parse(event.data);
+		        var user_no = $('#pastUser_no').val();
+		        var text = '<div class="col-xs-12 col-sm-12">';
+		        if(obj.post_no.mem_no!=user_no ){
+		        	text += '<div class="col-xs-12 col-sm-2"><div class="row"><img class="img-circle msgPic" title="'+obj.post_no.mem_nickname+
+		        	'" src="'+webCtx+'/util/OutputPic?mem_no='+obj.post_no.mem_no+'&mem_rank='+obj.post_no.mem_rank+'"></div><div class="col-xs-12 col-sm-8">'+
+			        '<div class="row well"></div>'+obj.msg_ctx +'</div></div><div class="col-xs-12 col-sm-2">'+obj.date+
+			        ' </div>';
+		        }
+		        if(obj.post_no.mem_no==user_no ){
+		        	text += '<div class="col-xs-12 col-sm-2">'+obj.date+
+		        	'</div><div class="col-xs-12 col-sm-8 "><div class="row well">'+obj.msg_ctx+
+		         	'</div></div><div class="col-xs-12 col-sm-2"><div class="row"><img class="img-circle msgPic" '+
+		         	' title="'+obj.post_no.mem_nickname+'" src="'+webCtx+'/util/OutputPic?mem_no='+obj.post_no.mem_no+
+		         	'&mem_rank='+obj.post_no.mem_rank+'"></div></div></div>';
+
+		        
+				}		
+		        $('#msgContent').append(text);
+		        refresh();
+		         
+		        
+		        	
 			};
 
 			webSocket.onclose = function(event) {
@@ -348,7 +407,7 @@
 		
 		function send() {
 		    var inputMessage = $('#sendInput');
-		    var message = inputMessage.text().trim();
+		    var message = inputMessage.html();
 		    
 		    if (message === ""){
 		        alert ("訊息請勿空白!");

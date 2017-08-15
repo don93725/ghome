@@ -8,7 +8,7 @@ import com.members.model.MembersVO;
 public class MessageService {
 	// 封裝新增物件
 
-	public boolean add(String rcv_no, String post_no, String msg_ctx) {
+	public Message add(String rcv_no, String post_no, String msg_ctx) {
 		Message message = new Message();
 		MembersVO rcv = new MembersVO();
 		rcv.setMem_no(rcv_no);
@@ -18,9 +18,10 @@ public class MessageService {
 		message.setPost_no(post);
 		message.setMsg_ctx(msg_ctx);
 		MessageDAO dao = new MessageDAO();
-		boolean result = dao.executeInsert(message);
-		return result;
+		message = dao.add(message);
+		return message;
 	}
+	
 	public List<Message> getLastestMsg(String user_no) {
 		MessageDAO dao = new MessageDAO();
 		List<Message> list = dao.getLastest(user_no);

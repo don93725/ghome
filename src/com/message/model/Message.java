@@ -10,8 +10,22 @@ String msg_no;
 String msg_ctx,if_read;
 Date send_time;
 MembersVO rcv_no,post_no;
+String date;
+Integer nr;
 
 
+public Integer getNr() {
+	return nr;
+}
+public void setNr(Integer nr) {
+	this.nr = nr;
+}
+public String getDate() {
+	return date;
+}
+public void setDate(String date) {
+	this.date = date;
+}
 public String getIf_read() {
 	return if_read;
 }
