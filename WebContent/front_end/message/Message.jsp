@@ -3,6 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ page import="com.members.model.*" %>
+
+	
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="zh-ch-en">
 	<head>
@@ -227,7 +230,7 @@
 			var num = parseInt($('#thisPage').val(),10);
 			if(num+1<=$('#oneNum').val()){
 				$('#thisPage').val(num+1);
-				load(path,$('#sendWho').val());
+				load(path,$('#sendWho').val(),$('#thisPage').val());
 			}
 			
 		}
@@ -237,14 +240,18 @@
 			$('#sendInput').empty();
 			
 		}
-		function load(path,post_no){
+		function load(path,post_no,thisPage){
+			if(thisPage==undefined){
+				thisPage = 1;
+			}
 			$.ajax({
 				type : "POST",
 				url : path + "/message/MessageCtrl",
 				dataType : 'text',
 				data: {
 					"action" : "getOne",					
-					"post_no":post_no
+					"post_no":post_no,
+					"thisPage": thisPage
 				},
 				success : function(msg) {					
 					
@@ -390,11 +397,11 @@
 		        if(obj.post_no.mem_no!=user_no ){
 		        	text += '<div class="col-xs-12 col-sm-2"><div class="row"><img class="img-circle msgPic" title="'+obj.post_no.mem_nickname+
 		        	'" src="'+webCtx+'/util/OutputPic?mem_no='+obj.post_no.mem_no+'&mem_rank='+obj.post_no.mem_rank+'"></div><div class="col-xs-12 col-sm-8">'+
-			        '<div class="row well"></div>'+obj.msg_ctx +'</div></div><div class="col-xs-12 col-sm-2">'+obj.date+
+			        '<div class="row well"></div>'+obj.msg_ctx +'</div></div><div class="col-xs-12 col-sm-2 text-left">'+obj.day+"<br>"+obj.date+
 			        ' </div>';
 		        }
 		        if(obj.post_no.mem_no==user_no ){
-		        	text += '<div class="col-xs-12 col-sm-2">'+obj.date+
+		        	text += '<div class="col-xs-12 col-sm-2 text-right">'+obj.day+"<br>"+obj.date+
 		        	'</div><div class="col-xs-12 col-sm-8 "><div class="row well">'+obj.msg_ctx+
 		         	'</div></div><div class="col-xs-12 col-sm-2"><div class="row"><img class="img-circle msgPic" '+
 		         	' title="'+obj.post_no.mem_nickname+'" src="'+webCtx+'/util/OutputPic?mem_no='+obj.post_no.mem_no+
@@ -428,7 +435,7 @@
 		    	var user_no =$('#pastUser_no').val();
 		    	var rcv_no = $('#sendWho').val();
 				var msg_ctx = $('#sendInput').html();
-		        var jsonObj = {"post_no" : user_no,"rcv_no": rcv_no, "msg_ctx" : msg_ctx};
+		        var jsonObj = {"type":"textMsg","post_no" : user_no,"rcv_no": rcv_no, "msg_ctx" : msg_ctx};
 		        webSocket.send(JSON.stringify(jsonObj));
 		        $('#sendInput').empty();
 		        inputMessage.focus();

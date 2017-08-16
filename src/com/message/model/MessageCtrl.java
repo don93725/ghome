@@ -44,6 +44,7 @@ public class MessageCtrl extends HttpServlet {
 		if("getOne".equals(action)){
 			String post_no = req.getParameter("post_no");
 			int thisPage = (req.getParameter("thisPage")==null)? 1:Integer.parseInt(req.getParameter("thisPage"));
+			System.out.println(thisPage);
 			int pageSize = 6;
 			List<Message> oneMsg = messageService.getOneMsg(thisPage, pageSize, user_no, post_no);
 			if(thisPage==1){

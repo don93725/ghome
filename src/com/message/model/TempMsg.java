@@ -1,7 +1,15 @@
 package com.message.model;
 
 public class TempMsg {
-	String post_no,rcv_no,msg_ctx;
+	String post_no,rcv_no,msg_ctx,type;
+	
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public String getPost_no() {
 		return post_no;

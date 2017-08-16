@@ -10,10 +10,16 @@ String msg_no;
 String msg_ctx,if_read;
 Date send_time;
 MembersVO rcv_no,post_no;
-String date;
+String day,date;
 Integer nr;
 
 
+public String getDay() {
+	return day;
+}
+public void setDay(String day) {
+	this.day = day;
+}
 public Integer getNr() {
 	return nr;
 }
