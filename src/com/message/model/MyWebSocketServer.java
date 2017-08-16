@@ -26,7 +26,6 @@ public class MyWebSocketServer {
 		connectedSessions.put(name,userSession);
 		String text = String.format("Session ID = %s, connected; name = %s", 
 				userSession.getId(), name);
-		System.out.println(text);
 	}
 
 	@OnMessage

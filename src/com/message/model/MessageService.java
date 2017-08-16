@@ -46,6 +46,10 @@ public class MessageService {
 		int num = dao.countBySQL(sql);
 		return num;
 	}
+	public boolean clear(String user_no,String other_no){
+		MessageDAO dao = new MessageDAO();
+		return dao.clear(user_no, other_no);
+	}
 	
 
 }

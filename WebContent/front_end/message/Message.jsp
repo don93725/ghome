@@ -394,11 +394,29 @@
 		        var obj = JSON.parse(event.data);
 		        var user_no = $('#pastUser_no').val();
 		        var text = '<div class="col-xs-12 col-sm-12">';
-		        if(obj.post_no.mem_no!=user_no ){
-		        	text += '<div class="col-xs-12 col-sm-2"><div class="row"><img class="img-circle msgPic" title="'+obj.post_no.mem_nickname+
-		        	'" src="'+webCtx+'/util/OutputPic?mem_no='+obj.post_no.mem_no+'&mem_rank='+obj.post_no.mem_rank+'"></div><div class="col-xs-12 col-sm-8">'+
-			        '<div class="row well"></div>'+obj.msg_ctx +'</div></div><div class="col-xs-12 col-sm-2 text-left">'+obj.day+"<br>"+obj.date+
-			        ' </div>';
+		        var rcv_no = $('#sendWho').val();
+		        if(rcv_no==obj.post_no.mem_no){		        	
+			        if(obj.post_no.mem_no!=user_no ){
+			        	text += '<div class="col-xs-12 col-sm-2"><div class="row"><img class="img-circle msgPic" title="'+obj.post_no.mem_nickname+
+			        	'" src="'+webCtx+'/util/OutputPic?mem_no='+obj.post_no.mem_no+'&mem_rank='+obj.post_no.mem_rank+'"></div></div><div class="col-xs-12 col-sm-8">'+
+				        '<div class="row well">'+obj.msg_ctx +'</div></div><div class="col-xs-12 col-sm-2 text-left">'+obj.day+"<br>"+obj.date+
+				        ' </div>';
+			        }
+			        $.ajax({
+						type : "POST",
+						url : webCtx + "/message/MessageCtrl",
+						dataType : 'text',
+						data: {
+							"action" : "clear",
+							"rcv_no" : user_no,
+							"post_no": obj.post_no.mem_no
+						},
+						success : function(msg) {
+						},
+						error : function(xhr, ajaxOptions, thrownError) {							
+						}
+
+					});
 		        }
 		        if(obj.post_no.mem_no==user_no ){
 		        	text += '<div class="col-xs-12 col-sm-2 text-right">'+obj.day+"<br>"+obj.date+

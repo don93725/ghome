@@ -14,8 +14,8 @@ function create(pj,mem_no) {
                 type:"POST",
                 dataType:'text',
 
-                success: function(msg){		                  
-                	if(msg.legth==0){                    	
+                success: function(msg){		
+                	if(msg.length==0){                    	
   					  $(".inline").colorbox.close();
 	  					swal({
 							  title: "申請成功",

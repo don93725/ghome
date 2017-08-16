@@ -65,6 +65,14 @@ public class MessageCtrl extends HttpServlet {
 			req.getRequestDispatcher("/front_end/message/Message3.jsp").forward(req, res);			
 			return;
 		}
+		if("clear".equals(action)){
+			String post_no = req.getParameter("post_no");
+			String rcv_no = req.getParameter("rcv_no");
+			
+			messageService.clear(rcv_no,post_no);
+					
+			return;
+		}
 
 		if ("insert".equals(action)) {
 			// 新增
