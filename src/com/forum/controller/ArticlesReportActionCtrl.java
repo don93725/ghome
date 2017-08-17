@@ -33,8 +33,10 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 		PrintWriter out = res.getWriter();
 
 		if("insert".equals(action)){
+			
 			String rpt_type = req.getParameter("rpt_type");
 			String rpt_ctx = req.getParameter("rpt_ctx");
+			System.out.println(rpt_ctx);
 			HashMap<String,String> map = new HashMap<String,String>();
 			boolean valid = Validation.checkLengthOne2Ten(rpt_ctx, "檢舉內容", map);
 			if(!valid){
@@ -47,6 +49,7 @@ public class ArticlesReportActionCtrl extends HttpServlet {
 			Article_reportService article_reportServiece = new Article_reportService();
 			System.out.println(rpt_type+rpt_ctx+art_no+mem_no);
 			boolean result = article_reportServiece.add(art_no, user.getMem_no(), rpt_type, rpt_ctx);
+			
 			if(!result){
 				out.print("{\"動作失敗\":\"請稍後再嘗試\"}");
 			}		

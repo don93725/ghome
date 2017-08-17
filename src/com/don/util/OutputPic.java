@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.album.dao.PhotosDAO;
 import com.board.dao.Message_boardDAO;
 import com.forum.dao.Article_commentsDAO;
-import com.forum.dao.Article_photosDAO;
 import com.sun.xml.internal.messaging.saaj.util.Base64;
 
 /**
@@ -61,11 +60,7 @@ public class OutputPic extends HttpServlet {
 			if (art_cmt_no != null) {
 				bytes = new Article_commentsDAO().getPic(art_cmt_no);
 			}
-			if (art_no != null) {
-				String art_pt_idx = req.getParameter("art_pt_idx");
-				String where = "art_no=" + art_no + "and art_pt_idx=" + art_pt_idx;
-				bytes = new Article_photosDAO().getPic(where);
-			}
+
 			if (photo_no != null) {
 				String type = req.getParameter("type");
 				if("big".equals(type)){

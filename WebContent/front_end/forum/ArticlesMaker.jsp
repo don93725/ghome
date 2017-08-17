@@ -29,7 +29,7 @@
 
 <c:if test="${param.action=='goCreatePage'}">
 
-<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post' id='articleForm' enctype='multipart/form-data'>
+<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post' id='articleForm'>
  <table class="table">
 <thead>
 	<caption><h1>發表文章</h1></caption>	
@@ -48,14 +48,10 @@
 <tr>
 <td>內文</td><td colspan='2'>
 <div contentEditable="true" id='ctx' name='content' style='width:100%; height:500px;'></div>
-<textarea id="my-textarea" name='art_ctx' style="display:none"></textarea>
-<input type="text" id='order' name='order' style="display:none"/>       
-<input type="file" id='file0' name='file' style="display:none"/> 
-<input type="file" id='file1' name='file' style="display:none"/>
-<input type="file" id='file2' name='file' style="display:none"/>
-<input type="file" id='file3' name='file' style="display:none"/>
-<input type="file" id='file4' name='file' style="display:none"/></td></tr>
-<tr><td style='text-align: center' colspan='3'><input class='btn btn-lg btn-primary' type='button' name="getHtml" value='送出'/><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }'><button class='btn btn-lg btn-default'>返回</button></a></td></tr>
+<textarea id="my-textarea" name='art_ctx' style="display:none"></textarea>     
+<input type="file" id='file' name='file' style="display:none"/> 
+</td></tr>
+<tr><td style='text-align: center' colspan='3'><input class='btn btn-lg btn-primary' type='button' name="getHtml" value='送出'/><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }'><input class='btn btn-lg btn-default' value='返回'></a></td></tr>
 </tbody>
 </table>
 </form>
@@ -64,7 +60,7 @@
 
 
 <c:if test="${param.action=='goUpdatePage'}">
-<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post' id='articleForm' enctype='multipart/form-data'>
+<form action="${pageContext.request.contextPath}/forum/ArticlesActionCtrl" method='post' id='articleForm'>
 <table class="table">
 <thead>
 	<caption><h1>發表文章</h1></caption>	
@@ -79,22 +75,15 @@
 		<option value='<c:out value='${type }'/>' <c:if test='${type==articles.art_type}'>selected </c:if>><c:out value='${art_types[loop.count-1].art_type_name }'/></option>
 		</c:forEach>		
 		</select></td>
-	<td><input type='text' id='art_name' class='form-control' name='art_name' value='${articles.art_name }' ><input type='hidden' name='forum_no' value='${param.forum_no }'><input type='hidden' name='art_no' value='${param.art_no }'><input type='hidden' name='action' id='artAction' value='update'></td>
-</tr>
+	<td><input type='text' id='art_name' class='form-control' name='art_name' value='${articles.art_name }' ><input type='hidden' name='forum_no' value='${param.forum_no }'><input type='hidden' name='art_no' value='${param.art_no }'>
+	<input type='hidden' name='action' id='artAction' value='update'></td></tr>
 <tr><td>內文</td>
 <td colspan='2'>
 <div contentEditable="true" id='ctx' name='content' style='width:100%; height:500px;'>${articles.art_ctx}</div>
 <textarea id="my-textarea" name='art_ctx' style="display:none"></textarea> 
-<input type="text" id='updateInfo' name='updateInfo' style="display:none"/>   
-<input type="text" id='order' name='order' style="display:none"/>   
-<input type="text" id='deleteInfo' name='deleteInfo' style="display:none"/>  
-<input type="file" id='file0' name='file' style="display:none"/> 
-<input type="file" id='file1' name='file' style="display:none"/>
-<input type="file" id='file2' name='file' style="display:none"/>
-<input type="file" id='file3' name='file' style="display:none"/>
-<input type="file" id='file4' name='file' style="display:none"/>
+<input type="file" id='file' name='file' style="display:none"/> 
 </td></tr>
-<tr><td  style='text-align: center' colspan='3'><input type='button' class='btn btn-lg btn-primary' name="getHtml" value='更新'><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }'><button class='btn btn-lg btn-default'>返回</button></a></td></tr>
+<tr><td  style='text-align: center' colspan='3'><input type='button' class='btn btn-lg btn-primary' name="getHtml" value='更新'><a href='${pageContext.request.contextPath}/forum/ForumShowCtrl?forum_no=${param.forum_no }'><input class='btn btn-lg btn-default' value='返回'></a></td></tr>
 </tbody>
 </table>
 </form>

@@ -6,73 +6,12 @@ KindEditor.ready(function(K) {
 	});
 	var path = window.location.pathname;
 	webCtx = path.substring(0, path.indexOf('/', 1));
-	for(var i = 0 ; i < $('#ctx img').length ; i ++){				
-		var temp = $('#ctx img').eq(i).attr("id");
-		temp = temp.substring(temp.length-1,temp.length); 
-		originPic[i] = temp;	
-	}	
+	Preview.file_change();
 	K('input[name=getHtml]').click(function(e) {
 		
 		e.preventDefault();
 		$('#ctx').html(editor.html());
-		var deleteInfo = "";
-		var ctx = document.getElementById('ctx').childNodes;
-		var text = "";
-		var arr = [];		
-		for(var i = 0 ; i < $('input[type=file]').length;i++){
-			arr[i] = i+"";
-		}		
-		var order = "";
-		for(var i = 0 ; i<ctx.length ; i++){
-			
- 			var temp = ctx[i];
-
- 			if(temp.nodeType==1){
- 				var tag = temp.tagName;
- 				if(tag=='IMG'){
- 					if(temp.hasAttribute('alt')){
- 						text = text + "<img src='"+temp.src+"' border='0'>";
- 					}else{
- 						var id = temp.id;
- 						id = id.substring(id.length-1,id.length);		 						
- 						for(var j = 0 ; j < arr.length ; j++){
- 							if(arr[j]==id){
- 								delete arr[j];
- 							}
- 						} 						
- 						order = order + id + ",";
- 						text = text + "<img width=100 id='pic"+id+"' src='$ProjectRealPath$/"+
-		 				"util/OutputPic?art_no=$ArticlesPrimaryKey$&art_pt_idx="+id+"'>";
-		 				
- 					}
- 					
-	 			}else if(tag!='BR'){
- 					var tagInner = temp.innerHTML;
- 					text = text +"<"+tag+">"+tagInner+"</"+tag+">";	 						
-	 			}					 	
- 			
- 			}
- 			if(temp.nodeType==3){
- 				text = text +temp.nodeValue;
- 			}	 
-
-		}
-		
-		if(arr.length!=0){
-			for(var i = 0 ; i < arr.length ; i++){
-				$('#file'+arr[i]).remove();
-				for(var j = 0 ; j < originPic.length ; j++){
-					
-					if(arr[i]==originPic[j]){						
-						deleteInfo = deleteInfo + originPic[j]+",";						
-						$('#file'+originPic[j]).remove();			
-						
-					}	
-				}								
-			}							
-		}
-		$('#order').val(order);
-		$('#deleteInfo').val(deleteInfo);
+		var text = $('#ctx').html();
 		var form = $('#articleForm');
 		var art_ctx = document.getElementsByName("art_ctx")[0]; 
 		var art_name = $('#art_name').val();
@@ -130,6 +69,57 @@ function check(art_name,art_ctx,form){
 				});
          }
     });
+}
+Preview = new function() {
+	var fileInput = $('#file');
+	this.file_change = function() {
+		$('#file').on('change', function() {
+			show(this);
+		});
+	}
+	var show = function(input) {
+		if (input.files && input.files[0]) {
+			each_img(input.files);
+		}
+	}			
+	var each_img = function(files) {
+		$.each(files,function(index, file) {
+				if (file.type.match('image')) {
+					var reader = new FileReader();
+					var img = new Image();
+					img.onload = function() {
+						
+						var pic ="<img  height=100  src='"
+								+ img.src
+								+ "'>";
+						editor.insertHtml(pic);
+
+					};
+					reader.onload = function() {
+						img.src = reader.result;
+					}
+					if (file) {
+						reader.readAsDataURL(file);
+					}
+				}
+				if (file.type.match('video')) {
+					film = null;
+					var reader = new FileReader();
+					reader.onload = function() {
+						var video = "<video style='height:100px;'  controls='conrtols'><source src="+
+								reader.result+" type='video/mp4'></video>";
+						editor.insertHtml(video);							
+						
+
+					}
+					if (file) {
+						reader.readAsDataURL(file);
+					}
+					return;
+				}
+			});
+	}
+
 }
 var editor;
 KindEditor.ready(function(K) {

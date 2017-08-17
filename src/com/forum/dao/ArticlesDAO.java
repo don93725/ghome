@@ -1,5 +1,8 @@
 package com.forum.dao;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +17,6 @@ import com.don.inteface.DAOInterface;
 import com.don.util.BasicDAO;
 import com.don.util.SQLHelper;
 import com.forum.domain.Article_comments;
-import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
 import com.members.model.MembersVO;
 
@@ -65,7 +67,25 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 				articles.setArt_name((String) obj[6]);
 			}
 			if (obj[7] != null) {
-				articles.setArt_ctx((String) obj[7]);
+				BufferedReader br =null;
+				try {
+					Clob clob = (Clob) obj[7];				
+					br = new BufferedReader(clob.getCharacterStream());
+					StringBuilder msg_ctx = new StringBuilder();
+					String temp = null;
+					while( (temp = br.readLine()) !=null){
+						msg_ctx.append(temp);
+					}
+					br.close();
+					articles.setArt_ctx(msg_ctx.toString());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 			if (obj[8] != null) {
 				articles.setArt_views(Integer.parseInt(obj[8].toString()));
@@ -103,112 +123,59 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 	// 建置修改
 
 	public boolean updateByVO(Articles articles) {
-		String SQL = "update articles set art_type=?,art_upd_date=sysdate,art_name=?,art_ctx=? where art_no=?";
-		Object[] param = { articles.getArt_type(), articles.getArt_name(), articles.getArt_ctx(),
-				articles.getArt_no() };
-		boolean updateResult = new SQLHelper().executeUpdate(SQL, param);
-		return updateResult;
-	}
-
-	// 建置修改相片一起處理
-	public boolean updateByVO(Articles articles, List<Article_photos> article_photos, String[] updateInfos,
-			String[] deleteInfos) {
 		SQLHelper helper = new SQLHelper();
 		Connection con = helper.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		boolean result = false;
+		Clob clob =null;
 		try {
-			con.setAutoCommit(false);
-			String SQL = "update articles set art_type=?,art_upd_date=sysdate,art_name=?,art_ctx=? where art_no=?";
-			Object[] param = { articles.getArt_type(), articles.getArt_name(), articles.getArt_ctx(),
+			clob = con.createClob();
+			clob.setString(1, articles.getArt_ctx());
+			String sql = "update articles set art_type=?,art_upd_date=sysdate,art_name=?,art_ctx=? where art_no=?";
+			pstmt = con.prepareStatement(sql);
+			Object[] param = { articles.getArt_type(), articles.getArt_name(), clob,
 					articles.getArt_no() };
-			pstmt = con.prepareStatement(SQL);
-			for (int i = 0; i < param.length; i++) {
+			 for (int i = 0; i < param.length; i++) {
 				pstmt.setObject(i + 1, param[i]);
 			}
 			pstmt.executeUpdate();
-			Article_photosDAO article_photosDAO = new Article_photosDAO();
-			if (updateInfos != null) {
-				result = article_photosDAO.updateByVO(article_photos, articles.getArt_no(), con, updateInfos,
-						deleteInfos);
-			} else {
-				con.commit();
-				result = true;
-			}
+			result = true;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			try {
-				con.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 			e.printStackTrace();
-		} finally {
-			helper.close(con, pstmt);
 		}
 		return result;
 	}
 
-	// 新增沒照片
-	public boolean executeInsert(Articles articles) {
-		SQLHelper helper = new SQLHelper();
-		String SQL = "insert into articles values(articles_pk_seq.nextval,?,?,?,SYSDATE,null,?,?,default,default)";
-		Object[] param = { articles.getMem_no().getMem_no(), articles.getForum_no(), articles.getArt_type(), articles.getArt_name(),
-				articles.getArt_ctx() };
-		boolean result = helper.executeUpdate(SQL, param);
-		return result;
-	}
+	// 建置修改相片一起處理
+
+
 	// 建置新增有照片
 
-	public boolean executeInsert(Articles articles, List<Article_photos> article_photos) {
+	public boolean executeInsert(Articles articles) {
 		SQLHelper helper = new SQLHelper();
 		Connection con = helper.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		boolean result = false;
+		Clob clob =null;
 		try {
-			con.setAutoCommit(false);
+			clob = con.createClob();
+			clob.setString(1, articles.getArt_ctx());
 			String SQL = "insert into articles values(articles_pk_seq.nextval,?,?,?,SYSDATE,null,?,?,default,default)";
 			Object[] param = { articles.getMem_no().getMem_no(), articles.getForum_no(), articles.getArt_type(),
-					articles.getArt_name(), articles.getArt_ctx() };
-			String[] keyName = { "art_no" };
-			pstmt = con.prepareStatement(SQL, keyName);
+					articles.getArt_name(), clob };
+			pstmt = con.prepareStatement(SQL);
 			for (int i = 0; i < param.length; i++) {
 				pstmt.setObject(i + 1, param[i]);
 			}
-			pstmt.executeUpdate();
+			pstmt.executeUpdate();			
+			result = true;
 
-			rs = pstmt.getGeneratedKeys();
-			while (rs.next()) {
-				String key = rs.getString(1);
-				for (int i = 0; i < article_photos.size(); i++) {
-					Article_photos temp = article_photos.get(i);
-					temp.setArt_no(key);
-				}
-				articles.setArt_ctx(articles.getArt_ctx().replace("$ArticlesPrimaryKey$", key));
-				articles.setArt_no(key);
-
-			}
-			String SQL2 = "update articles set art_ctx=? where art_no=?";
-			String[] param2 = { articles.getArt_ctx(), articles.getArt_no() };
-			pstmt = con.prepareStatement(SQL2);
-			for (int i = 0; i < param2.length; i++) {
-				pstmt.setObject(i + 1, param2[i]);
-			}
-			pstmt.executeUpdate();
-
-			Article_photosDAO article_photosDAO = new Article_photosDAO();
-			result = article_photosDAO.executeInsert(article_photos, con);
-
+			
 		} catch (SQLException e) {
-			try {
-				con.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			
 			e.printStackTrace();
 		} finally {
 			helper.close(con, pstmt);
@@ -227,16 +194,15 @@ public class ArticlesDAO extends BasicDAO implements DAOInterface<Articles> {
 			con.setAutoCommit(false);
 			Article_reportDAO article_reportDAO = new Article_reportDAO();
 			result = article_reportDAO.executeDelete(art_no,con);
-			if(result){
-				Article_photosDAO article_photosDAO = new Article_photosDAO();
-				article_photosDAO.executeDelete(art_no, con);
+			if(result){			
+				
 				Article_commentsDAO article_commentsDAO = new Article_commentsDAO();
-				article_commentsDAO.executeDelete(art_no, con);
-				String SQL = "delete from articles where art_no=?";
-				Object[] param = { art_no };
-				pstmt = con.prepareStatement(SQL);
-				pstmt.setObject(1, param[0]);
-				pstmt.executeUpdate();
+				result = article_commentsDAO.executeDelete(art_no, con);
+				if(result){
+					String SQL = "delete from articles where art_no="+art_no;
+					pstmt = con.prepareStatement(SQL);
+					pstmt.executeUpdate();					
+				}
 				con.commit();
 				result = true;
 			}

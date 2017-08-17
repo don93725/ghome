@@ -1,6 +1,10 @@
 package com.board.dao;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,7 +59,24 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 				message_board.setBd_msg_ctx((String) obj[4]);
 			}
 			if (obj[5] != null) {
-				message_board.setBd_ref_ctx((String) obj[5]);
+				BufferedReader br =null;
+				try {
+					Clob clob = (Clob) obj[5];				
+					br = new BufferedReader(clob.getCharacterStream());
+					StringBuilder msg_ctx = new StringBuilder();
+					String temp = null;
+					while( (temp = br.readLine()) !=null){
+						msg_ctx.append(temp);
+					}
+					br.close();
+					message_board.setBd_ref_ctx(msg_ctx.toString());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			if (obj[6] != null) {
 				message_board.setBd_prvt((String) obj[6]);
@@ -237,11 +258,30 @@ public class Message_boardDAO extends BasicDAO implements DAOInterface<Message_b
 	// 建置新增
 
 	public boolean executeInsert(Message_board message_board) {
-		String sql = "insert into message_board values(message_board_pk_seq.nextval,?,?,default,?,?,?,default,null,null,null)";
-		Object[] param = {message_board.getMem_no().getMem_no(), message_board.getBd_type(), message_board.getBd_msg_ctx(), message_board.getBd_ref_ctx(),
-				message_board.getBd_prvt()};
-		boolean insertResult = new SQLHelper().executeUpdate(sql, param);
-		return insertResult;
+		SQLHelper helper = new SQLHelper();
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		boolean result = false;
+		Clob clob = null;
+		con = helper.getConnection();
+		try {
+			clob = con.createClob();
+			clob.setString(1, message_board.getBd_ref_ctx());
+			String sql = "insert into message_board values(message_board_pk_seq.nextval,?,?,default,?,?,?,default,null,null,null)";
+			pstmt = con.prepareStatement(sql);
+			Object[] param = {message_board.getMem_no().getMem_no(), message_board.getBd_type(), message_board.getBd_msg_ctx(), clob,
+					message_board.getBd_prvt()};
+			for(int i = 0 ; i < param.length ; i++){
+				pstmt.setObject(i+1, param[i]);
+			}
+			pstmt.executeUpdate();
+			result = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 	// 建置新增
 

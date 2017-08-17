@@ -105,14 +105,24 @@ KindEditor.ready(function(K) {
 	
 
 function report(pj,art_no){
-	var xhr = createXHR();
-	if(xhr!=null){
-		xhr.onreadystatechange=function()
-		{
-
-		  if (xhr.readyState==4 && xhr.status==200){			  
-			  
-			  if(xhr.responseText.length==0){	
+	var rpt_type = $('#rpt_type').val()
+	var rpt_ctx= $('#rpt_ctx').val();
+	var art_no = art_no;
+	
+	$.ajax({
+		type : "POST",
+		url : pj + "/forum/ArticlesReportActionCtrl",
+		dataType : 'text',
+		data: {
+			"action" : "insert",
+			"rpt_type" : rpt_type,
+			"rpt_ctx" : rpt_ctx,
+			"art_no" : art_no
+			
+		},
+		success : function(msg) {
+			alert(msg);
+			if(msg.trim().length==0){	
 				  $(".inline").colorbox.close();
 				  swal({
 					  title: "成功",
@@ -122,7 +132,7 @@ function report(pj,art_no){
 					  showConfirmButton: false
 				  });
 			  } else{
-				  $.each(JSON.parse(xhr.responseText),function(v,i){
+				  $.each(JSON.parse(msg),function(v,i){
 						swal({
 						  title: "輸入錯誤",
 						  text: i,
@@ -132,34 +142,20 @@ function report(pj,art_no){
 						});
 					});
 			  }
-			 
-			 
-		  }else	if(xhr.status==404||xhr.status==500){
-			  swal({
+		},
+		error : function(xhr, ajaxOptions, thrownError) {
+			 swal({
 				  title: "檢舉失敗",
 				  text: "請在嘗試看看",
 				  timer: 1000,
 				  type: "error",
 				  showConfirmButton: false
 			  });
-		  		
-		  }
-	  	}
-	}		
-	if(xhr!=null){
-		var URL = pj+"/forum/ArticlesReportActionCtrl";
-		xhr.open("post",URL,true);
-		xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-		xhr.send("rpt_type="+$('#rpt_type').val()+"&rpt_ctx="+$('#rpt_ctx').val()+"&art_no="+art_no+"&action=insert");		
-	}
+		}
+
+		});	
+	  	
+			
+	
 }
-function createXHR(){
-	var xhr = null;
-	if(window.XMLHttpRequest){
-		xhr = new XMLHttpRequest();
-	}else if(window.ActiveXObject){
-		xhr = new ActiveXObject("Microsoft.XMLHTTP")
-	}
-	return xhr;
-}		
 

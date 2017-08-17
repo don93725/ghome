@@ -7,20 +7,20 @@ import javax.servlet.http.HttpSession;
 
 public class Validation {
 	public static boolean checkLengthTen2ThrH(String str, String key,HashMap<String,String> map){
-		String regex = "[\\S\\s]{10,300}";
+		String regex = "[\\S\\s]{10,}";
 		if(str.matches(regex)){
 			return true;
 		}else{			
-			map.put(key, "請輸入10-300字的內容。");
+			map.put(key, "請輸入10字以上的內容。");
 			return false;
 		}
 	}
 	public static boolean checkLengthTen2FakeThrH(String str, String key,HashMap<String,String> map){
-		String regex = "[\\S\\s]{10,900}";
+		String regex = "[\\S\\s]{10,}";
 		if(str.matches(regex)){
 			return true;
 		}else{			
-			map.put(key, "請輸入10-300字的內容。");
+			map.put(key, "請輸入10字以上的內容。");
 			return false;
 		}
 	}

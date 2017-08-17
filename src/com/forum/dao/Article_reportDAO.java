@@ -1,6 +1,10 @@
 package com.forum.dao;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +34,24 @@ public class Article_reportDAO extends BasicDAO implements DAOInterface<Article_
 		articles.setForum_no(String.valueOf(obj[7]));
 		articles.setArt_type(String.valueOf(obj[8]));
 		articles.setArt_name(String.valueOf(obj[9]));
-		articles.setArt_ctx(String.valueOf(obj[10]));		
+		BufferedReader br =null;
+		try {
+			Clob clob = (Clob) obj[10];				
+			br = new BufferedReader(clob.getCharacterStream());
+			StringBuilder msg_ctx = new StringBuilder();
+			String temp = null;
+			while( (temp = br.readLine()) !=null){
+				msg_ctx.append(temp);
+			}
+			br.close();
+			articles.setArt_ctx(msg_ctx.toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		article_report.setArt_no(articles);
 		}
 		if(obj[2]!=null){

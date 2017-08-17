@@ -20,9 +20,7 @@ import com.don.util.Validation;
 import com.forum.dao.Art_typesDAO;
 import com.forum.dao.ArticlesDAO;
 import com.forum.domain.Art_types;
-import com.forum.domain.Article_photos;
 import com.forum.domain.Articles;
-import com.forum.service.Article_photosService;
 import com.forum.service.ArticlesService;
 import com.google.gson.Gson;
 import com.members.model.MembersVO;
@@ -31,7 +29,6 @@ import com.members.model.MembersVO;
  * Servlet implementation class ArticlesMakerCtrl
  */
 @WebServlet("/forum/ArticlesActionCtrl")
-@MultipartConfig(fileSizeThreshold = 100, maxFileSize = 10 * 1024 * 1024, maxRequestSize = 10 * 1024 * 1024)
 public class ArticlesActionCtrl extends HttpServlet {
 
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -40,20 +37,20 @@ public class ArticlesActionCtrl extends HttpServlet {
 		String forum_no = req.getParameter("forum_no");
 		HttpSession session = req.getSession();
 		MembersVO user = ((MembersVO) session.getAttribute("user"));
-		
+		System.out.println(action);
 		if("check".equals(action)){
 			res.setContentType("text/html ; charset=utf-8 ");
 			PrintWriter out = res.getWriter();
 			
 			HashMap<String,String> map = new HashMap<String,String>();
-			String art_name = req.getParameter("art_name");
+			String art_name = req.getParameter("art_name").trim();
 			boolean valid = Validation.checkLengthOne2Ten(art_name, "文章標題", map);
 			if(!valid){
 				Gson gson = new Gson();
 				out.write(gson.toJson(map));
 				return;
 			}
-			String art_ctx = req.getParameter("art_ctx").replace("$ProjectRealPath$", req.getContextPath());
+			String art_ctx = req.getParameter("art_ctx").trim();
 			valid = Validation.checkLengthTen2ThrH(art_ctx, "文章內文", map);
 			if(!valid){
 				Gson gson = new Gson();
@@ -62,7 +59,7 @@ public class ArticlesActionCtrl extends HttpServlet {
 			}
 			return;
 		}
-		if ((action.equals("goCreatePage") || action.equals("goUpdatePage")) && forum_no != null) {
+		if (action!=null&&(action.equals("goCreatePage") || action.equals("goUpdatePage")) && forum_no != null) {
 			List<Art_types> art_types = new Art_typesDAO()
 					.getVOBySQL("select * from art_types where forum_no=" + forum_no, null);
 			req.setAttribute("art_types", art_types);
@@ -80,19 +77,10 @@ public class ArticlesActionCtrl extends HttpServlet {
 			if ("create".equals(action)) {
 				String art_name = req.getParameter("art_name");
 				String art_type_name = req.getParameter("art_type_name");
-				String order = req.getParameter("order");
 				String art_ctx = req.getParameter("art_ctx").replace("$ProjectRealPath$", req.getContextPath());
 				String mem_no = user.getMem_no();
-				Article_photosService article_photosService = new Article_photosService();
-				Collection<Part> parts = req.getParts();
-				List<Article_photos> list = article_photosService.setArticle_photos(parts);
 				ArticlesService articlesSevice = new ArticlesService();
-				boolean createResult = false;
-				if (list.size() == 0) {
-					createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
-				} else {
-					createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx, list);
-				}
+				boolean createResult = articlesSevice.add(mem_no, forum_no, art_type_name, art_name, art_ctx);
 				if (createResult) {
 					String URL = this.getServletContext().getContextPath() + "/forum/ForumShowCtrl?forum_no="
 							+ forum_no;
@@ -105,18 +93,11 @@ public class ArticlesActionCtrl extends HttpServlet {
 				String art_name = req.getParameter("art_name");
 				String art_type_name = req.getParameter("art_type_name");
 				String art_no = req.getParameter("art_no");
-				String art_ctx = req.getParameter("art_ctx").replace("$ProjectRealPath$", req.getContextPath());
-				art_ctx = art_ctx.replace("$ArticlesPrimaryKey$", art_no);
-				String order = req.getParameter("order");
-				String updateInfo = req.getParameter("updateInfo");
-				String deleteInfo = req.getParameter("deleteInfo");
-				Article_photosService article_photosService = new Article_photosService();
-				Collection<Part> parts = req.getParts();
-				List<Article_photos> list = article_photosService.setArticle_photos(parts, order, updateInfo);
+				String art_ctx = req.getParameter("art_ctx");
 				ArticlesService articlesSevice = new ArticlesService();
 				boolean createResult = false;
-				createResult = articlesSevice.update(art_type_name, art_name, art_ctx, art_no, list, updateInfo,
-						deleteInfo);
+				System.out.println(art_ctx);
+				createResult = articlesSevice.update(art_type_name, art_name, art_ctx, art_no);
 
 				if (createResult) {
 					String URL = this.getServletContext().getContextPath() + "/forum/ArticleShowCtrl?forum_no="

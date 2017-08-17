@@ -7214,94 +7214,10 @@ KindEditor.plugin('image', function(K) {
 		
 		
 		
-		$('#ctx').html(editor.html());
 		
-		for(var i = 0 ; i < count ; i++){
-			AllPic[i] = i + "";
-		}
-		
-		var ctx = document.getElementById('ctx').childNodes;			
-	 	for(var i = 0 ; i<ctx.length ; i++){
-		 	var temp = ctx[i];
- 			if(temp.nodeType==1){
- 				var tag = temp.tagName;			 			
- 				if(tag=='IMG'){
- 					if(!temp.hasAttribute('alt')){
- 						var id = temp.id;
- 						id = id.substring(id.length-1,id.length); 								 						
- 						for(var j = 0 ; j < AllPic.length ; j++){
- 							if(AllPic[j]==id){
- 								delete AllPic[j];	 								
- 							}
- 						}	 					 						 				
- 					}	 					
-	 			}					 	
- 			
- 			}
- 		}
- 		var flag = false;
- 		var count2 = "";
- 		for(var i = 0 ; i < AllPic.length ; i++){
- 			if(AllPic[i]!=undefined){
- 				flag = true;
- 				count2 = AllPic[i];
- 				break;
- 			}
- 		}
- 	
-
- 		if(flag){	 			
- 			$("#file"+count2).change(function(event){
-			$("#file"+count2).unbind('change');			
-	  			var file    = event.target.files[0];
-	 			var reader  = new FileReader();
-	 			var img = new Image();
-	  			reader.addEventListener("load", function () {
-	  			img.height = 100;					
-	  			var picId = 'pic'+count2;	  			
-	  			img.id = picId;   		
-	    		img.src = reader.result;
-	    		self.insertHtml("&nbsp<img height='"+img.height+"' id='"+img.id+"' src='"+img.src+"'>&nbsp");
-	     		var updateInfo =""
-	     	 	for(var i = 0; i < originPic.length ; i++){
-	     	 		if(originPic[i]==count2){
-	     	 			updateInfo = updateInfo + originPic[i]+",";	
-	     	 		}
-	     	 	} 		
-	     	 	$("#updateInfo").val(updateInfo); 
-	     	 	
-	    		  
-	  			}, false);
-
-	  			if (file) {
-	   			reader.readAsDataURL(file);
-	  			}  			
-			});		
-			$("#file"+count2).trigger("click");	
- 		}else if(count==5){
- 			alert("照片僅能五張");
- 		}else{
-
- 			$("#file"+count).change(function(event){
-			$("#file"+count).unbind('change');			
-	  			var file    = event.target.files[0];
-	 			var reader  = new FileReader();
-	 			var img = new Image();
-	  			reader.addEventListener("load", function () {
-	  			img.height = 100;					
-	  			var picId = 'pic'+(count++);	  			
-	  			img.id = picId;   		
-	    		img.src = reader.result; 	
-	    		self.insertHtml("&nbsp<img height='"+img.height+"' id='"+img.id+"' src='"+img.src+"'>&nbsp");
-	    		  
-	  			}, false);
-
-	  			if (file) {
-	   			reader.readAsDataURL(file);
-	  			}  			
-			});		
-			$("#file"+count).trigger("click");	
- 		} 	
+			$("#file").trigger("click");	
+ 		
+ 		 	
 	
 	};
 	self.plugin.image = {

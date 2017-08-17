@@ -37,8 +37,6 @@ public class LoginFilter implements Filter {
 			req.getSession().setAttribute("referer", req.getHeader("Referer"));
 			res.sendRedirect(req.getContextPath() + "/front_end/login.jsp");
 			return;
-		} else if(!"3".equals(user.getMem_rank())){				
-			res.sendRedirect(req.getContextPath() + "/index.jsp");
 		} else{
 			chain.doFilter(request, response);			
 		}
