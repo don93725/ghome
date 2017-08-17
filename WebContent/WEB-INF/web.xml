@@ -9,6 +9,15 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+   <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>securedapp</web-resource-name>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
   <filter>
     <filter-name>loginFilter</filter-name>
     <filter-class>filters.LoginFilter</filter-class>
@@ -43,4 +52,6 @@
     <param-name>org.apache.tomcat.websocket.textBufferSize</param-name>
     <param-value>10000000</param-value>
   </context-param>
+ 
+ 
 </web-app>
